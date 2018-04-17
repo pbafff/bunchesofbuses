@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "start": "node ./bin/www",
-    "devstart": "nodemon ./bin/www"
+    "devstart": "nodemon ./bin/www",
+    "poststart": "node ./apicall.js"
   },
   "dependencies": {
     "async": "^2.6.0",

@@ -5,6 +5,7 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var bodyParser = require('body-parser');  
 var favicon = require('serve-favicon');
+var apicall = require('./apicall');
 
 
 var index = require('./routes/index');

@@ -5,6 +5,10 @@ block content
   p Welcome to #{title}
   svg
 
+  p Number of documents in bayridgemodels: !{JSON.stringify(bayridgenumber)}
+
   script(src="https://d3js.org/d3.v5.min.js")
   script(src='/javascripts/d3BusMap.js')
+  //- script(type='text/javascript').
+  //- var bayridgenumber = !{bayridgenumber}
 

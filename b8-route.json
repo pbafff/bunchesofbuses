@@ -2249,94 +2249,6 @@
       {
         "type": "Feature",
         "properties": {
-          "@id": "way/183794596",
-          "highway": "secondary",
-          "name": "Linden Boulevard",
-          "note": "frontage",
-          "oneway": "yes",
-          "@relations": [
-            {
-              "role": "",
-              "rel": "2928058",
-              "reltags": {
-                "name": "NYCB - B8",
-                "network": "MTA",
-                "operator": "MTA",
-                "ref": "B8",
-                "route": "bus",
-                "type": "route"
-              }
-            }
-          ]
-        },
-        "geometry": {
-          "type": "LineString",
-          "coordinates": [
-            [
-              -73.9195654,
-              40.6542291
-            ],
-            [
-              -73.9189881,
-              40.6542101
-            ],
-            [
-              -73.9178374,
-              40.6541593
-            ]
-          ]
-        },
-        "id": "way/183794596"
-      },
-      {
-        "type": "Feature",
-        "properties": {
-          "@id": "way/183794604",
-          "highway": "tertiary",
-          "name": "Linden Boulevard",
-          "note": "frontage",
-          "oneway": "yes",
-          "@relations": [
-            {
-              "role": "",
-              "rel": "2928058",
-              "reltags": {
-                "name": "NYCB - B8",
-                "network": "MTA",
-                "operator": "MTA",
-                "ref": "B8",
-                "route": "bus",
-                "type": "route"
-              }
-            }
-          ]
-        },
-        "geometry": {
-          "type": "LineString",
-          "coordinates": [
-            [
-              -73.9217107,
-              40.6543559
-            ],
-            [
-              -73.9211864,
-              40.654282
-            ],
-            [
-              -73.9202623,
-              40.654252
-            ],
-            [
-              -73.9195654,
-              40.6542291
-            ]
-          ]
-        },
-        "id": "way/183794604"
-      },
-      {
-        "type": "Feature",
-        "properties": {
           "@id": "way/221452539",
           "highway": "primary",
           "name": "4th Avenue",
@@ -3074,59 +2986,6 @@
       {
         "type": "Feature",
         "properties": {
-          "@id": "way/221453807",
-          "hgv": "local",
-          "highway": "secondary",
-          "name": "Remsen Avenue",
-          "oneway": "no",
-          "tiger:cfcc": "A41",
-          "tiger:county": "Kings, NY",
-          "tiger:name_base": "Remsen",
-          "tiger:name_type": "Ave",
-          "tiger:reviewed": "no",
-          "tiger:zip_left": "11236",
-          "tiger:zip_right": "11236",
-          "@relations": [
-            {
-              "role": "",
-              "rel": "2928058",
-              "reltags": {
-                "name": "NYCB - B8",
-                "network": "MTA",
-                "operator": "MTA",
-                "ref": "B8",
-                "route": "bus",
-                "type": "route"
-              }
-            }
-          ]
-        },
-        "geometry": {
-          "type": "LineString",
-          "coordinates": [
-            [
-              -73.9217107,
-              40.6543559
-            ],
-            [
-              -73.9215583,
-              40.6542201
-            ],
-            [
-              -73.921286,
-              40.6539775
-            ],
-            [
-              -73.920813,
-              40.6535561
-            ]
-          ]
-        },
-        "id": "way/221453807"
-      },
-      {
-        "type": "Feature",
-        "properties": {
           "@id": "way/221453949",
           "highway": "residential",
           "name": "East 98th Street",
@@ -3398,63 +3257,6 @@
           ]
         },
         "id": "way/221569418"
-      },
-      {
-        "type": "Feature",
-        "properties": {
-          "@id": "way/221788477",
-          "hgv": "local",
-          "highway": "secondary",
-          "name": "Remsen Avenue",
-          "oneway": "no",
-          "tiger:cfcc": "A41",
-          "tiger:county": "Kings, NY",
-          "tiger:name_base": "Remsen",
-          "tiger:name_type": "Ave",
-          "tiger:reviewed": "no",
-          "tiger:zip_left": "11236",
-          "tiger:zip_right": "11236",
-          "@relations": [
-            {
-              "role": "",
-              "rel": "2928058",
-              "reltags": {
-                "name": "NYCB - B8",
-                "network": "MTA",
-                "operator": "MTA",
-                "ref": "B8",
-                "route": "bus",
-                "type": "route"
-              }
-            }
-          ]
-        },
-        "geometry": {
-          "type": "LineString",
-          "coordinates": [
-            [
-              -73.920813,
-              40.6535561
-            ],
-            [
-              -73.919962,
-              40.652789
-            ],
-            [
-              -73.9198307,
-              40.6526717
-            ],
-            [
-              -73.918137,
-              40.651158
-            ],
-            [
-              -73.91632,
-              40.649527
-            ]
-          ]
-        },
-        "id": "way/221788477"
       },
       {
         "type": "Feature",
@@ -8211,6 +8013,1084 @@
           ]
         },
         "id": "node/5492126951"
-      }
+      },
+      {
+          "type": "Feature",
+          "properties": {
+            "@id": "node/3118144394",
+            "highway": "bus_stop",
+            "name": "Rockaway Avenue & Hegeman Avenue",
+            "DirectionRef": "1"
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              -73.9072794,
+              40.6558116
+            ]
+          },
+          "id": "node/3118144394"
+        },
+        {
+          "type": "Feature",
+          "properties": {
+            "@id": "node/5216105877",
+            "highway": "bus_stop",
+            "name": "Linden Boulevard & Thomas S Boyland Street",
+            "DirectionRef": "1"
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              -73.9096274,
+              40.6544369
+            ]
+          },
+          "id": "node/5216105877"
+        },
+        {
+          "type": "Feature",
+          "properties": {
+            "@id": "node/5216105138",
+            "highway": "bus_stop",
+            "name": "Linden Boulevard & Rockaway Parkway",
+            "DirectionRef": "1"
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              -73.912182,
+              40.6542284
+            ]
+          },
+          "id": "node/5216105138"
+        },
+        {
+          "type": "Feature",
+          "properties": {
+            "@id": "node/5201868076",
+            "highway": "bus_stop",
+            "name": "Church Avenue & East 93rd Street",
+            "DirectionRef": "1"
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              -73.918454,
+              40.6538735
+            ]
+          },
+          "id": "node/5201868076"
+        },
+        {
+          "type": "Feature",
+          "properties": {
+            "@id": "node/not_entered",
+            "highway": "bus_stop",
+            "name": "Remsen Avenue & Church Avenue",
+            "DirectionRef": "1"
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              -73.919861,
+              40.652552
+            ]
+          },
+          "id": "node/not_entered"
+        },
+        {
+          "type": "Feature",
+          "properties": {
+            "@id": "node/not_entered",
+            "highway": "bus_stop",
+            "name": "Remsen Avenue & Avenue A",
+            "DirectionRef": "1"
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              -73.917946,
+              40.650865
+            ]
+          },
+          "id": "node/not_entered"
+        },
+        {
+          "type": "Feature",
+          "properties": {
+            "@id": "node/not_entered",
+            "highway": "bus_stop",
+            "name": "Avenue B & Remsen Avenue",
+            "DirectionRef": "1"
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              -73.916671,
+              40.649354
+            ]
+          },
+          "id": "node/not_entered"
+        },
+        {
+          "type": "Feature",
+          "properties": {
+            "@id": "node/not_entered",
+            "highway": "bus_stop",
+            "name": "Avenue B & East 87th Street",
+            "DirectionRef": "1"
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              -73.918862,
+              40.647963
+            ]
+          },
+          "id": "node/not_entered"
+        },
+        {
+          "type": "Feature",
+          "properties": {
+            "@id": "node/not_entered",
+            "highway": "bus_stop",
+            "name": "Beverley Road & Ralph Avenue",
+            "DirectionRef": "1"
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              -73.9206886,
+              40.6468489
+            ]
+          },
+          "id": "node/not_entered"
+        },
+        {
+          "type": "Feature",
+          "properties": {
+            "@id": "node/not_entered",
+            "highway": "bus_stop",
+            "name": "Beverley Road & East 58th Street",
+            "DirectionRef": "1"
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              -73.9229014,
+              40.6467044
+            ]
+          },
+          "id": "node/not_entered"
+        },
+        {
+          "type": "Feature",
+          "properties": {
+            "@id": "node/not_entered",
+            "highway": "bus_stop",
+            "name": "Beverley Road & Kings Highway",
+            "DirectionRef": "1"
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              -73.9247844,
+              40.6464969
+            ]
+          },
+          "id": "node/not_entered"
+        },
+        {
+          "type": "Feature",
+          "properties": {
+            "@id": "node/5216116309",
+            "bench": "no",
+            "highway": "bus_stop",
+            "name": "Kings Highway & Clarendon Road",
+            "network": "B7",
+            "shelter": "no",
+            "DirectionRef": "1"
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              -73.9250006,
+              40.6448035
+            ]
+          },
+          "id": "node/5216116309"
+        },
+        {
+          "type": "Feature",
+          "properties": {
+            "@id": "node/5216119437",
+            "bench": "no",
+            "highway": "bus_stop",
+            "name": "Kings Highway & Avenue D",
+            "network": "B7",
+            "shelter": "no",
+            "DirectionRef": "1"
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              -73.9254301,
+              40.6424457
+            ]
+          },
+          "id": "node/5216119437"
+        },
+        {
+          "type": "Feature",
+          "properties": {
+            "@id": "node/not_entered",
+            "bench": "no",
+            "highway": "bus_stop",
+            "name": "Avenue D & East 52nd Street",
+            "network": "B7",
+            "shelter": "no",
+            "DirectionRef": "1"
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              -73.9278058,
+              40.6422832
+            ]
+          },
+          "id": "node/not_entered"
+        },
+        {
+          "type": "Feature",
+          "properties": {
+            "@id": "node/not_entered",
+            "bench": "no",
+            "highway": "bus_stop",
+            "name": "Avenue D & Utica Avenue",
+            "network": "B7",
+            "shelter": "no",
+            "DirectionRef": "1"
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              -73.9298094,
+              40.6421041
+            ]
+          },
+          "id": "node/not_entered"
+        },
+        {
+          "type": "Feature",
+          "properties": {
+            "@id": "node/not_entered",
+            "bench": "no",
+            "highway": "bus_stop",
+            "name": "Avenue D & East 48th Street",
+            "network": "B7",
+            "shelter": "no",
+            "DirectionRef": "1"
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              -73.9325372,
+              40.6419066
+            ]
+          },
+          "id": "node/not_entered"
+        },
+        {
+          "type": "Feature",
+          "properties": {
+            "@id": "node/not_entered",
+            "bench": "no",
+            "highway": "bus_stop",
+            "name": "Avenue D & East 46th Street",
+            "network": "B7",
+            "shelter": "no",
+            "DirectionRef": "1"
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              -73.9344416,
+              40.6416706
+            ]
+          },
+          "id": "node/not_entered"
+        },
+        {
+          "type": "Feature",
+          "properties": {
+            "@id": "node/not_entered",
+            "bench": "no",
+            "highway": "bus_stop",
+            "name": "Avenue D & East 43th Street",
+            "network": "B7",
+            "shelter": "no",
+            "DirectionRef": "1"
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              -73.937569,
+              40.6415118
+            ]
+          },
+          "id": "node/not_entered"
+        },
+        {
+          "type": "Feature",
+          "properties": {
+            "@id": "node/not_entered",
+            "bench": "no",
+            "highway": "bus_stop",
+            "name": "Avenue D & East 40th Street",
+            "network": "B7",
+            "shelter": "no",
+            "DirectionRef": "1"
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              -73.940042,
+              40.6412187
+            ]
+          },
+          "id": "node/not_entered"
+        },
+        {
+          "type": "Feature",
+          "properties": {
+            "@id": "node/not_entered",
+            "bench": "no",
+            "highway": "bus_stop",
+            "name": "Avenue D & East 38th Street",
+            "network": "B7",
+            "shelter": "no",
+            "DirectionRef": "1"
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              -73.9421127,
+              40.6412147
+            ]
+          },
+          "id": "node/not_entered"
+        },
+        {
+          "type": "Feature",
+          "properties": {
+            "@id": "node/not_entered",
+            "bench": "no",
+            "highway": "bus_stop",
+            "name": "Avenue D & Brooklyn Avenue",
+            "network": "B8",
+            "shelter": "no",
+            "DirectionRef": "1"
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              -73.9442853,
+              40.6411536
+            ]
+          },
+          "id": "node/not_entered"
+        },
+        {
+          "type": "Feature",
+          "properties": {
+            "@id": "node/not_entered",
+            "bench": "no",
+            "highway": "bus_stop",
+            "name": "Avenue D & New York Avenue",
+            "network": "B8",
+            "shelter": "no",
+            "DirectionRef": "1"
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              -73.9457337,
+              40.6409012
+            ]
+          },
+          "id": "node/not_entered"
+        },
+        {
+          "type": "Feature",
+          "properties": {
+            "@id": "node/not_entered",
+            "bench": "no",
+            "highway": "bus_stop",
+            "name": "Nostrand Avenue & Newkirk Avenue",
+            "network": "B8",
+            "shelter": "no",
+            "DirectionRef": "1"
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              -73.9484373,
+              40.639505
+            ]
+          },
+          "id": "node/not_entered"
+        },
+        {
+          "type": "Feature",
+          "properties": {
+            "@id": "node/not_entered",
+            "bench": "no",
+            "highway": "bus_stop",
+            "name": "Foster Avenue & East 29th Street",
+            "network": "B8",
+            "shelter": "no",
+            "DirectionRef": "1"
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              -73.9510122,
+              40.6383001
+            ]
+          },
+          "id": "node/not_entered"
+        },
+        {
+          "type": "Feature",
+          "properties": {
+            "@id": "node/not_entered",
+            "bench": "no",
+            "highway": "bus_stop",
+            "name": "Foster Avenue & East 29th Street",
+            "network": "B8",
+            "shelter": "no",
+            "DirectionRef": "1"
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              -73.9510122,
+              40.6383001
+            ]
+          },
+          "id": "node/not_entered"
+        },
+        {
+          "type": "Feature",
+          "properties": {
+            "@id": "node/5215190262",
+            "highway": "bus_stop",
+            "name": "Foster Avenue & Rogers Avenue",
+            "DirectionRef": "1"
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              -73.9509566,
+              40.6384922
+            ]
+          },
+          "id": "node/5215190262"
+        },
+        {
+          "type": "Feature",
+          "properties": {
+            "@id": "node/not_entered",
+            "highway": "bus_stop",
+            "name": "Foster Avenue & Flatbush Avenue",
+            "DirectionRef": "1"
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              -73.9542363,
+              40.6380192
+            ]
+          },
+          "id": "node/not_entered"
+        },
+        {
+          "type": "Feature",
+          "properties": {
+            "@id": "node/not_entered",
+            "highway": "bus_stop",
+            "name": "Foster Avenue & Bedford Avenue",
+            "DirectionRef": "1"
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              -73.9553735,
+              40.6377546
+            ]
+          },
+          "id": "node/not_entered"
+        },
+        {
+          "type": "Feature",
+          "properties": {
+            "@id": "node/not_entered",
+            "highway": "bus_stop",
+            "name": "Foster Avenue & East 22nd Street",
+            "DirectionRef": "1"
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              -73.9575354,
+              40.6369974
+            ]
+          },
+          "id": "node/not_entered"
+        },
+        {
+          "type": "Feature",
+          "properties": {
+            "@id": "node/not_entered",
+            "highway": "bus_stop",
+            "name": "Foster Avenue & Ocean Avenue",
+            "DirectionRef": "1"
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              -73.96018,
+              40.6358658
+            ]
+          },
+          "id": "node/not_entered"
+        },
+        {
+          "type": "Feature",
+          "properties": {
+            "@id": "node/not_entered",
+            "highway": "bus_stop",
+            "name": "Foster Avenue & East 18th Street",
+            "DirectionRef": "1"
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              -73.9619449,
+              40.6348806
+            ]
+          },
+          "id": "node/not_entered"
+        },
+        {
+          "type": "Feature",
+          "properties": {
+            "@id": "node/not_entered",
+            "highway": "bus_stop",
+            "name": "Foster Avenue & Marlborough Road",
+            "DirectionRef": "1"
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              -73.9629695,
+              40.6342944
+            ]
+          },
+          "id": "node/not_entered"
+        },
+        {
+          "type": "Feature",
+          "properties": {
+            "@id": "node/not_entered",
+            "highway": "bus_stop",
+            "name": "Foster Avenue & Rugby Road",
+            "DirectionRef": "1"
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              -73.9647076,
+              40.63324
+            ]
+          },
+          "id": "node/not_entered"
+        },
+        {
+          "type": "Feature",
+          "properties": {
+            "@id": "node/not_entered",
+            "highway": "bus_stop",
+            "name": "Foster Avenue & Coney Island Avenue",
+            "DirectionRef": "1"
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              -73.9661775,
+              40.6328655
+            ]
+          },
+          "id": "node/not_entered"
+        },
+        {
+          "type": "Feature",
+          "properties": {
+            "@id": "node/not_entered",
+            "highway": "bus_stop",
+            "name": "Coney Island Avenue & Newkirk Avenue",
+            "DirectionRef": "1"
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              -73.9668105,
+              40.6333011
+            ]
+          },
+          "id": "node/not_entered"
+        },
+        {
+          "type": "Feature",
+          "properties": {
+            "@id": "node/not_entered",
+            "highway": "bus_stop",
+            "name": "Coney Island Avenue & Newkirk Avenue",
+            "DirectionRef": "1"
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              -73.9668105,
+              40.6333011
+            ]
+          },
+          "id": "node/not_entered"
+        },
+        {
+          "type": "Feature",
+          "properties": {
+            "@id": "node/5227304636",
+            "highway": "bus_stop",
+            "name": "18th Avenue & Coney Island Avenue",
+            "shelter": "no",
+            "DirectionRef": "1"
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              -73.9679677,
+              40.6351674
+            ]
+          },
+          "id": "node/5227304636"
+        },
+        {
+          "type": "Feature",
+          "properties": {
+            "@id": "node/5227304419",
+            "bench": "no",
+            "highway": "bus_stop",
+            "name": "18th Avenue & East 8th Street",
+            "shelter": "no",
+            "DirectionRef": "1"
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              -73.9701417,
+              40.6341259
+            ]
+          },
+          "id": "node/5227304419"
+        },
+        {
+          "type": "Feature",
+          "properties": {
+            "@id": "node/5214327317",
+            "bench": "no",
+            "highway": "bus_stop",
+            "name": "18th Avenue & Ocean Parkway",
+            "shelter": "no",
+            "DirectionRef": "1"
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              -73.9717751,
+              40.6334016
+            ]
+          },
+          "id": "node/5214327317"
+        },
+        {
+          "type": "Feature",
+          "properties": {
+            "@id": "node/not_entered",
+            "bench": "no",
+            "highway": "bus_stop",
+            "name": "18th Avenue & East 5th Street",
+            "shelter": "no",
+            "DirectionRef": "1"
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              -73.9745645,
+              40.632134
+            ]
+          },
+          "id": "node/not_entered"
+        },
+        {
+          "type": "Feature",
+          "properties": {
+            "@id": "node/not_entered",
+            "bench": "no",
+            "highway": "bus_stop",
+            "name": "18th Avenue & East 2nd Street",
+            "shelter": "no",
+            "DirectionRef": "1"
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              -73.9778904,
+              40.6308394
+            ]
+          },
+          "id": "node/not_entered"
+        },
+        {
+          "type": "Feature",
+          "properties": {
+            "@id": "node/not_entered",
+            "bench": "no",
+            "highway": "bus_stop",
+            "name": "18th Avenue & McDonald Avenue",
+            "shelter": "no",
+            "DirectionRef": "1"
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              -73.9787434,
+              40.6303183
+            ]
+          },
+          "id": "node/not_entered"
+        },
+        {
+          "type": "Feature",
+          "properties": {
+            "@id": "node/not_entered",
+            "bench": "no",
+            "highway": "bus_stop",
+            "name": "18th Avenue & 45th Street",
+            "shelter": "no",
+            "DirectionRef": "1"
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              -73.9790116,
+              40.630245
+            ]
+          },
+          "id": "node/not_entered"
+        },
+        {
+          "type": "Feature",
+          "properties": {
+            "@id": "node/5229522506",
+            "bench": "no",
+            "highway": "bus_stop",
+            "name": "18th Avenue & 47th Street",
+            "shelter": "no",
+            "DirectionRef": "1"
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              -73.9801429,
+              40.6292837
+            ]
+          },
+          "id": "node/5229522506"
+        },
+        {
+          "type": "Feature",
+          "properties": {
+            "@id": "node/5229536572",
+            "highway": "bus_stop",
+            "name": "18th Avenue & 49th Street",
+            "DirectionRef": "1"
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              -73.9812888,
+              40.628139
+            ]
+          },
+          "id": "node/5229536572"
+        },
+        {
+          "type": "Feature",
+          "properties": {
+            "@id": "node/not_entered",
+            "highway": "bus_stop",
+            "name": "18th Avenue & 50th Street",
+            "DirectionRef": "1"
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              -73.9825789,
+              40.6272933
+            ]
+          },
+          "id": "node/not_entered"
+        },
+        {
+          "type": "Feature",
+          "properties": {
+            "@id": "node/not_entered",
+            "highway": "bus_stop",
+            "name": "18th Avenue & 52nd Street",
+            "DirectionRef": "1"
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              -73.9835928,
+              40.6263976
+            ]
+          },
+          "id": "node/not_entered"
+        },
+        {
+          "type": "Feature",
+          "properties": {
+            "@id": "node/not_entered",
+            "highway": "bus_stop",
+            "name": "18th Avenue & 55th Street",
+            "DirectionRef": "1"
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              -73.9835928,
+              40.6263976
+            ]
+          },
+          "id": "node/not_entered"
+        },
+        {
+          "type": "Feature",
+          "properties": {
+            "@id": "node/not_entered",
+            "highway": "bus_stop",
+            "name": "18th Avenue & 58th Street",
+            "DirectionRef": "1"
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              -73.9876483,
+              40.6225378
+            ]
+          },
+          "id": "node/not_entered"
+        },
+        {
+          "type": "Feature",
+          "properties": {
+            "@id": "node/not_entered",
+            "highway": "bus_stop",
+            "name": "18th Avenue & 60th Street",
+            "DirectionRef": "1"
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              -73.9872342,
+              40.6221775
+            ]
+          },
+          "id": "node/not_entered"
+        },
+        {
+          "type": "Feature",
+          "properties": {
+            "@id": "node/not_entered",
+            "highway": "bus_stop",
+            "name": "18th Avenue & 62nd Street",
+            "DirectionRef": "1"
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              -73.9896331,
+              40.6202169
+            ]
+          },
+          "id": "node/not_entered"
+        },
+        {
+          "type": "Feature",
+          "properties": {
+            "@id": "node/not_entered",
+            "highway": "bus_stop",
+            "name": "18th Avenue & 64th Street",
+            "DirectionRef": "1"
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              -73.9914356,
+              40.6188365
+            ]
+          },
+          "id": "node/not_entered"
+        },
+        {
+          "type": "Feature",
+          "properties": {
+            "@id": "node/not_entered",
+            "highway": "bus_stop",
+            "name": "18th Avenue & 66th Street",
+            "DirectionRef": "1"
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              -73.9921705,
+              40.6177941
+            ]
+          },
+          "id": "node/not_entered"
+        },
+        {
+          "type": "Feature",
+          "properties": {
+            "@id": "node/not_entered",
+            "highway": "bus_stop",
+            "name": "18th Avenue & 68th Street",
+            "DirectionRef": "1"
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              -73.9934043,
+              40.6168657
+            ]
+          },
+          "id": "node/not_entered"
+        },
+        {
+          "type": "Feature",
+          "properties": {
+            "@id": "node/not_entered",
+            "highway": "bus_stop",
+            "name": "18th Avenue & 70th Street",
+            "DirectionRef": "1"
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              -73.9938657,
+              40.6157214
+            ]
+          },
+          "id": "node/not_entered"
+        },
+        {
+          "type": "Feature",
+          "properties": {
+            "@id": "node/not_entered",
+            "highway": "bus_stop",
+            "name": "18th Avenue & 72nd Street",
+            "DirectionRef": "1"
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              -73.9950727,
+              40.6147156
+            ]
+          },
+          "id": "node/not_entered"
+        },
+        {
+          "type": "Feature",
+          "properties": {
+            "@id": "node/not_entered",
+            "highway": "bus_stop",
+            "name": "18th Avenue & Bay Ridge Parkway",
+            "DirectionRef": "1"
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              -73.9960061,
+              40.6138035
+            ]
+          },
+          "id": "node/not_entered"
+        },
+        {
+          "type": "Feature",
+          "properties": {
+            "@id": "node/not_entered",
+            "highway": "bus_stop",
+            "name": "18th Avenue & 77th Street",
+            "DirectionRef": "1"
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              -73.9972506,
+              40.6124352
+            ]
+          },
+          "id": "node/not_entered"
+        },
+        {
+          "type": "Feature",
+          "properties": {
+            "@id": "node/not_entered",
+            "highway": "bus_stop",
+            "name": "18th Avenue & 79th Street",
+            "DirectionRef": "1"
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              -73.9987526,
+              40.6110343
+            ]
+          },
+          "id": "node/not_entered"
+        },
+        {
+          "type": "Feature",
+          "properties": {
+            "@id": "node/not_entered",
+            "highway": "bus_stop",
+            "name": "18th Avenue & 82nd Street",
+            "DirectionRef": "1"
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              -73.9987526,
+              40.6110343
+            ]
+          },
+          "id": "node/not_entered"
+        }
+         
     ]
   }

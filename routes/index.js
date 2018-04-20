@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var usStates = require('../us-states');
-var b8 = require('../b8-route');
+var b8 = require('../filtered-b8-routes-and-stops');
 var BayRidgeModels = require('../modules/bayridge');
 var precount;
 
@@ -25,7 +25,7 @@ router.get('/us-states.json', function (req, res, next) {
   res.json(usStates)
 });
 
-router.get('/b8-route.json', function (req, res, next) {
+router.get('/filtered-b8-routes-and-stops.json', function (req, res, next) {
   res.json(b8)
 });
 module.exports = router;

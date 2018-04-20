@@ -2,9 +2,9 @@ var width = 1200;
 var height = 600;
 
 var vis = d3.select("body").append("svg")
-  .attr("width", width).attr("height", height)
+  .attr("width", width).attr("height", height).style('background-color', '#242f3e')
 
-d3.json("/b8-route.json", function (json) {
+d3.json("/filtered-b8-routes-and-stops.json", function (json) {
   // create a first guess for the projection
   var center = d3.geo.centroid(json)
   var scale = 150;
@@ -34,7 +34,7 @@ d3.json("/b8-route.json", function (json) {
     .style('stroke', 'black').style('fill', 'none');
 
   function filterJson(item) { 
-    if (item.geometry.type === "MultiLineString" || item.geometry.type === "LineString" || item.properties.highway === "bus_stop") {
+    if (item.geometry.type === "MultiLineString" || item.geometry.type === "LineString" || item.geometry.type === "Point") {
       return true;
     }
     return false;
@@ -42,7 +42,7 @@ d3.json("/b8-route.json", function (json) {
 
   vis.selectAll("path").data(json.features.filter(filterJson)).enter().append("path")
     .attr("d", path)
-    .style("stroke", "red")
-    .style("stroke-width", "4")
+    .style("stroke", "#ca8f61")
+    .style("stroke-width", "3")
     .style("fill", "none")
 });

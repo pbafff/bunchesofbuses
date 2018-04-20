@@ -1,0 +1,2355 @@
+[{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -73.924881,
+            40.644535
+        ]
+    },
+    "properties": {
+        "box_id": "300692",
+        "name": "KINGS HY/CLARENDON RD",
+        "zip_name": "2016Jan_Prod_r03_b6"
+    }
+},
+{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -73.924522,
+            40.646503
+        ]
+    },
+    "properties": {
+        "box_id": "300693",
+        "name": "KINGS HY/BEVERLY RD",
+        "zip_name": "2016Jan_Prod_r03_b6"
+    }
+},
+{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -73.925026,
+            40.644852
+        ]
+    },
+    "properties": {
+        "box_id": "300765",
+        "name": "KINGS HY/CLARENDON RD",
+        "zip_name": "2016Jan_Prod_r03_b6"
+    }
+},
+{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -73.92543,
+            40.642509
+        ]
+    },
+    "properties": {
+        "box_id": "300766",
+        "name": "KINGS HY/AV D",
+        "zip_name": "2016Jan_Prod_r03_b6"
+    }
+},
+{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -74.014442,
+            40.606213
+        ]
+    },
+    "properties": {
+        "box_id": "300790",
+        "name": "CROPSEY AV/15 AV",
+        "zip_name": "2016Jan_Prod_r03_b6"
+    }
+},
+{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -74.012146,
+            40.605019
+        ]
+    },
+    "properties": {
+        "box_id": "300791",
+        "name": "CROPSEY AV/16 AV",
+        "zip_name": "2016Jan_Prod_r03_b6"
+    }
+},
+{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -74.009514,
+            40.603645
+        ]
+    },
+    "properties": {
+        "box_id": "300792",
+        "name": "CROPSEY AV/17 AV",
+        "zip_name": "2016Jan_Prod_r03_b6"
+    }
+},
+{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -74.006203,
+            40.60376
+        ]
+    },
+    "properties": {
+        "box_id": "300794",
+        "name": "18 AV/BATH AV",
+        "zip_name": "2016Jan_Prod_r03_b6"
+    }
+},
+{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -74.004547,
+            40.605339
+        ]
+    },
+    "properties": {
+        "box_id": "300795",
+        "name": "18 AV/BENSON AV",
+        "zip_name": "2016Jan_Prod_r03_b6"
+    }
+},
+{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -74.002701,
+            40.607124
+        ]
+    },
+    "properties": {
+        "box_id": "300796",
+        "name": "18 AV/86 ST",
+        "zip_name": "2016Jan_Prod_r03_b6"
+    }
+},
+{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -74.001976,
+            40.607712
+        ]
+    },
+    "properties": {
+        "box_id": "300797",
+        "name": "18 AV/85 ST",
+        "zip_name": "2016Jan_Prod_r03_b6"
+    }
+},
+{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -74.000969,
+            40.608517
+        ]
+    },
+    "properties": {
+        "box_id": "300798",
+        "name": "18 AV/84 ST",
+        "zip_name": "2016Jan_Prod_r03_b6"
+    }
+},
+{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -73.99913,
+            40.610168
+        ]
+    },
+    "properties": {
+        "box_id": "300799",
+        "name": "18 AV/81 ST",
+        "zip_name": "2016Jan_Prod_r03_b6"
+    }
+},
+{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -73.998009,
+            40.611286
+        ]
+    },
+    "properties": {
+        "box_id": "300800",
+        "name": "18 AV/79 ST",
+        "zip_name": "2016Jan_Prod_r03_b6"
+    }
+},
+{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -73.996872,
+            40.612404
+        ]
+    },
+    "properties": {
+        "box_id": "300801",
+        "name": "18 AV/77 ST",
+        "zip_name": "2016Jan_Prod_r03_b6"
+    }
+},
+{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -73.995621,
+            40.613625
+        ]
+    },
+    "properties": {
+        "box_id": "300802",
+        "name": "18 AV/BAY RIDGE PY",
+        "zip_name": "2016Jan_Prod_r03_b6"
+    }
+},
+{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -73.993896,
+            40.615326
+        ]
+    },
+    "properties": {
+        "box_id": "300803",
+        "name": "18 AV/72 ST",
+        "zip_name": "2016Jan_Prod_r03_b6"
+    }
+},
+{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -73.992775,
+            40.616444
+        ]
+    },
+    "properties": {
+        "box_id": "300804",
+        "name": "18 AV/70 ST",
+        "zip_name": "2016Jan_Prod_r03_b6"
+    }
+},
+{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -73.991631,
+            40.617577
+        ]
+    },
+    "properties": {
+        "box_id": "300805",
+        "name": "18 AV/68 ST",
+        "zip_name": "2016Jan_Prod_r03_b6"
+    }
+},
+{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -73.990479,
+            40.618717
+        ]
+    },
+    "properties": {
+        "box_id": "300806",
+        "name": "18 AV/66 ST",
+        "zip_name": "2016Jan_Prod_r03_b6"
+    }
+},
+{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -73.98925,
+            40.619926
+        ]
+    },
+    "properties": {
+        "box_id": "300807",
+        "name": "18 AV/64 ST",
+        "zip_name": "2016Jan_Prod_r03_b6"
+    }
+},
+{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -73.988106,
+            40.621059
+        ]
+    },
+    "properties": {
+        "box_id": "300808",
+        "name": "18 AV/62 ST",
+        "zip_name": "2016Jan_Prod_r03_b6"
+    }
+},
+{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -73.987274,
+            40.621883
+        ]
+    },
+    "properties": {
+        "box_id": "300809",
+        "name": "18 AV/60 ST",
+        "zip_name": "2016Jan_Prod_r03_b6"
+    }
+},
+{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -73.984077,
+            40.625092
+        ]
+    },
+    "properties": {
+        "box_id": "300811",
+        "name": "18 AV/55 ST",
+        "zip_name": "2016Jan_Prod_r03_b6"
+    }
+},
+{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -73.982956,
+            40.626221
+        ]
+    },
+    "properties": {
+        "box_id": "300812",
+        "name": "18 AV/53 ST",
+        "zip_name": "2016Jan_Prod_r03_b6"
+    }
+},
+{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -73.981255,
+            40.62793
+        ]
+    },
+    "properties": {
+        "box_id": "300814",
+        "name": "18 AV/50 ST",
+        "zip_name": "2016Jan_Prod_r03_b6"
+    }
+},
+{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -73.980675,
+            40.628502
+        ]
+    },
+    "properties": {
+        "box_id": "300815",
+        "name": "18 AV/49 ST",
+        "zip_name": "2016Jan_Prod_r03_b6"
+    }
+},
+{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -73.9795,
+            40.629559
+        ]
+    },
+    "properties": {
+        "box_id": "300816",
+        "name": "18 AV/47 ST",
+        "zip_name": "2016Jan_Prod_r03_b6"
+    }
+},
+{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -73.977325,
+            40.630581
+        ]
+    },
+    "properties": {
+        "box_id": "300817",
+        "name": "18 AV/MC DONALD AV",
+        "zip_name": "2016Jan_Prod_r03_b6"
+    }
+},
+{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -73.974754,
+            40.631798
+        ]
+    },
+    "properties": {
+        "box_id": "300818",
+        "name": "18 AV/E 3 ST",
+        "zip_name": "2016Jan_Prod_r03_b6"
+    }
+},
+{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -73.972511,
+            40.632858
+        ]
+    },
+    "properties": {
+        "box_id": "300819",
+        "name": "18 AV/OCEAN PY",
+        "zip_name": "2016Jan_Prod_r03_b6"
+    }
+},
+{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -73.969536,
+            40.634277
+        ]
+    },
+    "properties": {
+        "box_id": "300820",
+        "name": "18 AV/E 8 ST",
+        "zip_name": "2016Jan_Prod_r03_b6"
+    }
+},
+{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -73.967667,
+            40.634888
+        ]
+    },
+    "properties": {
+        "box_id": "300821",
+        "name": "CONEY ISLAND AV/18 AV",
+        "zip_name": "2016Jan_Prod_r03_b6"
+    }
+},
+{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -73.967232,
+            40.633377
+        ]
+    },
+    "properties": {
+        "box_id": "300822",
+        "name": "CONEY ISLAND AV/NEWKIRK AV",
+        "zip_name": "2016Jan_Prod_r03_b6"
+    }
+},
+{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -73.966393,
+            40.632404
+        ]
+    },
+    "properties": {
+        "box_id": "300823",
+        "name": "FOSTER AV/CONEY ISLAND AV",
+        "zip_name": "2016Jan_Prod_r03_b6"
+    }
+},
+{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -73.964447,
+            40.633339
+        ]
+    },
+    "properties": {
+        "box_id": "300824",
+        "name": "FOSTER AV/ARGYLE RD",
+        "zip_name": "2016Jan_Prod_r03_b6"
+    }
+},
+{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -73.96225,
+            40.634403
+        ]
+    },
+    "properties": {
+        "box_id": "300825",
+        "name": "FOSTER AV/E 16 ST",
+        "zip_name": "2016Jan_Prod_r03_b6"
+    }
+},
+{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -73.959999,
+            40.635483
+        ]
+    },
+    "properties": {
+        "box_id": "300826",
+        "name": "FOSTER AV/E 18 ST",
+        "zip_name": "2016Jan_Prod_r03_b6"
+    }
+},
+{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -73.957977,
+            40.636456
+        ]
+    },
+    "properties": {
+        "box_id": "300827",
+        "name": "FOSTER AV/OCEAN AV",
+        "zip_name": "2016Jan_Prod_r03_b6"
+    }
+},
+{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -73.956192,
+            40.637314
+        ]
+    },
+    "properties": {
+        "box_id": "300828",
+        "name": "FOSTER AV/E 22 ST",
+        "zip_name": "2016Jan_Prod_r03_b6"
+    }
+},
+{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -73.952744,
+            40.638355
+        ]
+    },
+    "properties": {
+        "box_id": "300830",
+        "name": "FOSTER AV/FLATBUSH AV",
+        "zip_name": "2016Jan_Prod_r03_b6"
+    }
+},
+{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -73.951111,
+            40.638798
+        ]
+    },
+    "properties": {
+        "box_id": "300831",
+        "name": "ROGERS AV/FOSTER AV",
+        "zip_name": "2016Jan_Prod_r03_b6"
+    }
+},
+{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -73.950859,
+            40.640732
+        ]
+    },
+    "properties": {
+        "box_id": "300832",
+        "name": "AV D/ROGERS AV",
+        "zip_name": "2016Jan_Prod_r03_b6"
+    }
+},
+{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -73.948677,
+            40.640869
+        ]
+    },
+    "properties": {
+        "box_id": "300833",
+        "name": "AV D/NOSTRAND AV",
+        "zip_name": "2016Jan_Prod_r03_b6"
+    }
+},
+{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -73.947136,
+            40.640968
+        ]
+    },
+    "properties": {
+        "box_id": "300834",
+        "name": "AV D/E 31 ST",
+        "zip_name": "2016Jan_Prod_r03_b6"
+    }
+},
+{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -73.945213,
+            40.641087
+        ]
+    },
+    "properties": {
+        "box_id": "300835",
+        "name": "AV D/NEW YORK AV",
+        "zip_name": "2016Jan_Prod_r03_b6"
+    }
+},
+{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -73.943321,
+            40.641197
+        ]
+    },
+    "properties": {
+        "box_id": "300836",
+        "name": "AV D/E 35 ST",
+        "zip_name": "2016Jan_Prod_r03_b6"
+    }
+},
+{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -73.941399,
+            40.641323
+        ]
+    },
+    "properties": {
+        "box_id": "300837",
+        "name": "AV D/E 37 ST",
+        "zip_name": "2016Jan_Prod_r03_b6"
+    }
+},
+{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -73.939499,
+            40.641438
+        ]
+    },
+    "properties": {
+        "box_id": "300838",
+        "name": "AV D/E 39 ST",
+        "zip_name": "2016Jan_Prod_r03_b6"
+    }
+},
+{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -73.933762,
+            40.641792
+        ]
+    },
+    "properties": {
+        "box_id": "300839",
+        "name": "AV D/E 45 ST",
+        "zip_name": "2016Jan_Prod_r03_b6"
+    }
+},
+{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -73.931862,
+            40.641911
+        ]
+    },
+    "properties": {
+        "box_id": "300841",
+        "name": "AV D/SCHENECTADY AV",
+        "zip_name": "2016Jan_Prod_r03_b6"
+    }
+},
+{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -73.928909,
+            40.642094
+        ]
+    },
+    "properties": {
+        "box_id": "300842",
+        "name": "AV D/UTICA AV",
+        "zip_name": "2016Jan_Prod_r03_b6"
+    }
+},
+{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -73.92662,
+            40.642239
+        ]
+    },
+    "properties": {
+        "box_id": "300843",
+        "name": "AV D/E 53 ST",
+        "zip_name": "2016Jan_Prod_r03_b6"
+    }
+},
+{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -73.925682,
+            40.642292
+        ]
+    },
+    "properties": {
+        "box_id": "300844",
+        "name": "AV D/KINGS HY",
+        "zip_name": "2016Jan_Prod_r03_b6"
+    }
+},
+{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -73.922646,
+            40.646698
+        ]
+    },
+    "properties": {
+        "box_id": "300847",
+        "name": "BEVERLY RD/E 57 ST",
+        "zip_name": "2016Jan_Prod_r03_b6"
+    }
+},
+{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -73.92083,
+            40.646805
+        ]
+    },
+    "properties": {
+        "box_id": "300848",
+        "name": "BEVERLY RD/E 59 ST",
+        "zip_name": "2016Jan_Prod_r03_b6"
+    }
+},
+{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -73.920677,
+            40.64695
+        ]
+    },
+    "properties": {
+        "box_id": "300858",
+        "name": "BEVERLY RD/RALPH AV",
+        "zip_name": "2016Jan_Prod_r03_b6"
+    }
+},
+{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -73.922455,
+            40.646843
+        ]
+    },
+    "properties": {
+        "box_id": "300859",
+        "name": "BEVERLY RD/E 58 ST",
+        "zip_name": "2016Jan_Prod_r03_b6"
+    }
+},
+{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -73.927299,
+            40.642326
+        ]
+    },
+    "properties": {
+        "box_id": "300862",
+        "name": "AV D/E 52 ST",
+        "zip_name": "2016Jan_Prod_r03_b6"
+    }
+},
+{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -73.929878,
+            40.64217
+        ]
+    },
+    "properties": {
+        "box_id": "300863",
+        "name": "AV D/UTICA AV",
+        "zip_name": "2016Jan_Prod_r03_b6"
+    }
+},
+{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -73.931656,
+            40.642056
+        ]
+    },
+    "properties": {
+        "box_id": "300864",
+        "name": "AV D/E 48 ST",
+        "zip_name": "2016Jan_Prod_r03_b6"
+    }
+},
+{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -73.933632,
+            40.641937
+        ]
+    },
+    "properties": {
+        "box_id": "300865",
+        "name": "AV D/E 46 ST",
+        "zip_name": "2016Jan_Prod_r03_b6"
+    }
+},
+{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -73.936516,
+            40.641754
+        ]
+    },
+    "properties": {
+        "box_id": "300866",
+        "name": "AV D/E 43 ST",
+        "zip_name": "2016Jan_Prod_r03_b6"
+    }
+},
+{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -73.939323,
+            40.641579
+        ]
+    },
+    "properties": {
+        "box_id": "300867",
+        "name": "AV D/E 40 ST",
+        "zip_name": "2016Jan_Prod_r03_b6"
+    }
+},
+{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -73.941223,
+            40.64146
+        ]
+    },
+    "properties": {
+        "box_id": "300868",
+        "name": "AV D/E 38 ST",
+        "zip_name": "2016Jan_Prod_r03_b6"
+    }
+},
+{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -73.943161,
+            40.641342
+        ]
+    },
+    "properties": {
+        "box_id": "300869",
+        "name": "AV D/BROOKLYN AV",
+        "zip_name": "2016Jan_Prod_r03_b6"
+    }
+},
+{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -73.949692,
+            40.638584
+        ]
+    },
+    "properties": {
+        "box_id": "300873",
+        "name": "FOSTER AV/E 29 ST",
+        "zip_name": "2016Jan_Prod_r03_b6"
+    }
+},
+{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -73.951027,
+            40.6385
+        ]
+    },
+    "properties": {
+        "box_id": "300874",
+        "name": "FOSTER AV/ROGERS AV",
+        "zip_name": "2016Jan_Prod_r03_b6"
+    }
+},
+{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -73.953476,
+            40.638496
+        ]
+    },
+    "properties": {
+        "box_id": "300875",
+        "name": "FOSTER AV/FLATBUSH AV",
+        "zip_name": "2016Jan_Prod_r03_b6"
+    }
+},
+{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -73.954773,
+            40.638172
+        ]
+    },
+    "properties": {
+        "box_id": "300876",
+        "name": "FOSTER AV/BEDFORD AV",
+        "zip_name": "2016Jan_Prod_r03_b6"
+    }
+},
+{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -73.95694,
+            40.6371
+        ]
+    },
+    "properties": {
+        "box_id": "300877",
+        "name": "FOSTER AV/E 22 ST",
+        "zip_name": "2016Jan_Prod_r03_b6"
+    }
+},
+{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -73.958801,
+            40.636204
+        ]
+    },
+    "properties": {
+        "box_id": "300878",
+        "name": "FOSTER AV/OCEAN AV",
+        "zip_name": "2016Jan_Prod_r03_b6"
+    }
+},
+{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -73.960793,
+            40.635246
+        ]
+    },
+    "properties": {
+        "box_id": "300879",
+        "name": "FOSTER AV/E 18 ST",
+        "zip_name": "2016Jan_Prod_r03_b6"
+    }
+},
+{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -73.962997,
+            40.63419
+        ]
+    },
+    "properties": {
+        "box_id": "300880",
+        "name": "FOSTER AV/MARLBOROUGH RD",
+        "zip_name": "2016Jan_Prod_r03_b6"
+    }
+},
+{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -73.964325,
+            40.633549
+        ]
+    },
+    "properties": {
+        "box_id": "300881",
+        "name": "FOSTER AV/RUGBY RD",
+        "zip_name": "2016Jan_Prod_r03_b6"
+    }
+},
+{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -73.966614,
+            40.63245
+        ]
+    },
+    "properties": {
+        "box_id": "300882",
+        "name": "FOSTER AV/CONEY ISLAND AV",
+        "zip_name": "2016Jan_Prod_r03_b6"
+    }
+},
+{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -73.96714,
+            40.633999
+        ]
+    },
+    "properties": {
+        "box_id": "300883",
+        "name": "CONEY ISLAND AV/NEWKIRK AV",
+        "zip_name": "2016Jan_Prod_r03_b6"
+    }
+},
+{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -73.96814,
+            40.63509
+        ]
+    },
+    "properties": {
+        "box_id": "300884",
+        "name": "18 AV/CONEY ISLAND AV",
+        "zip_name": "2016Jan_Prod_r03_b6"
+    }
+},
+{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -73.970245,
+            40.63409
+        ]
+    },
+    "properties": {
+        "box_id": "300885",
+        "name": "18 AV/E 8 ST",
+        "zip_name": "2016Jan_Prod_r03_b6"
+    }
+},
+{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -73.971809,
+            40.63335
+        ]
+    },
+    "properties": {
+        "box_id": "300886",
+        "name": "18 AV/OCEAN PY",
+        "zip_name": "2016Jan_Prod_r03_b6"
+    }
+},
+{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -73.973572,
+            40.632526
+        ]
+    },
+    "properties": {
+        "box_id": "300887",
+        "name": "18 AV/E 5 ST",
+        "zip_name": "2016Jan_Prod_r03_b6"
+    }
+},
+{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -73.976463,
+            40.631165
+        ]
+    },
+    "properties": {
+        "box_id": "300888",
+        "name": "18 AV/E 2 ST",
+        "zip_name": "2016Jan_Prod_r03_b6"
+    }
+},
+{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -73.97757,
+            40.630642
+        ]
+    },
+    "properties": {
+        "box_id": "300889",
+        "name": "18 AV/MC DONALD AV",
+        "zip_name": "2016Jan_Prod_r03_b6"
+    }
+},
+{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -73.978638,
+            40.630131
+        ]
+    },
+    "properties": {
+        "box_id": "300890",
+        "name": "18 AV/45 ST",
+        "zip_name": "2016Jan_Prod_r03_b6"
+    }
+},
+{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -73.980171,
+            40.629261
+        ]
+    },
+    "properties": {
+        "box_id": "300891",
+        "name": "18 AV/47 ST",
+        "zip_name": "2016Jan_Prod_r03_b6"
+    }
+},
+{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -73.981316,
+            40.628113
+        ]
+    },
+    "properties": {
+        "box_id": "300892",
+        "name": "18 AV/49 ST",
+        "zip_name": "2016Jan_Prod_r03_b6"
+    }
+},
+{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -73.981888,
+            40.627544
+        ]
+    },
+    "properties": {
+        "box_id": "300893",
+        "name": "18 AV/50 ST",
+        "zip_name": "2016Jan_Prod_r03_b6"
+    }
+},
+{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -73.983047,
+            40.626362
+        ]
+    },
+    "properties": {
+        "box_id": "300894",
+        "name": "18 AV/52 ST",
+        "zip_name": "2016Jan_Prod_r03_b6"
+    }
+},
+{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -73.984726,
+            40.624691
+        ]
+    },
+    "properties": {
+        "box_id": "300895",
+        "name": "18 AV/55 ST",
+        "zip_name": "2016Jan_Prod_r03_b6"
+    }
+},
+{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -73.98642,
+            40.622982
+        ]
+    },
+    "properties": {
+        "box_id": "300896",
+        "name": "18 AV/58 ST",
+        "zip_name": "2016Jan_Prod_r03_b6"
+    }
+},
+{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -73.988754,
+            40.620663
+        ]
+    },
+    "properties": {
+        "box_id": "300898",
+        "name": "18 AV/62 ST",
+        "zip_name": "2016Jan_Prod_r03_b6"
+    }
+},
+{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -73.989906,
+            40.619514
+        ]
+    },
+    "properties": {
+        "box_id": "300899",
+        "name": "18 AV/64 ST",
+        "zip_name": "2016Jan_Prod_r03_b6"
+    }
+},
+{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -73.991142,
+            40.618298
+        ]
+    },
+    "properties": {
+        "box_id": "300900",
+        "name": "18 AV/66 ST",
+        "zip_name": "2016Jan_Prod_r03_b6"
+    }
+},
+{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -73.992332,
+            40.617115
+        ]
+    },
+    "properties": {
+        "box_id": "300901",
+        "name": "18 AV/68 ST",
+        "zip_name": "2016Jan_Prod_r03_b6"
+    }
+},
+{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -73.993416,
+            40.616043
+        ]
+    },
+    "properties": {
+        "box_id": "300902",
+        "name": "18 AV/70 ST",
+        "zip_name": "2016Jan_Prod_r03_b6"
+    }
+},
+{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -73.994553,
+            40.614922
+        ]
+    },
+    "properties": {
+        "box_id": "300903",
+        "name": "18 AV/72 ST",
+        "zip_name": "2016Jan_Prod_r03_b6"
+    }
+},
+{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -73.996315,
+            40.613159
+        ]
+    },
+    "properties": {
+        "box_id": "300904",
+        "name": "18 AV/BAY RIDGE PY",
+        "zip_name": "2016Jan_Prod_r03_b6"
+    }
+},
+{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -73.997498,
+            40.611984
+        ]
+    },
+    "properties": {
+        "box_id": "300905",
+        "name": "18 AV/77 ST",
+        "zip_name": "2016Jan_Prod_r03_b6"
+    }
+},
+{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -73.998596,
+            40.610901
+        ]
+    },
+    "properties": {
+        "box_id": "300906",
+        "name": "18 AV/79 ST",
+        "zip_name": "2016Jan_Prod_r03_b6"
+    }
+},
+{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -74.001602,
+            40.608192
+        ]
+    },
+    "properties": {
+        "box_id": "300908",
+        "name": "18 AV/NEW UTRECHT AV",
+        "zip_name": "2016Jan_Prod_r03_b6"
+    }
+},
+{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -74.002556,
+            40.607418
+        ]
+    },
+    "properties": {
+        "box_id": "300909",
+        "name": "18 AV/86 ST",
+        "zip_name": "2016Jan_Prod_r03_b6"
+    }
+},
+{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -74.004715,
+            40.605385
+        ]
+    },
+    "properties": {
+        "box_id": "300910",
+        "name": "18 AV/BENSON AV",
+        "zip_name": "2016Jan_Prod_r03_b6"
+    }
+},
+{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -74.006149,
+            40.604004
+        ]
+    },
+    "properties": {
+        "box_id": "300911",
+        "name": "18 AV/BATH AV",
+        "zip_name": "2016Jan_Prod_r03_b6"
+    }
+},
+{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -74.007454,
+            40.602753
+        ]
+    },
+    "properties": {
+        "box_id": "300912",
+        "name": "18 AV/CROPSEY AV",
+        "zip_name": "2016Jan_Prod_r03_b6"
+    }
+},
+{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -74.010086,
+            40.604095
+        ]
+    },
+    "properties": {
+        "box_id": "300913",
+        "name": "CROPSEY AV/17 AV",
+        "zip_name": "2016Jan_Prod_r03_b6"
+    }
+},
+{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -74.01268,
+            40.605446
+        ]
+    },
+    "properties": {
+        "box_id": "300914",
+        "name": "CROPSEY AV/16 AV",
+        "zip_name": "2016Jan_Prod_r03_b6"
+    }
+},
+{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -74.014915,
+            40.606613
+        ]
+    },
+    "properties": {
+        "box_id": "300915",
+        "name": "CROPSEY AV/15 AV",
+        "zip_name": "2016Jan_Prod_r03_b6"
+    }
+},
+{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -74.016113,
+            40.60725
+        ]
+    },
+    "properties": {
+        "box_id": "300916",
+        "name": "CROPSEY AV/BAY 7 ST",
+        "zip_name": "2016Jan_Prod_r03_b6"
+    }
+},
+{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -73.918289,
+            40.651405
+        ]
+    },
+    "properties": {
+        "box_id": "301746",
+        "name": "REMSEN AV/AV A",
+        "zip_name": "2016Jan_Prod_r03_b6"
+    }
+},
+{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -73.9198,
+            40.652523
+        ]
+    },
+    "properties": {
+        "box_id": "301783",
+        "name": "REMSEN AV/CHURCH AV",
+        "zip_name": "2016Jan_Prod_r03_b6"
+    }
+},
+{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -73.917801,
+            40.654095
+        ]
+    },
+    "properties": {
+        "box_id": "302721",
+        "name": "CHURCH AV/E 93 ST",
+        "zip_name": "2016Jan_Prod_r03_b6"
+    }
+},
+{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -73.916679,
+            40.654816
+        ]
+    },
+    "properties": {
+        "box_id": "302722",
+        "name": "CHURCH AV/E 94 ST",
+        "zip_name": "2016Jan_Prod_r03_b6"
+    }
+},
+{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -73.915077,
+            40.655857
+        ]
+    },
+    "properties": {
+        "box_id": "302723",
+        "name": "CHURCH AV/E 96 ST",
+        "zip_name": "2016Jan_Prod_r03_b6"
+    }
+},
+{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -73.914223,
+            40.656403
+        ]
+    },
+    "properties": {
+        "box_id": "302724",
+        "name": "CHURCH AV/ROCKAWAY PY",
+        "zip_name": "2016Jan_Prod_r03_b6"
+    }
+},
+{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -73.948517,
+            40.640083
+        ]
+    },
+    "properties": {
+        "box_id": "303477",
+        "name": "NOSTRAND AV/NEWKIRK AV",
+        "zip_name": "2016Jan_Prod_r03_b6"
+    }
+},
+{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -74.024452,
+            40.610268
+        ]
+    },
+    "properties": {
+        "box_id": "305872",
+        "name": "7 AV/POLY PL",
+        "zip_name": "2016Jan_Prod_r03_b6"
+    }
+},
+{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -74.023605,
+            40.612347
+        ]
+    },
+    "properties": {
+        "box_id": "305873",
+        "name": "7 AV/POLY PREP ENT",
+        "zip_name": "2016Jan_Prod_r03_b6"
+    }
+},
+{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -74.023087,
+            40.614189
+        ]
+    },
+    "properties": {
+        "box_id": "305951",
+        "name": "7 AV/92 ST",
+        "zip_name": "2016Jan_Prod_r03_b6"
+    }
+},
+{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -74.024002,
+            40.611946
+        ]
+    },
+    "properties": {
+        "box_id": "305952",
+        "name": "7 AV/POLY PREP ENT",
+        "zip_name": "2016Jan_Prod_r03_b6"
+    }
+},
+{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -73.924309,
+            40.646732
+        ]
+    },
+    "properties": {
+        "box_id": "306344",
+        "name": "BEVERLY RD/KINGS HY",
+        "zip_name": "2016Jan_Prod_r03_b6"
+    }
+},
+{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -73.936661,
+            40.641613
+        ]
+    },
+    "properties": {
+        "box_id": "306345",
+        "name": "AV D/E 42 ST",
+        "zip_name": "2016Jan_Prod_r03_b6"
+    }
+},
+{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -73.918312,
+            40.653938
+        ]
+    },
+    "properties": {
+        "box_id": "306454",
+        "name": "CHURCH AV/E 93 ST",
+        "zip_name": "2016Jan_Prod_r03_b6"
+    }
+},
+{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -74.007996,
+            40.602848
+        ]
+    },
+    "properties": {
+        "box_id": "306470",
+        "name": "CROPSEY AV/BAY 17 ST",
+        "zip_name": "2016Jan_Prod_r03_b6"
+    }
+},
+{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -73.919556,
+            40.652954
+        ]
+    },
+    "properties": {
+        "box_id": "306838",
+        "name": "CHURCH AV/REMSEN AV",
+        "zip_name": "2016Jan_Prod_r03_b6"
+    }
+},
+{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -73.912094,
+            40.654228
+        ]
+    },
+    "properties": {
+        "box_id": "306843",
+        "name": "LINDEN BL/ROCKAWAY PY",
+        "zip_name": "2016Jan_Prod_r03_b6"
+    }
+},
+{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -73.916679,
+            40.64938
+        ]
+    },
+    "properties": {
+        "box_id": "306845",
+        "name": "AV B/REMSEN AV",
+        "zip_name": "2016Jan_Prod_r03_b6"
+    }
+},
+{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -73.918869,
+            40.647961
+        ]
+    },
+    "properties": {
+        "box_id": "306846",
+        "name": "AV B/E 87 ST",
+        "zip_name": "2016Jan_Prod_r03_b6"
+    }
+},
+{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -73.919815,
+            40.647179
+        ]
+    },
+    "properties": {
+        "box_id": "306869",
+        "name": "AV B/RALPH AV",
+        "zip_name": "2016Jan_Prod_r03_b6"
+    }
+},
+{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -73.916504,
+            40.649807
+        ]
+    },
+    "properties": {
+        "box_id": "306870",
+        "name": "REMSEN AV/AV B",
+        "zip_name": "2016Jan_Prod_r03_b6"
+    }
+},
+{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -74.032333,
+            40.614529
+        ]
+    },
+    "properties": {
+        "box_id": "306945",
+        "name": "4 AV/97 ST",
+        "zip_name": "2016Jan_Prod_r03_b6"
+    }
+},
+{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -74.027245,
+            40.616684
+        ]
+    },
+    "properties": {
+        "box_id": "306959",
+        "name": "92 ST/FT HAMILTON PY",
+        "zip_name": "2016Jan_Prod_r03_b6"
+    }
+},
+{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -73.987251,
+            40.622147
+        ]
+    },
+    "properties": {
+        "box_id": "307099",
+        "name": "18 AV/60 ST",
+        "zip_name": "2016Jan_Prod_r03_b6"
+    }
+},
+{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -73.909477,
+            40.65588
+        ]
+    },
+    "properties": {
+        "box_id": "307115",
+        "name": "HEGEMAN AV/THOMAS S BOYLAND ST",
+        "zip_name": "2016Jan_Prod_r03_b6"
+    }
+},
+{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -74.017334,
+            40.607517
+        ]
+    },
+    "properties": {
+        "box_id": "307128",
+        "name": "CROPSEY AV/14 AV",
+        "zip_name": "2016Jan_Prod_r03_b6"
+    }
+},
+{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -74.026733,
+            40.616665
+        ]
+    },
+    "properties": {
+        "box_id": "307203",
+        "name": "92 ST/GATLING PL",
+        "zip_name": "2016Jan_Prod_r03_b6"
+    }
+},
+{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -74.022408,
+            40.608234
+        ]
+    },
+    "properties": {
+        "box_id": "307313",
+        "name": "CROPSEY AV/VETERANS HOSPITAL",
+        "zip_name": "2016Jan_Prod_r03_b6"
+    }
+},
+{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -73.918205,
+            40.648212
+        ]
+    },
+    "properties": {
+        "box_id": "307475",
+        "name": "AV B/E 87 ST",
+        "zip_name": "2016Jan_Prod_r03_b6"
+    }
+},
+{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -74.031143,
+            40.616104
+        ]
+    },
+    "properties": {
+        "box_id": "307582",
+        "name": "4 AV/95 ST",
+        "zip_name": "2016Jan_Prod_r03_b6"
+    }
+},
+{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -74.030319,
+            40.618237
+        ]
+    },
+    "properties": {
+        "box_id": "307593",
+        "name": "4 AV/92 ST",
+        "zip_name": "2016Jan_Prod_r03_b6"
+    }
+},
+{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -73.985115,
+            40.624054
+        ]
+    },
+    "properties": {
+        "box_id": "307666",
+        "name": "18 AV/57 ST",
+        "zip_name": "2016Jan_Prod_r03_b6"
+    }
+},
+{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -73.946022,
+            40.641167
+        ]
+    },
+    "properties": {
+        "box_id": "307914",
+        "name": "AV D/NEW YORK AV",
+        "zip_name": "2016Jan_Prod_r03_b6"
+    }
+},
+{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -74.016396,
+            40.607235
+        ]
+    },
+    "properties": {
+        "box_id": "307951",
+        "name": "CROPSEY AV/BAY 7 ST",
+        "zip_name": "2016Jan_Prod_r03_b6"
+    }
+},
+{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -73.913132,
+            40.656082
+        ]
+    },
+    "properties": {
+        "box_id": "307954",
+        "name": "E 98 ST/CHURCH AV",
+        "zip_name": "2016Jan_Prod_r03_b6"
+    }
+},
+{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -73.917946,
+            40.650864
+        ]
+    },
+    "properties": {
+        "box_id": "307994",
+        "name": "REMSEN AV/AV A",
+        "zip_name": "2016Jan_Prod_r03_b6"
+    }
+},
+{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -74.030602,
+            40.613316
+        ]
+    },
+    "properties": {
+        "box_id": "308038",
+        "name": "FT HAMILTON PKWY/MARINE AV",
+        "zip_name": "2016Jan_Prod_r03_b6"
+    }
+},
+{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -74.029068,
+            40.615101
+        ]
+    },
+    "properties": {
+        "box_id": "308039",
+        "name": "FT HAMILTON PKY/95 ST",
+        "zip_name": "2016Jan_Prod_r03_b6"
+    }
+},
+{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -74.027763,
+            40.617176
+        ]
+    },
+    "properties": {
+        "box_id": "308040",
+        "name": "92 ST/FT HAMILTON PARKWAY",
+        "zip_name": "2016Jan_Prod_r03_b6"
+    }
+},
+{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -74.02317,
+            40.614899
+        ]
+    },
+    "properties": {
+        "box_id": "308176",
+        "name": "92 ST/7 AV",
+        "zip_name": "2016Jan_Prod_r03_b6"
+    }
+},
+{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -74.023209,
+            40.608925
+        ]
+    },
+    "properties": {
+        "box_id": "308270",
+        "name": "CROPSEY AV/OPP VA HOSPITAL",
+        "zip_name": "2016Jan_Prod_r03_b6"
+    }
+},
+{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -73.907318,
+            40.655903
+        ]
+    },
+    "properties": {
+        "box_id": "308313",
+        "name": "ROCKAWAY AV/HEGEMAN AV",
+        "zip_name": "2016Jan_Prod_r03_b6"
+    }
+},
+{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -73.910042,
+            40.654518
+        ]
+    },
+    "properties": {
+        "box_id": "308314",
+        "name": "LINDEN BL/THOMAS BOYLAND ST",
+        "zip_name": "2016Jan_Prod_r03_b6"
+    }
+},
+{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -74.02417,
+            40.609261
+        ]
+    },
+    "properties": {
+        "box_id": "308357",
+        "name": "POLY PL/7 AV",
+        "zip_name": "2016Jan_Prod_r03_b6"
+    }
+},
+{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -74.023079,
+            40.608307
+        ]
+    },
+    "properties": {
+        "box_id": "308358",
+        "name": "VA HOSPITAL/MAIN ENT BAY 1",
+        "zip_name": "2016Jan_Prod_r03_b6"
+    }
+},
+{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -74.023376,
+            40.608406
+        ]
+    },
+    "properties": {
+        "box_id": "308359",
+        "name": "VA HOSPITAL/MAIN ENT BAY 2",
+        "zip_name": "2016Jan_Prod_r03_b6"
+    }
+},
+{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -74.000229,
+            40.609287
+        ]
+    },
+    "properties": {
+        "box_id": "308537",
+        "name": "18 AV/82 ST",
+        "zip_name": "2016Jan_Prod_r03_b6"
+    }
+},
+{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -73.907379,
+            40.656048
+        ]
+    },
+    "properties": {
+        "box_id": "901029",
+        "name": "ROCKAWAY AV/HEGEMAN AV",
+        "zip_name": "2016Jan_Prod_r03_b6"
+    }
+},
+{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -74.031128,
+            40.616261
+        ]
+    },
+    "properties": {
+        "box_id": "901082",
+        "name": "4 AV/95 ST",
+        "zip_name": "2016Jan_Prod_r03_b6"
+    }
+}]

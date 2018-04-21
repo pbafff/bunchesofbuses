@@ -5,6 +5,7 @@ var async = require('async');
 var BrownsvilleModel = require("./modules/brownsville");
 var BayRidgeModel = require('./modules/bayridge');
 var HospModel = require('./modules/hosp');
+var fs = require('file-system');
 
 var APIkey = "e76036fc-f470-4344-8df0-ce31c6cf01eb";
 var format = "json";
@@ -36,6 +37,44 @@ function makeCall() {
 
                     }
                 }
+                function createGeoJSON() {
+                    var busesGeoJSON = {
+                        "type": "FeatureCollection",
+                        "timestamp": new Date().toLocaleString(),
+                        "features": []
+                    };
+
+                    function pushTemplates(arr) {
+                        arr.forEach(element => {
+                            // if (element.length > 0) {
+                                var template = {
+                                    "type": "Feature",
+                                    "geometry": {
+                                        "type": "Point",
+                                        "coordinates": []
+                                    },
+                                    "properties": {
+
+                                    }
+                                };
+                                template.geometry.coordinates.push(element.VehicleLocation.Longitude);
+                                template.geometry.coordinates.push(element.VehicleLocation.Latitude);
+                                template.properties.VehicleRef = element.VehicleRef;
+                                template.properties.DirectionRef = element.DirectionRef;
+                                template.properties.DestinationName = element.DestinationName;
+                                template.properties.Distances = element.MonitoredCall.Extensions.Distances;
+                                busesGeoJSON.features.push(template);
+                            // };
+                        });
+                    };
+                    pushTemplates(brownsville);
+                    pushTemplates(bayRidge);
+                    pushTemplates(hosp);
+                    busesGeoJSON = JSON.stringify(busesGeoJSON);
+                    fs.writeFile('./busLocations.json', busesGeoJSON);
+                };
+                createGeoJSON();
+
                 var brownsville_instance = new BrownsvilleModel({ buses: brownsville, length: brownsville.length });
                 brownsville_instance.save(function (err) {
                     if (err) return handleError(err);

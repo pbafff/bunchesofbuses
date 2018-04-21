@@ -6,14 +6,14 @@ var vis = d3.select("body").append("svg")
 
 d3.json("/filtered-b8-routes-and-stops.json", function (json) {
   // create a first guess for the projection
-  var center = d3.geo.centroid(json)
+  var center = d3.geoCentroid(json)
   var scale = 150;
   var offset = [width / 2, height / 2];
-  var projection = d3.geo.mercator().scale(scale).center(center)
+  var projection = d3.geoMercator().scale(scale).center(center)
     .translate(offset);
 
   // create the path
-  var path = d3.geo.path().projection(projection);
+  var path = d3.geoPath().projection(projection);
 
   // using the path determine the bounds of the current map and use 
   // these to determine better values for the scale and translation
@@ -25,7 +25,7 @@ d3.json("/filtered-b8-routes-and-stops.json", function (json) {
   height - (bounds[0][1] + bounds[1][1]) / 1.9];
 
   // new projection
-  projection = d3.geo.mercator().center(center)
+  projection = d3.geoMercator().center(center)
     .scale(scale).translate(offset);
   path = path.projection(projection);
 
@@ -33,7 +33,7 @@ d3.json("/filtered-b8-routes-and-stops.json", function (json) {
   vis.append("rect").attr('width', width).attr('height', height)
     .style('stroke', 'black').style('fill', 'none');
 
-  function filterJson(item) { 
+  function filterJson(item) {
     if (item.geometry.type === "MultiLineString" || item.geometry.type === "LineString" || item.geometry.type === "Point") {
       return true;
     }

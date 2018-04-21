@@ -8,7 +8,13 @@ block content
   p Number of documents in bayridgemodels: !{JSON.stringify(bayridgenumber)}
 
   script(src="https://d3js.org/d3.v4.min.js")
-
+  script(src="/javascripts/dist/socket.io.js")
+  script.
+    var socket = io.connect('http://localhost:3000');
+    socket.on('news', function (data) {
+    console.log(data);
+    socket.emit('my other event', { my: 'data' });
+    });
   script(src='/javascripts/d3BusMap.js')
   //- script(type='text/javascript').
   //- var bayridgenumber = !{bayridgenumber}

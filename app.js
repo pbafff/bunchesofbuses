@@ -8,8 +8,6 @@ var favicon = require('serve-favicon');
 var apicall = require('./apicall');
 
 
-var index = require('./routes/index');
-var users = require('./routes/users');
 //Import the mongoose module
 var mongoose = require('mongoose');
 
@@ -25,6 +23,9 @@ var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
 var app = express();
+app.io = require('socket.io')();
+var index = require('./routes/index')(app.io);
+var users = require('./routes/users')(app.io);
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));

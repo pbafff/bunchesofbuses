@@ -19,6 +19,9 @@ module.exports = function (io) {
     function makeCall() {
         setInterval(() => {
             request({ url: APIURL }, function (error, response, body) {
+                if (error) {
+                    console.log('error: ', error);
+                };
                 var brownsville = [];
                 var hosp = [];
                 var bayRidge = [];
@@ -61,9 +64,16 @@ module.exports = function (io) {
                             template.properties.VehicleRef = element.VehicleRef;
                             template.properties.DirectionRef = element.DirectionRef;
                             template.properties.DestinationName = element.DestinationName;
-                            template.properties.Distances = element.MonitoredCall.Extensions.Distances;
-                            template.properties.StopPointName = element.MonitoredCall.StopPointName;
-                            busesGeoJSON.features.push(template);
+                            try {
+                                template.properties.Distances = element.MonitoredCall.Extensions.Distances; //Cannot read property 'Extensions' of undefined
+                            }
+                            catch (err) {
+                                console.log(err)
+                            }
+                            finally {
+                                template.properties.StopPointName = element.MonitoredCall.StopPointName;
+                                busesGeoJSON.features.push(template);
+                            }
                             // };
                         });
                     };
@@ -115,7 +125,7 @@ module.exports = function (io) {
         setInterval(() => {
             socket.emit('JSON update', busesGeoJSON);
         }, 60000);
-        
+
         //End ON Events
     });
     return router;

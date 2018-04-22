@@ -8,11 +8,6 @@ var precount;
 
 /* GET home page. */
 router.get('/', function (req, res, next) {
-  BayRidgeModels.count({}, function (err, count) {
-    if (err) return handleError(err);
-    precount = count;
-    console.log(precount)
-  });
   res.header('Cache-Control', 'no-cache, no-store, must-revalidate');
   res.render('index', { title: 'B8 the dumb bus', bayridgenumber: precount });
   

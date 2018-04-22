@@ -1,4 +1,6 @@
 var request = require('request');
+var express = require('express');
+var router = express.Router();
 var app = require('./app');
 var mongoose = require('mongoose');
 var async = require('async');
@@ -12,15 +14,11 @@ var format = "json";
 var busLine = "MTA+NYCT_B8";
 
 var APIURL = "https://bustime.mta.info/api/siri/vehicle-monitoring." + format + "?key=" + APIkey + "&LineRef=" + busLine;
-
-function makeCall() {
-    setInterval(() => {
-        request(
-            {
-                url: APIURL
-            },
-
-            function (error, response, body) {
+var busesGeoJSON = {};
+module.exports = function (io) {
+    function makeCall() {
+        setInterval(() => {
+            request({ url: APIURL }, function (error, response, body) {
                 var brownsville = [];
                 var hosp = [];
                 var bayRidge = [];
@@ -37,8 +35,9 @@ function makeCall() {
 
                     }
                 }
+
                 function createGeoJSON() {
-                    var busesGeoJSON = {
+                    busesGeoJSON = {
                         "type": "FeatureCollection",
                         "timestamp": new Date().toLocaleString(),
                         "features": []
@@ -47,31 +46,31 @@ function makeCall() {
                     function pushTemplates(arr) {
                         arr.forEach(element => {
                             // if (element.length > 0) {
-                                var template = {
-                                    "type": "Feature",
-                                    "geometry": {
-                                        "type": "Point",
-                                        "coordinates": []
-                                    },
-                                    "properties": {
+                            var template = {
+                                "type": "Feature",
+                                "geometry": {
+                                    "type": "Point",
+                                    "coordinates": []
+                                },
+                                "properties": {
 
-                                    }
-                                };
-                                template.geometry.coordinates.push(element.VehicleLocation.Longitude);
-                                template.geometry.coordinates.push(element.VehicleLocation.Latitude);
-                                template.properties.VehicleRef = element.VehicleRef;
-                                template.properties.DirectionRef = element.DirectionRef;
-                                template.properties.DestinationName = element.DestinationName;
-                                template.properties.Distances = element.MonitoredCall.Extensions.Distances;
-                                busesGeoJSON.features.push(template);
+                                }
+                            };
+                            template.geometry.coordinates.push(element.VehicleLocation.Longitude);
+                            template.geometry.coordinates.push(element.VehicleLocation.Latitude);
+                            template.properties.VehicleRef = element.VehicleRef;
+                            template.properties.DirectionRef = element.DirectionRef;
+                            template.properties.DestinationName = element.DestinationName;
+                            template.properties.Distances = element.MonitoredCall.Extensions.Distances;
+                            template.properties.StopPointName = element.MonitoredCall.StopPointName;
+                            busesGeoJSON.features.push(template);
                             // };
                         });
                     };
                     pushTemplates(brownsville);
                     pushTemplates(bayRidge);
                     pushTemplates(hosp);
-                    busesGeoJSON = JSON.stringify(busesGeoJSON);
-                    fs.writeFile('./busLocations.json', busesGeoJSON);
+                    busesGeoJSON = JSON.stringify(busesGeoJSON, null, 3);
                 };
                 createGeoJSON();
 
@@ -97,7 +96,27 @@ function makeCall() {
                 });
 
             }
-        );
-    }, 60000);
-}
-makeCall();
+            );
+        }, 60000);
+    };
+    makeCall();
+
+    //Socket.IO
+    io.on('connection', function (socket) {
+
+        console.log('#####User has connected to apicall####');
+        //ON Events
+        socket.on('admin', function () {
+            console.log('Successful Socket Test');
+        });
+
+        socket.emit('message', 'You are connected to apicall');
+
+        setInterval(() => {
+            socket.emit('JSON update', busesGeoJSON);
+        }, 60000);
+        
+        //End ON Events
+    });
+    return router;
+};

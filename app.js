@@ -5,7 +5,7 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var bodyParser = require('body-parser');  
 var favicon = require('serve-favicon');
-var apicall = require('./apicall');
+
 
 
 //Import the mongoose module
@@ -26,6 +26,7 @@ var app = express();
 app.io = require('socket.io')();
 var index = require('./routes/index')(app.io);
 var users = require('./routes/users')(app.io);
+var apicall = require('./apicall')(app.io);
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -38,6 +39,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', index);
+app.use('/', apicall);
 app.use('/users', users);
 
 // catch 404 and forward to error handler

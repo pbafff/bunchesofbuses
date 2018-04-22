@@ -1,1 +1,336 @@
-{"type":"FeatureCollection","timestamp":"2018-4-21 03:05:38","features":[{"type":"Feature","geometry":{"type":"Point","coordinates":[-74.023052,40.614722]},"properties":{"VehicleRef":"MTA NYCT_664","DirectionRef":"0","DestinationName":"BROWNSVILLE ROCKAWAY AV","Distances":{"PresentableDistance":"approaching","DistanceFromCall":76.71,"StopsFromCall":0,"CallDistanceAlongRoute":1487.49}}},{"type":"Feature","geometry":{"type":"Point","coordinates":[-73.924181,40.646668]},"properties":{"VehicleRef":"MTA NYCT_397","DirectionRef":"1","DestinationName":"BAY RIDGE 95 ST STA","Distances":{"PresentableDistance":"at stop","DistanceFromCall":10.1,"StopsFromCall":0,"CallDistanceAlongRoute":2553.78}}}]}
+{
+   "type": "FeatureCollection",
+   "timestamp": "2018-4-21 20:22:53",
+   "features": [
+      {
+         "type": "Feature",
+         "geometry": {
+            "type": "Point",
+            "coordinates": [
+               -74.002031,
+               40.607751
+            ]
+         },
+         "properties": {
+            "VehicleRef": "MTA NYCT_778",
+            "DirectionRef": "0",
+            "DestinationName": "BROWNSVILLE ROCKAWAY AV",
+            "Distances": {
+               "DistanceFromCall": 0,
+               "StopsFromCall": 0,
+               "PresentableDistance": "at stop",
+               "CallDistanceAlongRoute": 4543.26
+            },
+            "StopPointName": "18 AV/85 ST"
+         }
+      },
+      {
+         "type": "Feature",
+         "geometry": {
+            "type": "Point",
+            "coordinates": [
+               -73.974891,
+               40.63182
+            ]
+         },
+         "properties": {
+            "VehicleRef": "MTA NYCT_411",
+            "DirectionRef": "0",
+            "DestinationName": "BROWNSVILLE ROCKAWAY AV",
+            "Distances": {
+               "DistanceFromCall": 8.53,
+               "StopsFromCall": 0,
+               "PresentableDistance": "at stop",
+               "CallDistanceAlongRoute": 8101.95
+            },
+            "StopPointName": "18 AV/E 3 ST"
+         }
+      },
+      {
+         "type": "Feature",
+         "geometry": {
+            "type": "Point",
+            "coordinates": [
+               -73.953065,
+               40.638426
+            ]
+         },
+         "properties": {
+            "VehicleRef": "MTA NYCT_362",
+            "DirectionRef": "0",
+            "DestinationName": "BROWNSVILLE ROCKAWAY AV",
+            "Distances": {
+               "DistanceFromCall": 27.46,
+               "StopsFromCall": 0,
+               "PresentableDistance": "at stop",
+               "CallDistanceAlongRoute": 10535.85
+            },
+            "StopPointName": "FOSTER AV/FLATBUSH AV"
+         }
+      },
+      {
+         "type": "Feature",
+         "geometry": {
+            "type": "Point",
+            "coordinates": [
+               -73.95132,
+               40.638417
+            ]
+         },
+         "properties": {
+            "VehicleRef": "MTA NYCT_809",
+            "DirectionRef": "0",
+            "DestinationName": "BROWNSVILLE ROCKAWAY AV",
+            "Distances": {
+               "DistanceFromCall": 54.48,
+               "StopsFromCall": 0,
+               "PresentableDistance": "approaching",
+               "CallDistanceAlongRoute": 10710.17
+            },
+            "StopPointName": "ROGERS AV/FOSTER AV"
+         }
+      },
+      {
+         "type": "Feature",
+         "geometry": {
+            "type": "Point",
+            "coordinates": [
+               -73.938623,
+               40.641561
+            ]
+         },
+         "properties": {
+            "VehicleRef": "MTA NYCT_435",
+            "DirectionRef": "0",
+            "DestinationName": "BROWNSVILLE ROCKAWAY AV",
+            "Distances": {
+               "DistanceFromCall": 165.46,
+               "StopsFromCall": 0,
+               "PresentableDistance": "< 1 stop away",
+               "CallDistanceAlongRoute": 12178.27
+            },
+            "StopPointName": "AV D/E 42 ST"
+         }
+      },
+      {
+         "type": "Feature",
+         "geometry": {
+            "type": "Point",
+            "coordinates": [
+               -73.909109,
+               40.656004
+            ]
+         },
+         "properties": {
+            "VehicleRef": "MTA NYCT_794",
+            "DirectionRef": "0",
+            "DestinationName": "BROWNSVILLE ROCKAWAY AV",
+            "Distances": {
+               "DistanceFromCall": 178.16,
+               "StopsFromCall": 0,
+               "PresentableDistance": "< 1 stop away",
+               "CallDistanceAlongRoute": 16221.49
+            },
+            "StopPointName": "ROCKAWAY AV/HEGEMAN AV"
+         }
+      },
+      {
+         "type": "Feature",
+         "geometry": {
+            "type": "Point",
+            "coordinates": [
+               -74.007816,
+               40.602828
+            ]
+         },
+         "properties": {
+            "VehicleRef": "MTA NYCT_480",
+            "DirectionRef": "0",
+            "DestinationName": "BROWNSVILLE ROCKAWAY AV",
+            "Distances": {
+               "DistanceFromCall": 199.15,
+               "StopsFromCall": 0,
+               "PresentableDistance": "< 1 stop away",
+               "CallDistanceAlongRoute": 3976.22
+            },
+            "StopPointName": "18 AV/BATH AV"
+         }
+      },
+      {
+         "type": "Feature",
+         "geometry": {
+            "type": "Point",
+            "coordinates": [
+               -73.93359,
+               40.641872
+            ]
+         },
+         "properties": {
+            "VehicleRef": "MTA NYCT_759",
+            "DirectionRef": "1",
+            "DestinationName": "BAY RIDGE 95 ST STA",
+            "Distances": {
+               "DistanceFromCall": 3.11,
+               "StopsFromCall": 0,
+               "PresentableDistance": "at stop",
+               "CallDistanceAlongRoute": 3755.12
+            },
+            "StopPointName": "AV D/E 46 ST"
+         }
+      },
+      {
+         "type": "Feature",
+         "geometry": {
+            "type": "Point",
+            "coordinates": [
+               -74.03098,
+               40.616337
+            ]
+         },
+         "properties": {
+            "VehicleRef": "MTA NYCT_432",
+            "DirectionRef": "1",
+            "DestinationName": "BAY RIDGE 95 ST STA",
+            "Distances": {
+               "DistanceFromCall": 11.48,
+               "StopsFromCall": 0,
+               "PresentableDistance": "at stop",
+               "CallDistanceAlongRoute": 15951.51
+            },
+            "StopPointName": "4 AV/95 ST"
+         }
+      },
+      {
+         "type": "Feature",
+         "geometry": {
+            "type": "Point",
+            "coordinates": [
+               -73.909442,
+               40.654426
+            ]
+         },
+         "properties": {
+            "VehicleRef": "MTA NYCT_230",
+            "DirectionRef": "1",
+            "DestinationName": "BAY RIDGE 95 ST STA",
+            "Distances": {
+               "DistanceFromCall": 12.68,
+               "StopsFromCall": 0,
+               "PresentableDistance": "at stop",
+               "CallDistanceAlongRoute": 354.94
+            },
+            "StopPointName": "LINDEN BL/THOMAS BOYLAND ST"
+         }
+      },
+      {
+         "type": "Feature",
+         "geometry": {
+            "type": "Point",
+            "coordinates": [
+               -73.981442,
+               40.627863
+            ]
+         },
+         "properties": {
+            "VehicleRef": "MTA NYCT_395",
+            "DirectionRef": "1",
+            "DestinationName": "BAY RIDGE 95 ST STA",
+            "Distances": {
+               "DistanceFromCall": 50.98,
+               "StopsFromCall": 0,
+               "PresentableDistance": "approaching",
+               "CallDistanceAlongRoute": 8865.48
+            },
+            "StopPointName": "18 AV/50 ST"
+         }
+      },
+      {
+         "type": "Feature",
+         "geometry": {
+            "type": "Point",
+            "coordinates": [
+               -74.022548,
+               40.608431
+            ]
+         },
+         "properties": {
+            "VehicleRef": "MTA NYCT_478",
+            "DirectionRef": "1",
+            "DestinationName": "BAY RIDGE 95 ST STA",
+            "Distances": {
+               "DistanceFromCall": 77.98,
+               "StopsFromCall": 0,
+               "PresentableDistance": "approaching",
+               "CallDistanceAlongRoute": 13987.04
+            },
+            "StopPointName": "CROPSEY AV/OPP VA HOSPITAL"
+         }
+      },
+      {
+         "type": "Feature",
+         "geometry": {
+            "type": "Point",
+            "coordinates": [
+               -74.030293,
+               40.618048
+            ]
+         },
+         "properties": {
+            "VehicleRef": "MTA NYCT_457",
+            "DirectionRef": "1",
+            "DestinationName": "BAY RIDGE 95 ST STA",
+            "Distances": {
+               "DistanceFromCall": 210.42,
+               "StopsFromCall": 0,
+               "PresentableDistance": "< 1 stop away",
+               "CallDistanceAlongRoute": 15951.51
+            },
+            "StopPointName": "4 AV/95 ST"
+         }
+      },
+      {
+         "type": "Feature",
+         "geometry": {
+            "type": "Point",
+            "coordinates": [
+               -74.02806,
+               40.617275
+            ]
+         },
+         "properties": {
+            "VehicleRef": "MTA NYCT_356",
+            "DirectionRef": "1",
+            "DestinationName": "BAY RIDGE 95 ST STA",
+            "Distances": {
+               "DistanceFromCall": 228.96,
+               "StopsFromCall": 0,
+               "PresentableDistance": "< 1 stop away",
+               "CallDistanceAlongRoute": 15721.96
+            },
+            "StopPointName": "4 AV/92 ST"
+         }
+      },
+      {
+         "type": "Feature",
+         "geometry": {
+            "type": "Point",
+            "coordinates": [
+               -73.994501,
+               40.614853
+            ]
+         },
+         "properties": {
+            "VehicleRef": "MTA NYCT_464",
+            "DirectionRef": "1",
+            "DestinationName": "BAY RIDGE 95 ST STA",
+            "Distances": {
+               "DistanceFromCall": 242.68,
+               "StopsFromCall": 0,
+               "PresentableDistance": "< 1 stop away",
+               "CallDistanceAlongRoute": 10875.87
+            },
+            "StopPointName": "18 AV/BAY RIDGE PY"
+         }
+      }
+   ]
+}

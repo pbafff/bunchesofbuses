@@ -47,7 +47,7 @@ d3.json("/filtered-b8-routes-and-stops.json", function (json) {
     .style("stroke-width", "3")
     .style("fill", "none")
 
-    
+
   function filterStops(item) {
     if (item.geometry.type === "Point") {
       return true;

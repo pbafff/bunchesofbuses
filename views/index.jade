@@ -17,12 +17,21 @@ block content
     socket.on('JSON update', function(json) {
       json = JSON.parse(json);
       console.log(json);
-      vis.selectAll("path").data(json.features).enter().append("path")
-        .attr("d", path)
-        .attr("class", "bus")
+      vis.selectAll("circle").data(json.features).exit().remove();
+      vis.selectAll("circle").data(json.features).enter().append("circle")
+        .classed("bus", true)
+        .attr("r", 8)
         .style("stroke", "green")
         .style("stroke-width", "3")
-      });
+
+      vis.selectAll("circle.bus").data(json.features)
+        .attr("cx", function(d) {
+          return d.geometry.coordinates[0];
+        })
+        .attr("cy", function(d) {
+          return d.geometry.coordinates[1];
+        })
+    });
     
   script(src='/javascripts/d3BusMap.js')
   //- script(type='text/javascript').

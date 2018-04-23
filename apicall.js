@@ -7,7 +7,6 @@ var async = require('async');
 var BrownsvilleModel = require("./modules/brownsville");
 var BayRidgeModel = require('./modules/bayridge');
 var HospModel = require('./modules/hosp');
-var fs = require('file-system');
 
 var APIkey = "e76036fc-f470-4344-8df0-ce31c6cf01eb";
 var format = "json";
@@ -59,20 +58,18 @@ module.exports = function (io) {
 
                                 }
                             };
-                            template.geometry.coordinates.push(element.VehicleLocation.Longitude);
-                            template.geometry.coordinates.push(element.VehicleLocation.Latitude);
-                            template.properties.VehicleRef = element.VehicleRef;
-                            template.properties.DirectionRef = element.DirectionRef;
-                            template.properties.DestinationName = element.DestinationName;
                             try {
+                                template.geometry.coordinates.push(element.VehicleLocation.Longitude);
+                                template.geometry.coordinates.push(element.VehicleLocation.Latitude);
+                                template.properties.VehicleRef = element.VehicleRef;
+                                template.properties.DirectionRef = element.DirectionRef;
+                                template.properties.DestinationName = element.DestinationName;
                                 template.properties.Distances = element.MonitoredCall.Extensions.Distances; //Cannot read property 'Extensions' of undefined
+                                template.properties.StopPointName = element.MonitoredCall.StopPointName;
+                                busesGeoJSON.features.push(template);
                             }
                             catch (err) {
                                 console.log(err)
-                            }
-                            finally {
-                                template.properties.StopPointName = element.MonitoredCall.StopPointName;
-                                busesGeoJSON.features.push(template);
                             }
                             // };
                         });

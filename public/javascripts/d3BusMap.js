@@ -1,20 +1,21 @@
 var width = 1200;
 var height = 600;
 var path;
+var projection;
 
 var vis = d3.select("body").append("svg")
   .attr("width", width).attr("height", height).style('background-color', '#242f3e')
 
 d3.json("/filtered-b8-routes-and-stops.json", function (json) {
   // create a first guess for the projection
-  var center = d3.geoCentroid(json)
+  var center = d3.geo.centroid(json)
   var scale = 150;
   var offset = [width / 2, height / 2];
-  var projection = d3.geoMercator().scale(scale).center(center)
+  projection = d3.geo.mercator().scale(scale).center(center)
     .translate(offset);
 
   // create the path
-  path = d3.geoPath().projection(projection);
+  path = d3.geo.path().projection(projection);
 
   // using the path determine the bounds of the current map and use 
   // these to determine better values for the scale and translation
@@ -26,7 +27,7 @@ d3.json("/filtered-b8-routes-and-stops.json", function (json) {
   height - (bounds[0][1] + bounds[1][1]) / 1.9];
 
   // new projection
-  projection = d3.geoMercator().center(center)
+  projection = d3.geo.mercator().center(center)
     .scale(scale).translate(offset);
   path = path.projection(projection);
 

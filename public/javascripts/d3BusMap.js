@@ -6,6 +6,10 @@ var projection;
 var vis = d3.select("body").append("svg")
   .attr("width", width).attr("height", height).style('background-color', '#242f3e')
 
+var div = d3.select("body").append("div")
+  .attr("class", "tooltip")
+  .style("opacity", 0);
+
 d3.json("/filtered-b8-routes-and-stops.json", function (json) {
   // create a first guess for the projection
   var center = d3.geo.centroid(json)
@@ -62,8 +66,19 @@ d3.json("/filtered-b8-routes-and-stops.json", function (json) {
     .style("stroke", "#ca8f61")
     .style("stroke-width", "3")
     .style("fill", "none")
-    .on('mouseover', dissapear)
-    .on('mouseout', reappear)
+    .on("mouseover", function (d) {
+      div.transition()
+        .duration(200)
+        .style("opacity", .9);
+      div.html(d.properties.name + "<br/>")
+        .style("left", (d3.event.pageX) + "px")
+        .style("top", (d3.event.pageY - 28) + "px");
+    })
+    .on("mouseout", function (d) {
+      div.transition()
+        .duration(500)
+        .style("opacity", 0);
+    });
 
 
 });

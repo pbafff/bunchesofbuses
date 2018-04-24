@@ -21,8 +21,27 @@ block content
       vis.selectAll("circle").data(json.features).enter().append("circle")
         .classed("bus", true)
         .attr("r", 8)
-        .style("stroke", "green")
+        .style("stroke", function(d) {
+          if (d.properties.DirectionRef === "0") {
+            return "green"
+          } else if (d.properties.DirectionRef === "1") {
+            return "red"
+          }
+        })
         .style("stroke-width", "3")
+        .on("mouseover", function (d) {
+          div.transition()
+            .duration(200)
+            .style("opacity", .9);
+          div.html(d.properties.Distances.PresentableDistance + "<br/>" + d.properties.StopPointName + "<br/>")
+            .style("left", (d3.event.pageX) + "px")
+            .style("top", (d3.event.pageY - 28) + "px");
+        })
+        .on("mouseout", function (d) {
+          div.transition()
+            .duration(500)
+            .style("opacity", 0);
+        });
 
       vis.selectAll("circle.bus").data(json.features)
         .attr("cx", function(d) {

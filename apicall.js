@@ -69,6 +69,7 @@ module.exports = function (io) {
                                 busesGeoJSON.features.push(template);
                             }
                             catch (err) {
+                                console.log(new Date().toLocaleString());
                                 console.log(err)
                             }
                             // };
@@ -104,7 +105,7 @@ module.exports = function (io) {
 
             }
             );
-        }, 60000);
+        }, 15000);
     };
     makeCall();
 
@@ -121,7 +122,7 @@ module.exports = function (io) {
 
         setInterval(() => {
             socket.emit('JSON update', busesGeoJSON);
-        }, 60000);
+        }, 15000);
 
         //End ON Events
     });

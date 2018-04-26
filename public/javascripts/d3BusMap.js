@@ -3,8 +3,26 @@ var height = 600;
 var path;
 var projection;
 
+// Define Zoom Function Event Listener
+function zoomFunction() {
+  // var transform = d3.event.transform;
+  var transform = d3.zoomTransform(this);
+  d3.selectAll("path")
+    .attr("transform", "translate(" + transform.x + "," + transform.y + ") scale(" + transform.k + ")");
+  d3.selectAll('circle').attr("transform", function (d) {
+    return "translate(" + transform.x + "," + transform.y + ") scale(" + transform.k + ")";
+  });
+ 
+}
+
+// Define Zoom Behavior
+var zoom = d3.zoom()
+  .scaleExtent([0.2, 10])
+  .on("zoom", zoomFunction);
+
 var vis = d3.select("body").append("svg")
-  .attr("width", width).attr("height", height).style('background-color', '#242f3e')
+  .attr("width", width).attr("height", height).style('background-color', '#242f3e').call(zoom)
+  .append("g")
 
 var div = d3.select("body").append("div")
   .attr("class", "tooltip")
@@ -12,14 +30,14 @@ var div = d3.select("body").append("div")
 
 d3.json("/filtered-b8-routes-and-stops.json", function (json) {
   // create a first guess for the projection
-  var center = d3.geo.centroid(json)
+  var center = d3.geoCentroid(json)
   var scale = 150;
   var offset = [width / 2, height / 2];
-  projection = d3.geo.mercator().scale(scale).center(center)
+  projection = d3.geoMercator().scale(scale).center(center)
     .translate(offset);
 
   // create the path
-  path = d3.geo.path().projection(projection);
+  path = d3.geoPath().projection(projection);
 
   // using the path determine the bounds of the current map and use 
   // these to determine better values for the scale and translation
@@ -31,13 +49,9 @@ d3.json("/filtered-b8-routes-and-stops.json", function (json) {
   height - (bounds[0][1] + bounds[1][1]) / 1.9];
 
   // new projection
-  projection = d3.geo.mercator().center(center)
+  projection = d3.geoMercator().center(center)
     .scale(scale).translate(offset);
   path = path.projection(projection);
-
-  // add a rectangle to see the bound of the svg
-  vis.append("rect").attr('width', width).attr('height', height)
-    .style('stroke', 'black').style('fill', 'none');
 
   function filterJson(item) {
     if (item.geometry.type === "MultiLineString" || item.geometry.type === "LineString") {
@@ -48,6 +62,7 @@ d3.json("/filtered-b8-routes-and-stops.json", function (json) {
 
   vis.selectAll("path").data(json.features.filter(filterJson)).enter().append("path")
     .attr("d", path)
+    .attr('class', 'route')
     .style("stroke", "#ca8f61")
     .style("stroke-width", "3")
     .style("fill", "none")
@@ -82,14 +97,3 @@ d3.json("/filtered-b8-routes-and-stops.json", function (json) {
 
 
 });
-
-function dissapear() {
-  d3.select(this).style(
-    'visibility', 'hidden'
-  )
-}
-function reappear() {
-  d3.select(this).style(
-    'visibility', 'visible'
-  )
-}

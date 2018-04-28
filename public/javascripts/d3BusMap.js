@@ -9,10 +9,12 @@ function zoomFunction() {
   var transform = d3.zoomTransform(this);
   d3.selectAll("path")
     .attr("transform", "translate(" + transform.x + "," + transform.y + ") scale(" + transform.k + ")");
-  d3.selectAll('circle').attr("transform", function (d) {
+  d3.selectAll('circle')
+    .attr("transform", function (d) {
     return "translate(" + transform.x + "," + transform.y + ") scale(" + transform.k + ")";
-  });
- 
+    })
+    .attr("r", 8 / transform.k)
+    .style('stroke-width', 3 / transform.k);
 }
 
 // Define Zoom Behavior
@@ -28,7 +30,7 @@ var div = d3.select("body").append("div")
   .attr("class", "tooltip")
   .style("opacity", 0);
 
-d3.json("/filtered-b8-routes-and-stops.json", function (json) {
+d3.json("/brooklyn.json", function (json) {
   // create a first guess for the projection
   var center = d3.geoCentroid(json)
   var scale = 150;
@@ -53,20 +55,20 @@ d3.json("/filtered-b8-routes-and-stops.json", function (json) {
     .scale(scale).translate(offset);
   path = path.projection(projection);
 
-  function filterJson(item) {
+  function filterRoute(item) {
     if (item.geometry.type === "MultiLineString" || item.geometry.type === "LineString") {
       return true;
     }
     return false;
   }
 
-  vis.selectAll("path").data(json.features.filter(filterJson)).enter().append("path")
+  vis.selectAll("path").data(json.features.filter(filterRoute)).enter().append("path")
     .attr("d", path)
     .attr('class', 'route')
     .style("stroke", "#ca8f61")
     .style("stroke-width", "3")
     .style("fill", "none")
-
+    .style("z-index", "100");
 
   function filterStops(item) {
     if (item.geometry.type === "Point") {
@@ -78,9 +80,10 @@ d3.json("/filtered-b8-routes-and-stops.json", function (json) {
   vis.selectAll("path").data(json.features.filter(filterStops)).enter().append("path")
     .attr("d", path)
     .attr("class", "stop")
-    .style("stroke", "#ca8f61")
+    .style("stroke", "#00b0ff")
     .style("stroke-width", "3")
     .style("fill", "none")
+    .style("z-index", "100")
     .on("mouseover", function (d) {
       div.transition()
         .duration(200)
@@ -94,6 +97,21 @@ d3.json("/filtered-b8-routes-and-stops.json", function (json) {
         .duration(500)
         .style("opacity", 0);
     });
+
+
+  function filterBrooklyn(item) {
+    if (item.geometry.type === "Polygon") {
+      return true;
+    }
+    return false;
+  }
+
+  vis.selectAll("path").data(json.features.filter(filterBrooklyn)).enter().append("path")
+    .attr("d", path)
+    .attr("class", "brooklyn")
+    .style("stroke", "#304a7d")
+    .style("stroke-width", "2")
+    .style("z-index", "1");
 
 
 });

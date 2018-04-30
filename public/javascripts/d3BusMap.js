@@ -11,7 +11,7 @@ function zoomFunction() {
     .attr("transform", "translate(" + transform.x + "," + transform.y + ") scale(" + transform.k + ")");
   d3.selectAll('circle')
     .attr("transform", function (d) {
-    return "translate(" + transform.x + "," + transform.y + ") scale(" + transform.k + ")";
+      return "translate(" + transform.x + "," + transform.y + ") scale(" + transform.k + ")";
     })
     .attr("r", 8 / transform.k)
     .style('stroke-width', 3 / transform.k);

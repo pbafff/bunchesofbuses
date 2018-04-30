@@ -82,26 +82,26 @@ module.exports = function (io) {
                 };
                 createGeoJSON();
 
-                var brownsville_instance = new BrownsvilleModel({ buses: brownsville, length: brownsville.length });
-                brownsville_instance.save(function (err) {
-                    if (err) return handleError(err);
-                    // BrownsvilleModel.count({}, function (err, count) {
-                    //     if (err) return handleError(err);
-                    //     console.log(count);
-                });
-                // BrownsvilleModel.findOne({ 'buses.MonitoredCall.StopPointName': 'AV D/NEW YORK AV' }, function (err, thing) {
+                // var brownsville_instance = new BrownsvilleModel({ buses: brownsville, length: brownsville.length });
+                // brownsville_instance.save(function (err) {
                 //     if (err) return handleError(err);
-                //     console.log(thing);
-                //     })
+                //     // BrownsvilleModel.count({}, function (err, count) {
+                //     //     if (err) return handleError(err);
+                //     //     console.log(count);
                 // });
-                var bayRidge_instance = new BayRidgeModel({ buses: bayRidge, length: bayRidge.length });
-                bayRidge_instance.save(function (err) {
-                    if (err) return handleError(err);
-                });
-                var hosp_instance = new HospModel({ buses: hosp, length: hosp.length });
-                hosp_instance.save(function (err) {
-                    if (err) return handleError(err);
-                });
+                // // BrownsvilleModel.findOne({ 'buses.MonitoredCall.StopPointName': 'AV D/NEW YORK AV' }, function (err, thing) {
+                // //     if (err) return handleError(err);
+                // //     console.log(thing);
+                // //     })
+                // // });
+                // var bayRidge_instance = new BayRidgeModel({ buses: bayRidge, length: bayRidge.length });
+                // bayRidge_instance.save(function (err) {
+                //     if (err) return handleError(err);
+                // });
+                // var hosp_instance = new HospModel({ buses: hosp, length: hosp.length });
+                // hosp_instance.save(function (err) {
+                //     if (err) return handleError(err);
+                // });
 
             }
             );

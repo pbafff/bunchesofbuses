@@ -21,6 +21,6 @@ div.tooltip {
   pointer-events: none;			
 }
 
-path {
+canvas {
   vector-effect: non-scaling-stroke;
 }

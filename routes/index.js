@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var b8 = require('../filtered-b8-routes-and-stops.json');
-var brooklyn = require('../brooklyn.json');
+var brooklyn = require('../topo-brooklyn.json');
 
 /* GET home page. */
 router.get('/', function (req, res, next) {

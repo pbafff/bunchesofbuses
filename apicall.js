@@ -46,8 +46,8 @@ module.exports = function (io) {
                     };
 
                     function pushTemplates(arr) {
+                    // if (arr.length > 0) {
                         arr.forEach(element => {
-                            // if (element.length > 0) {
                             var template = {
                                 "type": "Feature",
                                 "geometry": {
@@ -71,9 +71,9 @@ module.exports = function (io) {
                             catch (err) {
                                 console.log(new Date().toLocaleString());
                                 console.log(err)
-                            }
-                            // };
+                            } 
                         });
+                    // };
                     };
                     pushTemplates(brownsville);
                     pushTemplates(bayRidge);

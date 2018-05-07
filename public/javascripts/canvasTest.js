@@ -22,7 +22,7 @@ d3.json('/brooklyn.json', function (err, json) {
     var stops = topojson.feature(json, json.objects.stops);
 
     // create a first guess for the projection
-    var center = d3.geoCentroid(brooklyn)
+    var center = d3.geoCentroid(routes)
     var scale = 150;
     var offset = [width / 2, height / 2];
     projection = d3.geoMercator().scale(scale).center(center)
@@ -30,15 +30,16 @@ d3.json('/brooklyn.json', function (err, json) {
 
     // create the pathGenerator
     pathGenerator = d3.geoPath().projection(projection);
+    circleGenerator = d3.geoCircle().radius(5);
 
     // using the pathGenerator determine the bounds of the current map and use 
     // these to determine better values for the scale and translation
-    var bounds = pathGenerator.bounds(brooklyn);
+    var bounds = pathGenerator.bounds(routes);
     var hscale = scale * width / (bounds[1][0] - bounds[0][0]);
     var vscale = scale * height / (bounds[1][1] - bounds[0][1]) * 0.9;
     var scale = (hscale < vscale) ? hscale : vscale;
     var offset = [width - (bounds[0][0] + bounds[1][0]) / 2,
-    height - (bounds[0][1] + bounds[1][1]) / 2.2];
+    height - (bounds[0][1] + bounds[1][1]) / 1.9];
 
     // new projection
     projection = d3.geoMercator().center(center)
@@ -53,12 +54,14 @@ d3.json('/brooklyn.json', function (err, json) {
         context.beginPath();
         pathGenerator(brooklyn);
         context.strokeStyle = "#2c66";
+        context.fillStyle = '#2c66';
         context.lineWidth = '0.2';
+        context.fill();
         context.stroke();
 
         context.beginPath();
         pathGenerator(routes);
-        context.strokeStyle = '#ca8f61';
+        context.strokeStyle = '#ff9900';
         context.stroke();
 
         context.beginPath();

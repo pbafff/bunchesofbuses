@@ -9,17 +9,22 @@ function zoomFunction() {
   var transform = d3.zoomTransform(this);
   d3.selectAll("path")
     .attr("transform", "translate(" + transform.x + "," + transform.y + ") scale(" + transform.k + ")");
-  d3.selectAll('circle')
+  d3.selectAll('circle.bus')
     .attr("transform", function (d) {
       return "translate(" + transform.x + "," + transform.y + ") scale(" + transform.k + ")";
     })
     .attr("r", 8 / transform.k)
     .style('stroke-width', 3 / transform.k);
+  d3.selectAll('circle.stop')
+    .attr("transform", function (d) {
+      return "translate(" + transform.x + "," + transform.y + ") scale(" + transform.k + ")";
+    })
+    .attr("r", 2 / transform.k)
 }
 
 // Define Zoom Behavior
 var zoom = d3.zoom()
-  .scaleExtent([0.2, 10])
+  .scaleExtent([0.2, 15])
   .on("zoom", zoomFunction);
 
 var vis = d3.select("body").append("svg")
@@ -30,7 +35,7 @@ var div = d3.select("body").append("div")
   .attr("class", "tooltip")
   .style("opacity", 0);
 
-d3.json("/brooklyn.json", function (json) {
+d3.json("/filtered-b8-routes-and-stops.json", function (json) {
   // create a first guess for the projection
   var center = d3.geoCentroid(json)
   var scale = 150;
@@ -77,13 +82,13 @@ d3.json("/brooklyn.json", function (json) {
     return false;
   }
 
-  vis.selectAll("path").data(json.features.filter(filterStops)).enter().append("path")
-    .attr("d", path)
+  vis.selectAll("path").data(json.features.filter(filterStops)).enter().append("circle")
+    .attr("r", 2)
+    .attr("cx", function (d) { return projection(d.geometry.coordinates)[0] })
+    .attr("cy", function (d) { return projection(d.geometry.coordinates)[1] })
     .attr("class", "stop")
     .style("stroke", "#00b0ff")
-    .style("stroke-width", "3")
-    .style("fill", "none")
-    .style("z-index", "100")
+    .style("fill", "#00b0ff")
     .on("mouseover", function (d) {
       div.transition()
         .duration(200)

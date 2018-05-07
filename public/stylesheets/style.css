@@ -21,6 +21,14 @@ div.tooltip {
   pointer-events: none;			
 }
 
-canvas {
+path {
   vector-effect: non-scaling-stroke;
+}
+
+circle#green {
+  stroke: green
+}
+
+circle#red {
+  stroke: red
 }

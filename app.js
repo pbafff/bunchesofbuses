@@ -23,6 +23,7 @@ var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
 var app = express();
+app.use(favicon(path.join(__dirname,'public','images','favicon.ico')));
 app.io = require('socket.io')();
 var index = require('./routes/index')(app.io);
 var apicall = require('./apicall')(app.io);

@@ -37,7 +37,7 @@ block content
           div.transition()
             .duration(200)
             .style("opacity", .9);
-          div.html(d.properties.Distances.PresentableDistance + "<br/>" + d.properties.StopPointName + "<br/>" + d.properties.VehicleRef + "<br/>" + d.properties.DirectionRef)
+          div.html(d.properties.DestinationName + "<br/>" + d.properties.Distances.PresentableDistance + "<br/>" + d.properties.StopPointName + "<br/>" + d.properties.VehicleRef + "<br/>" + d.properties.ProgressRate + "<br/>" + d.properties.DirectionRef)
             .style("left", (d3.event.pageX) + "px")
             .style("top", (d3.event.pageY - 28) + "px");
         })

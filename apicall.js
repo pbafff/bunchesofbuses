@@ -66,6 +66,7 @@ module.exports = function (io) {
                                 template.properties.DestinationName = element.DestinationName;
                                 template.properties.Distances = element.MonitoredCall.Extensions.Distances; //Cannot read property 'Extensions' of undefined
                                 template.properties.StopPointName = element.MonitoredCall.StopPointName;
+                                template.properties.ProgressRate = element.ProgressRate;
                                 busesGeoJSON.features.push(template);
                             }
                             catch (err) {

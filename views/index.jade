@@ -6,7 +6,7 @@ block content
 
   //- div#map-container
   //-   canvas#container
-
+  .svg-container
 
 
   script(src="https://d3js.org/d3.v4.min.js")
@@ -24,7 +24,7 @@ block content
       vis.selectAll("circle.bus").data(json.features).exit().remove();
       vis.selectAll("circle.bus").data(json.features).enter().append("circle")
         .classed("bus", true)
-        .attr("r", 8)
+        .attr("r", 6)
         .attr("id", function(d) {
           if (d.properties.DirectionRef === "0") {
             return "green"

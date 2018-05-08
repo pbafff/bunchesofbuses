@@ -13,13 +13,13 @@ function zoomFunction() {
     .attr("transform", function (d) {
       return "translate(" + transform.x + "," + transform.y + ") scale(" + transform.k + ")";
     })
-    .attr("r", 8 / transform.k)
+    .attr("r", 6 / transform.k)
     .style('stroke-width', 3 / transform.k);
   d3.selectAll('circle.stop')
     .attr("transform", function (d) {
       return "translate(" + transform.x + "," + transform.y + ") scale(" + transform.k + ")";
     })
-    .attr("r", 2 / transform.k)
+    .attr("r", 1.5 / transform.k)
 }
 
 // Define Zoom Behavior
@@ -27,9 +27,14 @@ var zoom = d3.zoom()
   .scaleExtent([0.2, 15])
   .on("zoom", zoomFunction);
 
-var vis = d3.select("body").append("svg")
-  .attr("width", width).attr("height", height).style('background-color', '#242f3e').call(zoom)
-  .append("g")
+var vis = d3.select("div.svg-container").append("svg")
+  // .attr("width", width)
+  // .attr("height", height)
+  .attr("preserveAspectRatio", "xMinYMin meet")
+  .attr("viewBox", "0 0 1200 600")
+  .classed("svg-content", true)
+  .style('background-color', '#242f3e').call(zoom)
+  .append("g");
 
 var div = d3.select("body").append("div")
   .attr("class", "tooltip")
@@ -83,7 +88,7 @@ d3.json("/filtered-b8-routes-and-stops.json", function (json) {
   }
 
   vis.selectAll("path").data(json.features.filter(filterStops)).enter().append("circle")
-    .attr("r", 2)
+    .attr("r", 1.5)
     .attr("cx", function (d) { return projection(d.geometry.coordinates)[0] })
     .attr("cy", function (d) { return projection(d.geometry.coordinates)[1] })
     .attr("class", "stop")

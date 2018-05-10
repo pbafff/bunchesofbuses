@@ -4,6 +4,7 @@ var router = express.Router();
 var app = require('./app');
 var mongoose = require('mongoose');
 var async = require('async');
+var _ = require('underscore');
 var BrownsvilleModel = require("./modules/brownsville");
 var BayRidgeModel = require('./modules/bayridge');
 var HospModel = require('./modules/hosp');
@@ -16,6 +17,8 @@ var APIURL = "https://bustime.mta.info/api/siri/vehicle-monitoring." + format + 
 var busesGeoJSON = {};
 module.exports = function (io) {
     function makeCall() {
+        var layoverBuses = new Set();
+        var movingBuses = [];
         setInterval(() => {
             request({ url: APIURL }, function (error, response, body) {
                 if (error) {
@@ -46,7 +49,7 @@ module.exports = function (io) {
                     };
 
                     function pushTemplates(arr) {
-                    // if (arr.length > 0) {
+                        // if (arr.length > 0) {
                         arr.forEach(element => {
                             var template = {
                                 "type": "Feature",
@@ -72,9 +75,9 @@ module.exports = function (io) {
                             catch (err) {
                                 console.log(new Date().toLocaleString());
                                 console.log(err)
-                            } 
+                            }
                         });
-                    // };
+                        // };
                     };
                     pushTemplates(brownsville);
                     pushTemplates(bayRidge);
@@ -104,8 +107,23 @@ module.exports = function (io) {
                 //     if (err) return handleError(err);
                 // });
 
-            }
-            );
+                function checkIfLayover(arr) {
+                    arr.forEach(element => {
+                        if (element.ProgressRate === 'noProgress' && element.ProgressStatus === 'layover' && layoverBuses.has(element) !== true) {//test VehicleRef instead
+                            layoverBuses.add(element);
+                        }
+                    });
+                };
+
+                function checkIfMovingYet(arr) {
+                    if (layoverBuses.size > 0) {
+                        layoverBuses.forEach(element => {
+                            movingBuses.push(arr.filter(bus => { bus.VehicleRef === element.VehicleRef && bus.ProgressRate === 'normalProgress' }));
+                            layoverBuses.delete(element);//rewrite as if statement
+                        });
+                    }
+                };
+            });
         }, 15000);
     };
     makeCall();

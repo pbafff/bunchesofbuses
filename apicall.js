@@ -18,7 +18,7 @@ var busesGeoJSON = {};
 module.exports = function (io) {
     function makeCall() {
         var layoverBuses = new Set();
-        var movingBuses = [];
+        var movingBuses = new Set();
         setInterval(() => {
             request({ url: APIURL }, function (error, response, body) {
                 if (error) {
@@ -120,13 +120,17 @@ module.exports = function (io) {
                         layoverBuses.forEach((element) => {
                             arr.forEach(bus => {
                                 if (bus.VehicleRef === element && bus.ProgressRate === 'normalProgress') {
-                                    movingBuses.push(element);
+                                    movingBuses.add(element);
                                     layoverBuses.delete(element);
                                 }
                             });
                         });
                     }
                 };
+
+                function trackBuses(movingBuses) {
+                    
+                }
             });
         }, 15000);
     };

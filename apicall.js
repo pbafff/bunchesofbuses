@@ -107,19 +107,23 @@ module.exports = function (io) {
                 //     if (err) return handleError(err);
                 // });
 
-                function checkIfLayover(arr) {
+                function checkForLayovers(arr) {
                     arr.forEach(element => {
-                        if (element.ProgressRate === 'noProgress' && element.ProgressStatus === 'layover' && layoverBuses.has(element) !== true) {//test VehicleRef instead
-                            layoverBuses.add(element);
+                        if (element.ProgressRate === 'noProgress' && element.ProgressStatus === 'layover' && layoverBuses.has(element.VehicleRef) !== true) {
+                            layoverBuses.add(element.VehicleRef);
                         }
                     });
                 };
 
                 function checkIfMovingYet(arr) {
                     if (layoverBuses.size > 0) {
-                        layoverBuses.forEach(element => {
-                            movingBuses.push(arr.filter(bus => { bus.VehicleRef === element.VehicleRef && bus.ProgressRate === 'normalProgress' }));
-                            layoverBuses.delete(element);//rewrite as if statement
+                        layoverBuses.forEach((element) => {
+                            arr.forEach(bus => {
+                                if (bus.VehicleRef === element && bus.ProgressRate === 'normalProgress') {
+                                    movingBuses.push(element);
+                                    layoverBuses.delete(element);
+                                }
+                            });
                         });
                     }
                 };

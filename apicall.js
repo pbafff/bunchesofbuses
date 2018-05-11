@@ -134,6 +134,7 @@ module.exports = function (io) {
 
     //Socket.IO
     io.on('connection', function (socket) {
+        socket.emit('JSON update', busesGeoJSON);
 
         console.log('#####User has connected to apicall####');
         //ON Events

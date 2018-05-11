@@ -13,7 +13,7 @@ block content
   script(src="//d3js.org/topojson.v1.min.js")
   script(src="/javascripts/dist/socket.io.js")
   script.
-    var socket = io.connect('http://localhost:3000');
+    var socket = io.connect('https://peaceful-beach-15493.herokuapp.com/');
     socket.on('message', function(message) {
       console.log(message);
     });

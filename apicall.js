@@ -4,7 +4,7 @@ var router = express.Router();
 var app = require('./app');
 var mongoose = require('mongoose');
 var async = require('async');
-var _ = require('underscore');
+// var _ = require('underscore');
 var BrownsvilleModel = require("./modules/brownsville");
 var BayRidgeModel = require('./modules/bayridge');
 var HospModel = require('./modules/hosp');
@@ -86,34 +86,39 @@ module.exports = function (io) {
                 };
                 createGeoJSON();
 
-                // var brownsville_instance = new BrownsvilleModel({ buses: brownsville, length: brownsville.length });
-                // brownsville_instance.save(function (err) {
+                var brownsville_instance = new BrownsvilleModel({ buses: brownsville, length: brownsville.length });
+                brownsville_instance.save(function (err) {
+                    if (err) return handleError(err);
+                    // BrownsvilleModel.count({}, function (err, count) {
+                    //     if (err) return handleError(err);
+                    //     console.log(count);
+                });
+                // BrownsvilleModel.findOne({ 'buses.MonitoredCall.StopPointName': 'AV D/NEW YORK AV' }, function (err, thing) {
                 //     if (err) return handleError(err);
-                //     // BrownsvilleModel.count({}, function (err, count) {
-                //     //     if (err) return handleError(err);
-                //     //     console.log(count);
+                //     console.log(thing);
+                //     })
                 // });
-                // // BrownsvilleModel.findOne({ 'buses.MonitoredCall.StopPointName': 'AV D/NEW YORK AV' }, function (err, thing) {
-                // //     if (err) return handleError(err);
-                // //     console.log(thing);
-                // //     })
-                // // });
-                // var bayRidge_instance = new BayRidgeModel({ buses: bayRidge, length: bayRidge.length });
-                // bayRidge_instance.save(function (err) {
-                //     if (err) return handleError(err);
-                // });
-                // var hosp_instance = new HospModel({ buses: hosp, length: hosp.length });
-                // hosp_instance.save(function (err) {
-                //     if (err) return handleError(err);
-                // });
+                var bayRidge_instance = new BayRidgeModel({ buses: bayRidge, length: bayRidge.length });
+                bayRidge_instance.save(function (err) {
+                    if (err) return handleError(err);
+                });
+                var hosp_instance = new HospModel({ buses: hosp, length: hosp.length });
+                hosp_instance.save(function (err) {
+                    if (err) return handleError(err);
+                });
 
                 function checkForLayovers(arr) {
                     arr.forEach(element => {
                         if (element.ProgressRate === 'noProgress' && element.ProgressStatus === 'layover' && layoverBuses.has(element.VehicleRef) !== true) {
                             layoverBuses.add(element.VehicleRef);
+                            console.log('layovers ', layoverBuses);
                         }
                     });
                 };
+
+                checkForLayovers(bayRidge);
+                checkForLayovers(brownsville);
+                checkForLayovers(hosp);
 
                 function checkIfMovingYet(arr) {
                     if (layoverBuses.size > 0) {
@@ -122,14 +127,19 @@ module.exports = function (io) {
                                 if (bus.VehicleRef === element && bus.ProgressRate === 'normalProgress') {
                                     movingBuses.add(element);
                                     layoverBuses.delete(element);
+                                    console.log('moving buses ', movingBuses);
                                 }
                             });
                         });
                     }
                 };
 
+                checkIfMovingYet(bayRidge);
+                checkIfMovingYet(brownsville);
+                checkIfMovingYet(hosp);
+
                 function trackBuses(movingBuses) {
-                    
+
                 }
             });
         }, 15000);

@@ -122,7 +122,7 @@ module.exports = function (io) {
                             console.log(new Date().toLocaleString('en-US', { timeZone: 'UTC' }) + ' | Dissappeared from layovers: ', bus);
                         }
                     };
-
+                    //add buses to layover set
                     theArgs.forEach((arr) => {
                         arr.forEach((element) => {
                             if (element.ProgressRate === 'noProgress' && element.ProgressStatus === 'layover' && layoverBuses.has(element.VehicleRef) !== true) {
@@ -135,23 +135,23 @@ module.exports = function (io) {
 
                 checkForLayovers(bayRidge, brownsville, hosp);
 
-                function checkIfMovingYet(arr) {
-                    if (layoverBuses.size > 0) {
-                        layoverBuses.forEach((element) => {
-                            arr.forEach((bus) => {
-                                if (bus.VehicleRef === element && bus.ProgressRate === 'normalProgress') {
-                                    movingBuses.add(element);
-                                    layoverBuses.delete(element);
-                                    console.log('moving buses ', movingBuses);
-                                }
+                function checkIfMovingYet(...theArgs) {
+                    theArgs.forEach(arr => {
+                        if (layoverBuses.size > 0) {
+                            layoverBuses.forEach((element) => {
+                                arr.forEach((bus) => {
+                                    if (bus.VehicleRef === element && bus.ProgressRate === 'normalProgress') {
+                                        movingBuses.add(element);
+                                        layoverBuses.delete(element);
+                                        console.log('moving buses ', movingBuses);
+                                    }
+                                });
                             });
-                        });
-                    }
+                        }
+                    });
                 };
 
-                checkIfMovingYet(bayRidge);
-                checkIfMovingYet(brownsville);
-                checkIfMovingYet(hosp);
+                checkIfMovingYet(bayRidge, brownsville, hosp);
 
                 function trackBuses(movingBuses) {
 

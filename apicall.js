@@ -115,10 +115,9 @@ module.exports = function (io) {
                             everything.push(flattened);
                         });
                         everything = flatten(everything);
-                    });
-
+                    })
                     for (var bus of layoverBuses) {
-                        if (everything.length > 0 && everything.indexOf(bus) === -1) {
+                        if (everything.indexOf(bus) === -1) {
                             layoverBuses.delete(bus);
                             console.log(new Date().toLocaleString('en-US', { timeZone: 'UTC' }) + ' | Dissappeared from layovers: ', bus);
                         }

@@ -4,7 +4,7 @@ var router = express.Router();
 var app = require('./app');
 var mongoose = require('mongoose');
 var async = require('async');
-var _ = require('underscore');
+var flatten = require('array-flatten');
 var BrownsvilleModel = require("./modules/brownsville");
 var BayRidgeModel = require('./modules/bayridge');
 var HospModel = require('./modules/hosp');
@@ -20,7 +20,7 @@ module.exports = function (io) {
         var layoverBuses = new Set();
         var movingBuses = new Set();
         setInterval(() => {
-            request({ url: APIURL }, function (error, response, body) {
+            request({ url: 'https://215e88da-ab10-40f1-bfe1-229f1c639ac1.mock.pstmn.io/b8' }, function (error, response, body) { //'https://215e88da-ab10-40f1-bfe1-229f1c639ac1.mock.pstmn.io/b8'
                 if (error) {
                     console.log('error: ', error);
                 };
@@ -107,18 +107,39 @@ module.exports = function (io) {
                 //     if (err) return handleError(err);
                 // });
 
-                function checkForLayovers(arr) {
-                    arr.forEach(element => {
-                        if (element.ProgressRate === 'noProgress' && element.ProgressStatus === 'layover' && layoverBuses.has(element.VehicleRef) !== true) {
-                            layoverBuses.add(element.VehicleRef);
+                function checkForLayovers(...theArgs) {
+                    var everything = [];
+                    theArgs.forEach((arr) => {
+                        arr.forEach(element => {
+                            var flattened = flatten(Object.entries(element));
+                            everything.push(flattened);
+                        });
+                        everything = flatten(everything);
+                    });
+                    
+                    for (var bus of layoverBuses) {
+                        if (everything.length > 0 && everything.indexOf(bus) === -1) {
+                            layoverBuses.delete(bus);
+                            console.log(new Date().toLocaleString('en-US', { timeZone: 'UTC' }) + ' | Dissappeared from layovers: ', bus);
                         }
+                    };
+
+                    theArgs.forEach((arr) => {
+                        arr.forEach((element) => {
+                            if (element.ProgressRate === 'noProgress' && element.ProgressStatus === 'layover' && layoverBuses.has(element.VehicleRef) !== true) {
+                                layoverBuses.add(element.VehicleRef);
+                                console.log(new Date().toLocaleString('en-US', { timeZone: 'UTC' }) + ' | Current Layovers: ', layoverBuses);
+                            }
+                        });
                     });
                 };
+
+                checkForLayovers(bayRidge, brownsville, hosp);
 
                 function checkIfMovingYet(arr) {
                     if (layoverBuses.size > 0) {
                         layoverBuses.forEach((element) => {
-                            arr.forEach(bus => {
+                            arr.forEach((bus) => {
                                 if (bus.VehicleRef === element && bus.ProgressRate === 'normalProgress') {
                                     movingBuses.add(element);
                                     layoverBuses.delete(element);
@@ -129,7 +150,7 @@ module.exports = function (io) {
                 };
 
                 function trackBuses(movingBuses) {
-                    
+
                 }
             });
         }, 15000);

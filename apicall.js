@@ -4,7 +4,6 @@ var router = express.Router();
 var app = require('./app');
 var mongoose = require('mongoose');
 var async = require('async');
-var flatten = require('array-flatten');
 var BrownsvilleModel = require("./modules/brownsville");
 var BayRidgeModel = require('./modules/bayridge');
 var HospModel = require('./modules/hosp');
@@ -111,11 +110,10 @@ module.exports = function (io) {
                     var everything = [];
                     theArgs.forEach((arr) => {
                         arr.forEach(element => {
-                            var flattened = flatten(Object.entries(element));
-                            everything.push(flattened);
+                            var values = Object.values(element);
+                            everything.push(values);
                         });
-                        everything = flatten(everything);
-                    })
+                    });
                     for (var bus of layoverBuses) {
                         if (everything.indexOf(bus) === -1) {
                             layoverBuses.delete(bus);

@@ -8,8 +8,6 @@
     "poststart": "node ./apicall.js"
   },
   "dependencies": {
-    "array-flatten": "^2.1.1",
-    "async": "^2.6.0",
     "body-parser": "^1.18.2",
     "cookie-parser": "~1.4.3",
     "debug": "~2.6.9",
@@ -21,8 +19,7 @@
     "morgan": "~1.9.0",
     "request": "^2.85.0",
     "serve-favicon": "^2.5.0",
-    "socket.io": "^2.1.0",
-    "underscore": "^1.9.0"
+    "socket.io": "^2.1.0"
   },
   "devDependencies": {
     "nodemon": "^1.17.2"

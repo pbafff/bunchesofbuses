@@ -3,10 +3,9 @@ var express = require('express');
 var router = express.Router();
 var app = require('./app');
 var mongoose = require('mongoose');
-var async = require('async');
-var BrownsvilleModel = require("./modules/brownsville");
-var BayRidgeModel = require('./modules/bayridge');
-var HospModel = require('./modules/hosp');
+var BrownsvilleModel = require("./models/brownsville");
+var BayRidgeModel = require('./models/bayridge');
+var HospModel = require('./models/hosp');
 
 var APIkey = "e76036fc-f470-4344-8df0-ce31c6cf01eb";
 var format = "json";
@@ -110,8 +109,7 @@ module.exports = function (io) {
                     var everything = [];
                     theArgs.forEach((arr) => {
                         arr.forEach(element => {
-                            var values = Object.values(element);
-                            everything.push(values);
+                            everything.push(element.VehicleRef);
                         });
                     });
                     for (var bus of layoverBuses) {

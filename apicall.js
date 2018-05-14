@@ -18,7 +18,7 @@ module.exports = function (io) {
         var layoverBuses = new Set();
         var movingBuses = new Set();
         setInterval(() => {
-            request({ url: 'https://215e88da-ab10-40f1-bfe1-229f1c639ac1.mock.pstmn.io/b8' }, function (error, response, body) { //'https://215e88da-ab10-40f1-bfe1-229f1c639ac1.mock.pstmn.io/b8'
+            request({ url: APIURL }, function (error, response, body) { //'https://215e88da-ab10-40f1-bfe1-229f1c639ac1.mock.pstmn.io/b8'
                 if (error) {
                     console.log('error: ', error);
                 };
@@ -87,15 +87,7 @@ module.exports = function (io) {
                 var brownsville_instance = new BrownsvilleModel({ buses: brownsville, length: brownsville.length });
                 brownsville_instance.save(function (err) {
                     if (err) return handleError(err);
-                    // BrownsvilleModel.count({}, function (err, count) {
-                    //     if (err) return handleError(err);
-                    //     console.log(count);
                 });
-                // BrownsvilleModel.findOne({ 'buses.MonitoredCall.StopPointName': 'AV D/NEW YORK AV' }, function (err, thing) {
-                //     if (err) return handleError(err);
-                //     console.log(thing);
-                //     })
-                // });
                 var bayRidge_instance = new BayRidgeModel({ buses: bayRidge, length: bayRidge.length });
                 bayRidge_instance.save(function (err) {
                     if (err) return handleError(err);
@@ -123,7 +115,7 @@ module.exports = function (io) {
                         arr.forEach((element) => {
                             if (element.ProgressRate === 'noProgress' && element.ProgressStatus === 'layover' && layoverBuses.has(element.VehicleRef) !== true) {
                                 layoverBuses.add(element.VehicleRef);
-                                console.log(new Date().toLocaleString('en-US', { timeZone: 'UTC' }) + ' | Current Layovers: ', layoverBuses);
+                                console.log(new Date().toLocaleString('en-US', { timeZone: 'America/New_York' }) + ' | Current Layovers: ', layoverBuses);
                             }
                         });
                     });
@@ -150,7 +142,7 @@ module.exports = function (io) {
                 checkIfMovingYet(bayRidge, brownsville, hosp);
 
                 function trackBuses(movingBuses) {
-
+                    
                 }
             });
         }, 15000);

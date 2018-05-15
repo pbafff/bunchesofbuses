@@ -6,6 +6,8 @@ var mongoose = require('mongoose');
 var BrownsvilleModel = require("./models/brownsville");
 var BayRidgeModel = require('./models/bayridge');
 var HospModel = require('./models/hosp');
+var Trip = require('./models/trip');
+var Bunch = require('./models/bunch');
 
 var APIkey = "e76036fc-f470-4344-8df0-ce31c6cf01eb";
 var format = "json";
@@ -141,9 +143,34 @@ module.exports = function (io) {
 
                 checkIfMovingYet(bayRidge, brownsville, hosp);
 
-                function trackBuses(movingBuses) {
-                    
+                function trackBuses(movingBuses, ...theArgs) {
+                    var busMap = new Map();
+                    movingBuses.forEach(bus => {
+                        theArgs.forEach(arr => {
+                            arr.forEach(element => {
+                                if (element.VehicleRef === bus && bus.endsWith('tracking') !== true) {
+                                    busMap.set(element, 'new');
+                                    bus += 'tracking';
+                                } else if (element.VehicleRef === bus.slice(0, 11) && bus.endsWith('tracking') === true) {
+                                    busMap.set(element, 'tracking');
+                                };
+                            })
+                        })
+                    });
+                    for (var [key, value] of busMap) {
+                        if (value === 'new') {
+                            var bus_instance = new Trip({ trip_id: key.VehicleRef + ':' + new Date().toLocaleString('en-US', { timeZone: 'America/New_York' }), vehicleref: key.VehicleRef, begin: Date.now(), destination: key.DestinationName, active: true });
+                            bus_instance.save(function (err) {
+                                if (err) return handleError(err);
+                            });
+                        } else if (value === 'tracking') {
+                            Trip
+                                .findOneAndUpdate //to be continued...
+                        }
+                    };
                 }
+
+                trackBuses(movingBuses, bayRidge, brownsville, hosp);
             });
         }, 15000);
     };

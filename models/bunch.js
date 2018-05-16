@@ -9,6 +9,6 @@ var bunchSchema = new Schema({
     bus_exit: [{ type: Schema.Types.ObjectId, ref: 'Trip' }],
     locations: [{ time: Date, coordinates: [] }], //distances?
     traffic: [{ time: Date, speed: Number }]
-});
+}, {timestamps: true});
 
 module.exports = mongoose.model('Bunch', bunchSchema);

@@ -17,7 +17,7 @@ var APIURL = "https://bustime.mta.info/api/siri/vehicle-monitoring." + format + 
 var busesGeoJSON = {};
 module.exports = function (io) {
     function makeCall() {
-        var layoverBuses = new Set(['MTA NYCT_453']);
+        var layoverBuses = new Set();
         var movingBuses = new Set();
         setInterval(() => {
             request({ url: APIURL }, function (error, response, body) { //'https://215e88da-ab10-40f1-bfe1-229f1c639ac1.mock.pstmn.io/b8'
@@ -109,7 +109,7 @@ module.exports = function (io) {
                     for (var bus of layoverBuses) {
                         if (everything.indexOf(bus) === -1) {
                             layoverBuses.delete(bus);
-                            console.log(new Date().toLocaleString('en-US', { timeZone: 'UTC' }) + ' | Dissappeared from layovers: ', bus);
+                            console.log(new Date().toLocaleString('en-US', { timeZone: 'America/New_York' }) + ' | Dissappeared from layovers: ', bus);
                         }
                     };
                     //add buses to layover set
@@ -166,10 +166,13 @@ module.exports = function (io) {
                             movingBuses.delete(key.VehicleRef);
                         } else if (value === 'tracking' && key.MonitoredCall.Extensions.Distances.PresentableDistance === 'at stop') {
                             console.log('here ', key.VehicleRef, key.MonitoredCall.StopPointName);
-                            Trip
-                                .findOneAndUpdate({ vehicleref: key.VehicleRef }, { $push: { stops: { time: Date.now(), stop: key.MonitoredCall.StopPointName } } }, { sort: { begin: 'desc' } }, function (err, res) {
-                                    if (err) console.log(err);
-                                });
+                            Trip.findOneAndUpdate({ vehicleref: key.VehicleRef }, { $push: { stops: { time: Date.now(), stop: key.MonitoredCall.StopPointName } } }, { sort: { begin: 'desc' }, now: true }, function (err, res) {
+                                if (err) console.log(err);
+                                if (key.ProgressStatus === 'noProgress') {
+                                    Trip.findByIdAndUpdate(res._id, { active: false, end: Date.now() }, function (err, res) { if (err) console.log(err); });
+                                    movingbuses.delete(key.VehicleRef + 'tracking');
+                                }
+                            });
                         }
                     };
                 }

@@ -9,6 +9,6 @@ var tripSchema = new Schema({
     destination: String,
     stops: [{ time: Date, stop: String }],
     active: Boolean
-});
+}, {timestamps: true});
 
 module.exports = mongoose.model('Trip', tripSchema);

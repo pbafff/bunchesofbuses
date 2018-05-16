@@ -17,7 +17,7 @@ var APIURL = "https://bustime.mta.info/api/siri/vehicle-monitoring." + format + 
 var busesGeoJSON = {};
 module.exports = function (io) {
     function makeCall() {
-        var layoverBuses = new Set();
+        var layoverBuses = new Set(['MTA NYCT_453']);
         var movingBuses = new Set();
         setInterval(() => {
             request({ url: APIURL }, function (error, response, body) { //'https://215e88da-ab10-40f1-bfe1-229f1c639ac1.mock.pstmn.io/b8'
@@ -150,8 +150,7 @@ module.exports = function (io) {
                             arr.forEach(element => {
                                 if (element.VehicleRef === bus && bus.endsWith('tracking') !== true) {
                                     busMap.set(element, 'new');
-                                    bus += 'tracking';
-                                } else if (element.VehicleRef === bus.slice(0, 11) && bus.endsWith('tracking') === true) {
+                                } else if (element.VehicleRef === bus.slice(0, 12) && bus.endsWith('tracking') === true) {
                                     busMap.set(element, 'tracking');
                                 };
                             })
@@ -163,16 +162,21 @@ module.exports = function (io) {
                             bus_instance.save(function (err) {
                                 if (err) return handleError(err);
                             });
-                        } else if (value === 'tracking') {
+                            movingBuses.add(key.VehicleRef + 'tracking');
+                            movingBuses.delete(key.VehicleRef);
+                        } else if (value === 'tracking' && key.MonitoredCall.Extensions.Distances.PresentableDistance === 'at stop') {
+                            console.log('here ', key.VehicleRef, key.MonitoredCall.StopPointName);
                             Trip
-                                .findOneAndUpdate //to be continued...
+                                .findOneAndUpdate({ vehicleref: key.VehicleRef }, { $push: { stops: { time: Date.now(), stop: key.MonitoredCall.StopPointName } } }, { sort: { begin: 'desc' } }, function (err, res) {
+                                    if (err) console.log(err);
+                                });
                         }
                     };
                 }
 
                 trackBuses(movingBuses, bayRidge, brownsville, hosp);
             });
-        }, 15000);
+        }, 5000);
     };
     makeCall();
 

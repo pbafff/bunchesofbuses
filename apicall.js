@@ -170,7 +170,7 @@ module.exports = function (io) {
                                 if (err) console.log(err);
                                 if (key.ProgressStatus === 'noProgress') {
                                     Trip.findByIdAndUpdate(res._id, { active: false, end: Date.now() }, function (err, res) { if (err) console.log(err); });
-                                    movingbuses.delete(key.VehicleRef + 'tracking');
+                                    movingBuses.delete(key.VehicleRef + 'tracking');
                                 }
                             });
                         }

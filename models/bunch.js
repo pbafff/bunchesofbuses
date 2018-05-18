@@ -7,7 +7,7 @@ var bunchSchema = new Schema({
     end: Date,
     bus_enter: [{ type: Schema.Types.ObjectId, ref: 'Trip' }],
     bus_exit: [{ type: Schema.Types.ObjectId, ref: 'Trip' }],
-    locations: [{ time: Date, coordinates: [] }], //distances?
+    locations: [{ time: Date, coordinates: [Number] }], //distances?
     traffic: [{ time: Date, speed: Number }]
 }, {timestamps: true});
 

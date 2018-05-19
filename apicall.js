@@ -152,7 +152,7 @@ module.exports = function (io) {
                                     busMap.set(element, 'new');
                                 } else if (element.VehicleRef === bus.slice(0, 12) && bus.endsWith('tracking') === true) {
                                     busMap.set(element, 'tracking');
-                                };
+                                }
                             })
                         })
                     });
@@ -166,15 +166,15 @@ module.exports = function (io) {
                             movingBuses.delete(key.VehicleRef);
                         } else if (value === 'tracking' && key.MonitoredCall.Extensions.Distances.PresentableDistance === 'at stop') {
                             console.log('here ', key.VehicleRef, key.MonitoredCall.StopPointName);
-                            Trip.findOneAndUpdate({ vehicleref: key.VehicleRef }, { $push: { stops: { time: Date.now(), stop: key.MonitoredCall.StopPointName } } }, { sort: { begin: 'desc' }, now: true }, function (err, res) {
+                            Trip.findOneAndUpdate({ vehicleref: key.VehicleRef }, { $push: { stops: { time: Date.now(), stop: key.MonitoredCall.StopPointName } } }, { sort: { begin: 'desc' }, now: true }, function (err, doc) {
                                 if (err) console.log(err);
                                 if (key.ProgressStatus === 'noProgress') {
-                                    Trip.findByIdAndUpdate(res._id, { active: false, end: Date.now() }, function (err, res) { if (err) console.log(err); });
+                                    Trip.findByIdAndUpdate(doc._id, { active: false, end: Date.now() }, function (err, doc) { if (err) console.log(err); });
                                     movingBuses.delete(key.VehicleRef + 'tracking');
                                 }
                             });
                         }
-                    };
+                    }
                 }
 
                 trackBuses(movingBuses, bayRidge, brownsville, hosp);

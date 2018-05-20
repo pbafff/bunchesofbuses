@@ -3,6 +3,7 @@ var express = require('express');
 var router = express.Router();
 var app = require('./app');
 var mongoose = require('mongoose');
+var flatten = require('arr-flatten');
 var BrownsvilleModel = require("./models/brownsville");
 var BayRidgeModel = require('./models/bayridge');
 var HospModel = require('./models/hosp');
@@ -148,10 +149,14 @@ module.exports = function (io) {
                     movingBuses.forEach(bus => {
                         theArgs.forEach(arr => {
                             arr.forEach(element => {
-                                if (element.VehicleRef === bus && bus.endsWith('tracking') !== true) {
+                                if (element.VehicleRef === bus && bus.includes('tracking') !== true && bus.includes('bunched') !== true) {
                                     busMap.set(element, 'new');
-                                } else if (element.VehicleRef === bus.slice(0, 12) && bus.endsWith('tracking') === true) {
-                                    busMap.set(element, 'tracking');
+                                } else if (element.VehicleRef === bus.slice(0, 12) && bus.includes('tracking')) {
+                                    if (bus.includes('bunched')) {
+                                        busMap.set(element, 'trackingbunched');
+                                    } else {
+                                        busMap.set(element, 'tracking');
+                                    }
                                 }
                             })
                         })
@@ -164,15 +169,30 @@ module.exports = function (io) {
                             });
                             movingBuses.add(key.VehicleRef + 'tracking');
                             movingBuses.delete(key.VehicleRef);
-                        } else if (value === 'tracking' && key.MonitoredCall.Extensions.Distances.PresentableDistance === 'at stop') {
+                        }
+                        if (value.includes('tracking') && key.MonitoredCall.Extensions.Distances.PresentableDistance === 'at stop') {
                             console.log('here ', key.VehicleRef, key.MonitoredCall.StopPointName);
                             Trip.findOneAndUpdate({ vehicleref: key.VehicleRef }, { $push: { stops: { time: Date.now(), stop: key.MonitoredCall.StopPointName } } }, { sort: { begin: 'desc' }, now: true }, function (err, doc) {
                                 if (err) console.log(err);
                                 if (key.ProgressStatus === 'noProgress') {
                                     Trip.findByIdAndUpdate(doc._id, { active: false, end: Date.now() }, function (err, doc) { if (err) console.log(err); });
-                                    movingBuses.delete(key.VehicleRef + 'tracking');
+                                    movingBuses.delete(Array.from(movingBuses).filter(element => element.includes(key.VehicleRef + 'tracking'))[0]);
                                 }
                             });
+                        }
+                        if (value.includes('tracking') && flatten(theArgs).filter(element => element.DestinationName === key.DestinationName).some(element => Math.abs(key.MonitoredCall.Extensions.Distances.CallDistanceAlongRoute - element.MonitoredCall.Extensions.Distances.CallDistanceAlongRoute) <= 609.6)) {
+                            if (value.includes('bunched')) {
+                                Trip.findOneAndUpdate({ vehicleref: key.VehicleRef }, { $inc: { bunch_time: 5 } }, { sort: { begin: 'desc' } }, function (err, doc) {
+                                    if (err) console.log(err);
+                                });
+                            } else {
+                                movingBuses.add(key.VehicleRef + 'trackingbunched');
+                                movingBuses.delete(key.VehicleRef + 'tracking');
+                            }
+                        }
+                        if (value.includes('trackingbunched') && flatten(theArgs).filter(element => element.DestinationName === key.DestinationName).some(element => Math.abs(key.MonitoredCall.Extensions.Distances.CallDistanceAlongRoute - element.MonitoredCall.Extensions.Distances.CallDistanceAlongRoute) <= 609.6) !== true) {
+                            movingBuses.add(key.VehicleRef + 'tracking');
+                            movingBuses.delete(key.VehicleRef + 'trackingbunched');
                         }
                     }
                 }

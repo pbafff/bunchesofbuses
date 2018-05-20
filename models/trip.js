@@ -9,7 +9,8 @@ var tripSchema = new Schema({
     destination: String,
     stops: [{ time: Date, stop: String }],
     active: Boolean,
-    bunch: [{ time: Date, speed: Number, coordinates: [Number] }]
+    bunch_data: [{ time: Date, speed: Number, coordinates: [Number] }],
+    bunch_time: Number
 }, { timestamps: true });
 
 module.exports = mongoose.model('Trip', tripSchema);

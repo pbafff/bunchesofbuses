@@ -172,13 +172,13 @@ module.exports = function (io) {
                         }
                         if (value.includes('tracking') && key.MonitoredCall.Extensions.Distances.PresentableDistance === 'at stop') {
                             console.log('here ', key.VehicleRef, key.MonitoredCall.StopPointName);
-                            Trip.findOneAndUpdate({ vehicleref: key.VehicleRef }, { $push: { stops: { time: Date.now(), stop: key.MonitoredCall.StopPointName } } }, { sort: { begin: 'desc' }, now: true }, function (err, doc) {
+                            Trip.findOneAndUpdate({ vehicleref: key.VehicleRef }, { $push: { stops: { time: Date.now(), stop: key.MonitoredCall.StopPointName } } }, { sort: { begin: 'desc' } }, function (err, doc) {
                                 if (err) console.log(err);
-                                if (key.ProgressStatus === 'noProgress') {
-                                    Trip.findByIdAndUpdate(doc._id, { active: false, end: Date.now() }, function (err, doc) { if (err) console.log(err); });
-                                    movingBuses.delete(Array.from(movingBuses).filter(element => element.includes(key.VehicleRef + 'tracking'))[0]);
-                                }
                             });
+                        }
+                        if (key.ProgressRate === 'noProgress') {
+                            Trip.findOneAndUpdate({ vehicleref: key.VehicleRef }, { active: false, end: Date.now() }, { sort: { begin: 'desc' } }, function (err, doc) { if (err) console.log(err); });
+                            movingBuses.delete(Array.from(movingBuses).filter(element => element.includes(key.VehicleRef + 'tracking'))[0]);
                         }
                         if (value.includes('tracking') && flatten(theArgs).filter(element => element.DestinationName === key.DestinationName && element.VehicleRef !== key.VehicleRef).some(element => Math.abs(key.MonitoredCall.Extensions.Distances.CallDistanceAlongRoute - element.MonitoredCall.Extensions.Distances.CallDistanceAlongRoute) <= 609.6)) {
                             if (value.includes('bunched')) {

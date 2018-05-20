@@ -18,10 +18,10 @@ var APIURL = "https://bustime.mta.info/api/siri/vehicle-monitoring." + format + 
 var busesGeoJSON = {};
 module.exports = function (io) {
     function makeCall() {
-        var layoverBuses = new Set();
+        var layoverBuses = new Set(['MTA NYCT_999', 'MTA NYCT_461']);
         var movingBuses = new Set();
         setInterval(() => {
-            request({ url: APIURL }, function (error, response, body) { //'https://215e88da-ab10-40f1-bfe1-229f1c639ac1.mock.pstmn.io/b8'
+            request({ url: 'https://215e88da-ab10-40f1-bfe1-229f1c639ac1.mock.pstmn.io/b8' }, function (error, response, body) { //'https://215e88da-ab10-40f1-bfe1-229f1c639ac1.mock.pstmn.io/b8'
                 if (error) {
                     console.log('error: ', error);
                 };
@@ -180,7 +180,7 @@ module.exports = function (io) {
                                 }
                             });
                         }
-                        if (value.includes('tracking') && flatten(theArgs).filter(element => element.DestinationName === key.DestinationName).some(element => Math.abs(key.MonitoredCall.Extensions.Distances.CallDistanceAlongRoute - element.MonitoredCall.Extensions.Distances.CallDistanceAlongRoute) <= 609.6)) {
+                        if (value.includes('tracking') && flatten(theArgs).filter(element => element.DestinationName === key.DestinationName && element.VehicleRef !== key.VehicleRef).some(element => Math.abs(key.MonitoredCall.Extensions.Distances.CallDistanceAlongRoute - element.MonitoredCall.Extensions.Distances.CallDistanceAlongRoute) <= 609.6)) {
                             if (value.includes('bunched')) {
                                 Trip.findOneAndUpdate({ vehicleref: key.VehicleRef }, { $inc: { bunch_time: 5 } }, { sort: { begin: 'desc' } }, function (err, doc) {
                                     if (err) console.log(err);
@@ -190,7 +190,7 @@ module.exports = function (io) {
                                 movingBuses.delete(key.VehicleRef + 'tracking');
                             }
                         }
-                        if (value.includes('trackingbunched') && flatten(theArgs).filter(element => element.DestinationName === key.DestinationName).some(element => Math.abs(key.MonitoredCall.Extensions.Distances.CallDistanceAlongRoute - element.MonitoredCall.Extensions.Distances.CallDistanceAlongRoute) <= 609.6) !== true) {
+                        if (value.includes('trackingbunched') && flatten(theArgs).filter(element => element.DestinationName === key.DestinationName && element.VehicleRef !== key.VehicleRef).some(element => Math.abs(key.MonitoredCall.Extensions.Distances.CallDistanceAlongRoute - element.MonitoredCall.Extensions.Distances.CallDistanceAlongRoute) <= 609.6) !== true) {
                             movingBuses.add(key.VehicleRef + 'tracking');
                             movingBuses.delete(key.VehicleRef + 'trackingbunched');
                         }

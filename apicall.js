@@ -18,7 +18,7 @@ var APIURL = "https://bustime.mta.info/api/siri/vehicle-monitoring." + format + 
 var busesGeoJSON = {};
 module.exports = function (io) {
     function makeCall() {
-        var layoverBuses = new Set(['MTA NYCT_999', 'MTA NYCT_461']);
+        var layoverBuses = new Set();
         var movingBuses = new Set();
         setInterval(() => {
             request({ url: 'https://215e88da-ab10-40f1-bfe1-229f1c639ac1.mock.pstmn.io/b8' }, function (error, response, body) { //'https://215e88da-ab10-40f1-bfe1-229f1c639ac1.mock.pstmn.io/b8'
@@ -182,13 +182,13 @@ module.exports = function (io) {
                         }
                         if (value.includes('tracking') && flatten(theArgs).filter(element => element.DestinationName === key.DestinationName && element.VehicleRef !== key.VehicleRef).some(element => Math.abs(key.MonitoredCall.Extensions.Distances.CallDistanceAlongRoute - element.MonitoredCall.Extensions.Distances.CallDistanceAlongRoute) <= 609.6)) {
                             if (value.includes('bunched')) {
-                                Trip.findOneAndUpdate({ vehicleref: key.VehicleRef }, { $inc: { bunch_time: 5 } }, { sort: { begin: 'desc' }, new: true }, function (err, doc) {
+                                Trip.findOneAndUpdate({ vehicleref: key.VehicleRef }, { $inc: { bunch_time: 5 } }, { sort: { begin: 'desc' }, new: true }, ).exec(function (err, doc) {
                                     if (err) console.log(err);
-                                    if (doc.bunch_time % 120 === 0) {
+                                    if (doc.bunch_time % 10 === 0) {
                                         request({ url: 'https://api.tomtom.com/traffic/services/4/flowSegmentData/relative/18/json?key=yp3zE7zS5up8EAEqWyHMf2owUBBWIUNr&point=' + key.VehicleLocation.Latitude + ',' + key.VehicleLocation.Longitude + '&unit=MPH' }, function (error, response, body) {
                                             body = JSON.parse(body);
-                                            let speedRatio = body.currentSpeed / body.freeFlowSpeed;
-                                            Trip.findByIdAndUpdate(doc._id, { $push: { bunch_data: { time: Date.now(), speed: speedRatio, coordinates: [key.VehicleLocation.Latitude, key.VehicleLocation.Longitude] } } }, function (err, doc) { console.log(err); });
+                                            let speedRatio = body.flowSegmentData.currentSpeed / body.flowSegmentData.freeFlowSpeed;
+                                            Trip.findByIdAndUpdate(doc._id, { $push: { bunch_data: { time: Date.now(), speed: speedRatio, coordinates: [key.VehicleLocation.Latitude, key.VehicleLocation.Longitude] } } }, function (err, doc) { if (err) console.log(err); });
                                         });
                                     }
                                 });

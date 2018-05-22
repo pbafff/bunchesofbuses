@@ -16,10 +16,10 @@ var busLine = "MTA+NYCT_B8";
 var APIURL = "https://bustime.mta.info/api/siri/vehicle-monitoring." + format + "?key=" + APIkey + "&LineRef=" + busLine;
 var busesGeoJSON = {};
 var brownsville, hosp, bayridge;
-var layoverBuses = new Set(['MTA NYCT_999', 'MTA NYCT_461']);
+var layoverBuses = new Set();
 var movingBuses = new Set();
 setInterval(() => {
-    request({ url: 'https://215e88da-ab10-40f1-bfe1-229f1c639ac1.mock.pstmn.io/b8' }, function (error, response, body) { //'https://215e88da-ab10-40f1-bfe1-229f1c639ac1.mock.pstmn.io/b8'
+    request({ url: APIURL }, function (error, response, body) { //'https://215e88da-ab10-40f1-bfe1-229f1c639ac1.mock.pstmn.io/b8'
         if (error) {
             console.log('error: ', error);
         };

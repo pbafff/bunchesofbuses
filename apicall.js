@@ -185,7 +185,7 @@ function trackBuses(movingBuses, ...theArgs) {
             if (value.includes('bunched')) {
                 Trip.findOneAndUpdate({ vehicleref: key.VehicleRef }, { $inc: { bunch_time: 5 } }, { sort: { begin: 'desc' }, new: true }, ).exec(function (err, doc) {
                     if (err) console.log(err);
-                    if (doc.bunch_time % 10 === 0) {
+                    if (doc.bunch_time % 120 === 0) {
                         request({ url: 'https://api.tomtom.com/traffic/services/4/flowSegmentData/relative/18/json?key=yp3zE7zS5up8EAEqWyHMf2owUBBWIUNr&point=' + key.VehicleLocation.Latitude + ',' + key.VehicleLocation.Longitude + '&unit=MPH' }, function (error, response, body) {
                             body = JSON.parse(body);
                             let speedRatio = body.flowSegmentData.currentSpeed / body.flowSegmentData.freeFlowSpeed;
@@ -221,6 +221,7 @@ module.exports = function (io) {
         socket.emit('message', 'You are connected to apicall');
 
         setInterval(() => {
+            createGeoJSON();
             socket.emit('JSON update', busesGeoJSON);
         }, 5000);
 

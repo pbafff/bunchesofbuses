@@ -22,7 +22,7 @@ router.get('/brooklyn.json', function (req, res, next) {
 router.get('/index', function(req, res, next) {
   console.log('get')
   res.header('Cache-Control', 'no-cache, no-store, must-revalidate');
-  Trip.find({}, 'vehicleref begin')
+  Trip.find({}, '_id begin')
     .exec(function (err, trips) {
       if (err) { return next(err); }
       //Successful, so render

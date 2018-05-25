@@ -187,9 +187,14 @@ function trackBuses(movingBuses, ...theArgs) {
                     if (err) console.log(err);
                     if (doc.bunch_time % 120 === 0) {
                         request({ url: 'https://api.tomtom.com/traffic/services/4/flowSegmentData/relative/18/json?key=yp3zE7zS5up8EAEqWyHMf2owUBBWIUNr&point=' + key.VehicleLocation.Latitude + ',' + key.VehicleLocation.Longitude + '&unit=MPH' }, function (error, response, body) {
-                            body = JSON.parse(body);
-                            let speedRatio = body.flowSegmentData.currentSpeed / body.flowSegmentData.freeFlowSpeed;
-                            Trip.findByIdAndUpdate(doc._id, { $push: { bunch_data: { time: Date.now(), speed: speedRatio, coordinates: [key.VehicleLocation.Latitude, key.VehicleLocation.Longitude] } } }, function (err, doc) { if (err) console.log(err); });
+                            try {
+                                body = JSON.parse(body);
+                                let speedRatio = body.flowSegmentData.currentSpeed / body.flowSegmentData.freeFlowSpeed;
+                                Trip.findByIdAndUpdate(doc._id, { $push: { bunch_data: { time: Date.now(), speed: speedRatio, coordinates: [key.VehicleLocation.Latitude, key.VehicleLocation.Longitude] } } }, function (err, doc) { if (err) console.log(err); });
+                            }
+                            catch(err) {
+                                console.log(err)
+                            }
                         });
                     }
                 });
@@ -209,7 +214,7 @@ module.exports = function (io) {
 
     //Socket.IO
     io.on('connection', function (socket) {
-        createGeoJSON();
+        // createGeoJSON();
         socket.emit('JSON update', busesGeoJSON);
 
         console.log('#####User has connected to apicall####');

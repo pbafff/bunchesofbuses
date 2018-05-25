@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
+import test from './components/test';
 
 // class App extends Component {
 //   render() {
@@ -45,8 +46,9 @@ class App extends Component {
           <img src={logo} className="App-logo" alt="logo" />
           <h1 className="App-title">Welcome to React</h1>
         </header>
-        <h1>Trips</h1>
-
+        <test />
+        <test />
+        <test />
         {/* <div className="App-intro">{this.state.response}</div> */}
         {this.state.response.map(user =>
           <div key={user._id}>{user.begin}</div>

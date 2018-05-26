@@ -1,16 +1,25 @@
 import React, { Component } from 'react';
 
-class test extends Component {
-    constructor() {
-        super();
-        this.state = 'red';
+class Test extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            color: "red"
+        }
     }
+
+   flipColor() {
+       if (this.state.color === 'red') {
+           return this.setState({color: "blue"})
+       }
+       return this.setState({color: "red"})
+   }
 
 
     render() {
-        return(<div onclick={x => {this.state = "blue"}}> test test {this.state} </div>)
+        return(<div onClick = {() => this.flipColor()}> test test {this.state.color} </div>)
     }
     
 }
 
-export default test;
+export default Test;

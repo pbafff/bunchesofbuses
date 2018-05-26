@@ -1,24 +1,8 @@
 import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
-import test from './components/test';
+import Test from './components/test';
 
-// class App extends Component {
-//   render() {
-//     return (
-//       <div className="App">
-//         <header className="App-header">
-//           <img src={logo} className="App-logo" alt="logo" />
-//           <h1 className="App-title">Welcome to React</h1>
-//         </header>
-//         <p className="App-intro">
-//           To get started, edit <code>src/App.js</code> and save to reload.
-//           hello world test
-//         </p>
-//       </div>
-//     )
-//   }
-// }
 class App extends Component {
   state = {
     response: []
@@ -46,9 +30,10 @@ class App extends Component {
           <img src={logo} className="App-logo" alt="logo" />
           <h1 className="App-title">Welcome to React</h1>
         </header>
-        <test />
-        <test />
-        <test />
+        <Test />
+        <Test />
+        <Test />
+        <button onClick = {() => this.callApi()}/>
         {/* <div className="App-intro">{this.state.response}</div> */}
         {this.state.response.map(user =>
           <div key={user._id}>{user.begin}</div>

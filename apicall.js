@@ -40,18 +40,18 @@ setInterval(() => {
             }
         }
 
-        var brownsville_instance = new BrownsvilleModel({ buses: brownsville, length: brownsville.length });
-        brownsville_instance.save(function (err) {
-            if (err) return handleError(err);
-        });
-        var bayRidge_instance = new BayRidgeModel({ buses: bayRidge, length: bayRidge.length });
-        bayRidge_instance.save(function (err) {
-            if (err) return handleError(err);
-        });
-        var hosp_instance = new HospModel({ buses: hosp, length: hosp.length });
-        hosp_instance.save(function (err) {
-            if (err) return handleError(err);
-        });
+        // var brownsville_instance = new BrownsvilleModel({ buses: brownsville, length: brownsville.length });
+        // brownsville_instance.save(function (err) {
+        //     if (err) return handleError(err);
+        // });
+        // var bayRidge_instance = new BayRidgeModel({ buses: bayRidge, length: bayRidge.length });
+        // bayRidge_instance.save(function (err) {
+        //     if (err) return handleError(err);
+        // });
+        // var hosp_instance = new HospModel({ buses: hosp, length: hosp.length });
+        // hosp_instance.save(function (err) {
+        //     if (err) return handleError(err);
+        // });
 
         checkForLayovers(bayRidge, brownsville, hosp);
 
@@ -163,6 +163,10 @@ function trackBuses(movingBuses, ...theArgs) {
         })
     });
     for (var [key, value] of busMap) {
+        if (key.ProgressRate === 'noProgress') {
+            Trip.findOneAndUpdate({ vehicleref: key.VehicleRef }, { active: false, end: Date.now() }, { sort: { begin: 'desc' } }, function (err, doc) { if (err) console.log(err); });
+            movingBuses.delete(Array.from(movingBuses).filter(element => element.includes(key.VehicleRef))[0]);
+        }
         if (value === 'new') {
             var bus_instance = new Trip({ trip_id: key.VehicleRef + ':' + new Date().toLocaleString('en-US', { timeZone: 'America/New_York' }), vehicleref: key.VehicleRef, begin: Date.now(), destination: key.DestinationName, active: true });
             bus_instance.save(function (err) {
@@ -171,17 +175,12 @@ function trackBuses(movingBuses, ...theArgs) {
             movingBuses.add(key.VehicleRef + 'tracking');
             movingBuses.delete(key.VehicleRef);
         }
-        if (value.includes('tracking') && key.MonitoredCall.Extensions.Distances.PresentableDistance === 'at stop') {
-            console.log('here ', key.VehicleRef, key.MonitoredCall.StopPointName);
-            Trip.findOneAndUpdate({ vehicleref: key.VehicleRef }, { $push: { stops: { time: Date.now(), stop: key.MonitoredCall.StopPointName } } }, { sort: { begin: 'desc' } }, function (err, doc) {
+        if (value.includes('tracking') && key.MonitoredCall && key.MonitoredCall.Extensions.Distances.PresentableDistance === 'at stop' && key.ProgressRate !== 'noProgress') {
+            Trip.findOneAndUpdate({ vehicleref: key.VehicleRef, 'stops.stop': { $ne: key.MonitoredCall.StopPointName }, active: true }, { $push: { stops: { time: Date.now(), stop: key.MonitoredCall.StopPointName } } }, { sort: { begin: 'desc' }, new: true }, function (err, doc) {
                 if (err) console.log(err);
             });
         }
-        if (key.ProgressRate === 'noProgress') {
-            Trip.findOneAndUpdate({ vehicleref: key.VehicleRef }, { active: false, end: Date.now() }, { sort: { begin: 'desc' } }, function (err, doc) { if (err) console.log(err); });
-            movingBuses.delete(Array.from(movingBuses).filter(element => element.includes(key.VehicleRef + 'tracking'))[0]);
-        }
-        if (value.includes('tracking') && flatten(theArgs).filter(element => element.DestinationName === key.DestinationName && element.VehicleRef !== key.VehicleRef).some(element => Math.abs(key.MonitoredCall.Extensions.Distances.CallDistanceAlongRoute - element.MonitoredCall.Extensions.Distances.CallDistanceAlongRoute) <= 609.6)) {
+        if (value.includes('tracking') && flatten(theArgs).filter(element => element.DestinationName === key.DestinationName && element.VehicleRef !== key.VehicleRef && element.MonitoredCall).some(element => Math.abs(key.MonitoredCall.Extensions.Distances.CallDistanceAlongRoute - element.MonitoredCall.Extensions.Distances.CallDistanceAlongRoute) <= 609.6)) {
             if (value.includes('bunched')) {
                 Trip.findOneAndUpdate({ vehicleref: key.VehicleRef }, { $inc: { bunch_time: 5 } }, { sort: { begin: 'desc' }, new: true }, ).exec(function (err, doc) {
                     if (err) console.log(err);
@@ -192,7 +191,7 @@ function trackBuses(movingBuses, ...theArgs) {
                                 let speedRatio = body.flowSegmentData.currentSpeed / body.flowSegmentData.freeFlowSpeed;
                                 Trip.findByIdAndUpdate(doc._id, { $push: { bunch_data: { time: Date.now(), speed: speedRatio, coordinates: [key.VehicleLocation.Latitude, key.VehicleLocation.Longitude] } } }, function (err, doc) { if (err) console.log(err); });
                             }
-                            catch(err) {
+                            catch (err) {
                                 console.log(err)
                             }
                         });
@@ -214,7 +213,7 @@ module.exports = function (io) {
 
     //Socket.IO
     io.on('connection', function (socket) {
-        // createGeoJSON();
+        createGeoJSON();
         socket.emit('JSON update', busesGeoJSON);
 
         console.log('#####User has connected to apicall####');
@@ -232,5 +231,5 @@ module.exports = function (io) {
 
         //End ON Events
     });
-    return router;
+    return router; 
 };

@@ -15,7 +15,7 @@ var busLine = "MTA+NYCT_B8";
 
 var APIURL = "https://bustime.mta.info/api/siri/vehicle-monitoring." + format + "?key=" + APIkey + "&LineRef=" + busLine;
 var busesGeoJSON = {};
-var brownsville, hosp, bayridge;
+var brownsville, hosp, bayRidge;
 var layoverBuses = new Set();
 var movingBuses = new Set();
 setInterval(() => {
@@ -106,6 +106,7 @@ function createGeoJSON() {
 };
 
 function checkForLayovers(...theArgs) {
+    //check if bus is still there
     var everything = [];
     theArgs.forEach((arr) => {
         arr.forEach(element => {
@@ -125,6 +126,7 @@ function checkForLayovers(...theArgs) {
                 layoverBuses.add(element.VehicleRef);
                 console.log(new Date().toLocaleString('en-US', { timeZone: 'America/New_York' }) + ' | Current Layovers: ', layoverBuses);
             }
+            //if element approaching or 1 stop away from end stops
         });
     });
 };
@@ -213,7 +215,9 @@ module.exports = function (io) {
 
     //Socket.IO
     io.on('connection', function (socket) {
-        createGeoJSON();
+        // setTimeout(() => {
+        //     createGeoJSON();
+        // }, 1000); 
         socket.emit('JSON update', busesGeoJSON);
 
         console.log('#####User has connected to apicall####');
@@ -231,5 +235,5 @@ module.exports = function (io) {
 
         //End ON Events
     });
-    return router; 
+    return router;
 };

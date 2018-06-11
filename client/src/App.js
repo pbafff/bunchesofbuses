@@ -33,7 +33,8 @@ class App extends Component {
         <Test />
         <Test />
         <Test />
-        <button onClick = {() => this.callApi()}/>
+        <button onClick={() => this.callApi().then(res => this.setState({ response: res }))
+          .catch(err => console.log(err))} />
         {/* <div className="App-intro">{this.state.response}</div> */}
         {this.state.response.map(user =>
           <div key={user._id}>{user.begin}</div>

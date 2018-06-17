@@ -150,6 +150,10 @@ function checkIfMovingYet(...theArgs) {
 function trackBuses(movingBuses, ...theArgs) {
     var busMap = new Map();
     movingBuses.forEach(bus => {
+        if (flatten(theArgs).some(element => element.VehicleRef === bus.slice(0, 12) !== true)) {
+            movingBuses.delete(bus);
+            Trip.findOneAndUpdate({vehicleref: bus.slice(0, 12)}, {active: false, end: Date.now()}, {sort: {begin: 'desc'}}, function (err, doc) {if (err) console.log(err)});
+        }
         theArgs.forEach(arr => {
             arr.forEach(element => {
                 if (element.VehicleRef === bus && bus.includes('tracking') !== true && bus.includes('bunched') !== true) {
@@ -166,7 +170,7 @@ function trackBuses(movingBuses, ...theArgs) {
     });
     for (var [key, value] of busMap) {
         if (key.ProgressRate === 'noProgress') {
-            Trip.findOneAndUpdate({ vehicleref: key.VehicleRef }, { active: false, end: Date.now() }, { sort: { begin: 'desc' } }, function (err, doc) { if (err) console.log(err); });
+            Trip.update({ vehicleref: key.VehicleRef }, { active: false, end: Date.now() }, { sort: { begin: 'desc' } }, function (err, raw) { if (err) console.log(err); });
             movingBuses.delete(Array.from(movingBuses).filter(element => element.includes(key.VehicleRef))[0]);
         }
         if (value === 'new') {
@@ -178,7 +182,7 @@ function trackBuses(movingBuses, ...theArgs) {
             movingBuses.delete(key.VehicleRef);
         }
         if (value.includes('tracking') && key.MonitoredCall && key.MonitoredCall.Extensions.Distances.PresentableDistance === 'at stop' && key.ProgressRate !== 'noProgress') {
-            Trip.findOneAndUpdate({ vehicleref: key.VehicleRef, 'stops.stop': { $ne: key.MonitoredCall.StopPointName }, active: true }, { $push: { stops: { time: Date.now(), stop: key.MonitoredCall.StopPointName } } }, { sort: { begin: 'desc' }, new: true }, function (err, doc) {
+            Trip.update({ vehicleref: key.VehicleRef, 'stops.stop': { $ne: key.MonitoredCall.StopPointName }, active: true }, { $push: { stops: { time: Date.now(), stop: key.MonitoredCall.StopPointName } } }, { sort: { begin: 'desc' }, new: true }, function (err, raw) {
                 if (err) console.log(err);
             });
         }
@@ -191,7 +195,7 @@ function trackBuses(movingBuses, ...theArgs) {
                             try {
                                 body = JSON.parse(body);
                                 let speedRatio = body.flowSegmentData.currentSpeed / body.flowSegmentData.freeFlowSpeed;
-                                Trip.findByIdAndUpdate(doc._id, { $push: { bunch_data: { time: Date.now(), speed: speedRatio, coordinates: [key.VehicleLocation.Latitude, key.VehicleLocation.Longitude] } } }, function (err, doc) { if (err) console.log(err); });
+                                Trip.update({_id: doc._id}, { $push: { bunch_data: { time: Date.now(), speed: speedRatio, coordinates: [key.VehicleLocation.Latitude, key.VehicleLocation.Longitude] } } }, function (err, raw) { if (err) console.log(err); });
                             }
                             catch (err) {
                                 console.log(err)

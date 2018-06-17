@@ -12,7 +12,7 @@ var favicon = require('serve-favicon');
 var mongoose = require('mongoose');
 
 //Set up default mongoose connection
-var mongoDB = 'mongodb://pbaff:Paganizonda1@ds229549.mlab.com:29549/the-b8';
+var mongoDB = 'mongodb+srv://pbaff:ImQMVkSjIonPEQV5@b8-cluster-a9l2k.mongodb.net/test?retryWrites=true';
 mongoose.connect(mongoDB);
 // Get Mongoose to use the global promise library
 mongoose.Promise = global.Promise;

@@ -213,6 +213,7 @@ function trackBuses(movingBuses, ...theArgs) {
             movingBuses.delete(key.VehicleRef + 'trackingbunched');
         }
     }
+    Trip.watch().on('change', change => console.log('from watch ', change));
 }
 
 module.exports = function (io) {
@@ -226,9 +227,7 @@ module.exports = function (io) {
 
         console.log('#####User has connected to apicall####');
         //ON Events
-        socket.on('admin', function () {
-            console.log('Successful Socket Test');
-        });
+        Trip.watch().on('change', change => console.log('from watch ', change));
 
         socket.emit('message', 'You are connected to apicall');
 

@@ -18,6 +18,7 @@ var busesGeoJSON = {};
 var brownsville, hosp, bayRidge;
 var layoverBuses = new Set();
 var movingBuses = new Set();
+Trip.watch().on('change', change => console.log('from watch ', change));
 setInterval(() => {
     request({ url: APIURL }, function (error, response, body) { //'https://215e88da-ab10-40f1-bfe1-229f1c639ac1.mock.pstmn.io/b8'
         if (error) {
@@ -150,9 +151,9 @@ function checkIfMovingYet(...theArgs) {
 function trackBuses(movingBuses, ...theArgs) {
     var busMap = new Map();
     movingBuses.forEach(bus => {
-        if (flatten(theArgs).some(element => element.VehicleRef === bus.slice(0, 12) !== true)) {
+        if (flatten(theArgs).some(element => element.VehicleRef === bus.slice(0, 12)) !== true) {
             movingBuses.delete(bus);
-            Trip.findOneAndUpdate({vehicleref: bus.slice(0, 12)}, {active: false, end: Date.now()}, {sort: {begin: 'desc'}}, function (err, doc) {if (err) console.log(err)});
+            Trip.update({vehicleref: bus.slice(0, 12)}, {active: false, end: Date.now()}, {sort: {begin: 'desc'}}, function (err, raw) {if (err) console.log(err)});
         }
         theArgs.forEach(arr => {
             arr.forEach(element => {
@@ -213,7 +214,6 @@ function trackBuses(movingBuses, ...theArgs) {
             movingBuses.delete(key.VehicleRef + 'trackingbunched');
         }
     }
-    Trip.watch().on('change', change => console.log('from watch ', change));
 }
 
 module.exports = function (io) {
@@ -227,7 +227,6 @@ module.exports = function (io) {
 
         console.log('#####User has connected to apicall####');
         //ON Events
-        Trip.watch().on('change', change => console.log('from watch ', change));
 
         socket.emit('message', 'You are connected to apicall');
 

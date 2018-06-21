@@ -14,51 +14,66 @@ var brownsville, hosp, bayRidge;
 var layoverBuses = new Set();
 var movingBuses = new Set();
 let intervId;
-let isRunning = false;
+let isRunning;
+runInterval();
 
-router.get('/toggle/:state', function(req, res) {
-    if (req.params.state === 'on') {
-        isRunning = true;
-        intervId = setInterval(() => {
-        request({ url: APIURL }, function (error, response, body) { //'https://215e88da-ab10-40f1-bfe1-229f1c639ac1.mock.pstmn.io/b8'
-            if (error) {
-                console.log('error: ', error);
-            };
-            brownsville = [];
-            hosp = [];
-            bayRidge = [];
-            var json = JSON.parse(body);
-            for (var i = 0; i < json.Siri.ServiceDelivery.VehicleMonitoringDelivery[0].VehicleActivity.length; i++) {
-                if (json.Siri.ServiceDelivery.VehicleMonitoringDelivery[0].VehicleActivity[i].MonitoredVehicleJourney.DirectionRef == 1 && json.Siri.ServiceDelivery.VehicleMonitoringDelivery[0].VehicleActivity[i].MonitoredVehicleJourney.DestinationName == "V A HOSP") {
-                    hosp.push(json.Siri.ServiceDelivery.VehicleMonitoringDelivery[0].VehicleActivity[i].MonitoredVehicleJourney);
-    
-                } else if (json.Siri.ServiceDelivery.VehicleMonitoringDelivery[0].VehicleActivity[i].MonitoredVehicleJourney.DirectionRef == 1 && json.Siri.ServiceDelivery.VehicleMonitoringDelivery[0].VehicleActivity[i].MonitoredVehicleJourney.DestinationName == "BAY RIDGE 95 ST STA") {
-                    bayRidge.push(json.Siri.ServiceDelivery.VehicleMonitoringDelivery[0].VehicleActivity[i].MonitoredVehicleJourney);
-    
-                } else if (json.Siri.ServiceDelivery.VehicleMonitoringDelivery[0].VehicleActivity[i].MonitoredVehicleJourney.DirectionRef == 0) {
-                    brownsville.push(json.Siri.ServiceDelivery.VehicleMonitoringDelivery[0].VehicleActivity[i].MonitoredVehicleJourney);
-                }
-            }
-    
-            checkForLayovers(bayRidge, brownsville, hosp);
-    
-            checkIfMovingYet(bayRidge, brownsville, hosp);
-    
-            trackBuses(movingBuses, bayRidge, brownsville, hosp);
-        });
-        }, 5000);
+router.get('/toggle/:state', function (req, res) {
+    if (req.params.state === 'on' && isRunning === false) {
+        runInterval();
         res.status(200);
         res.end();
-    } else if (req.params.state === 'off') {
+    } else if (req.params.state === 'on' && isRunning === true) {
+        res.send('Interval is already running');
+        res.end();
+    } else if (req.params.state === 'off' && isRunning === true) {
         clearInterval(intervId);
         isRunning = false;
         res.status(200);
         res.end();
-    } else if (req.params.state === 'state') {
+    } else if (req.params.state === 'off' && isRunning === false) {
+        res.send('Interval is already off');
+        res.end();
+    } else if (req.params.state === 'status') {
         res.send(isRunning);
         res.end();
     }
 });
+
+function runInterval() {
+    isRunning = true;
+    intervId = setInterval(() => {
+        try {
+            request({ url: APIURL }, function (error, response, body) { //'https://215e88da-ab10-40f1-bfe1-229f1c639ac1.mock.pstmn.io/b8'
+                if (error) {
+                    console.log('error: ', error);
+                };
+                brownsville = [];
+                hosp = [];
+                bayRidge = [];
+                var json = JSON.parse(body);
+                for (var i = 0; i < json.Siri.ServiceDelivery.VehicleMonitoringDelivery[0].VehicleActivity.length; i++) {
+                    if (json.Siri.ServiceDelivery.VehicleMonitoringDelivery[0].VehicleActivity[i].MonitoredVehicleJourney.DirectionRef == 1 && json.Siri.ServiceDelivery.VehicleMonitoringDelivery[0].VehicleActivity[i].MonitoredVehicleJourney.DestinationName == "V A HOSP") {
+                        hosp.push(json.Siri.ServiceDelivery.VehicleMonitoringDelivery[0].VehicleActivity[i].MonitoredVehicleJourney);
+
+                    } else if (json.Siri.ServiceDelivery.VehicleMonitoringDelivery[0].VehicleActivity[i].MonitoredVehicleJourney.DirectionRef == 1 && json.Siri.ServiceDelivery.VehicleMonitoringDelivery[0].VehicleActivity[i].MonitoredVehicleJourney.DestinationName == "BAY RIDGE 95 ST STA") {
+                        bayRidge.push(json.Siri.ServiceDelivery.VehicleMonitoringDelivery[0].VehicleActivity[i].MonitoredVehicleJourney);
+
+                    } else if (json.Siri.ServiceDelivery.VehicleMonitoringDelivery[0].VehicleActivity[i].MonitoredVehicleJourney.DirectionRef == 0) {
+                        brownsville.push(json.Siri.ServiceDelivery.VehicleMonitoringDelivery[0].VehicleActivity[i].MonitoredVehicleJourney);
+                    }
+                }
+
+                checkForLayovers(bayRidge, brownsville, hosp);
+
+                checkIfMovingYet(bayRidge, brownsville, hosp);
+
+                trackBuses(movingBuses, bayRidge, brownsville, hosp);
+            });
+        } catch (err) {
+            console.log(err)
+        }
+    }, 5000);
+};
 
 function checkForLayovers(...theArgs) {
     //check if bus is still there
@@ -107,7 +122,7 @@ function trackBuses(movingBuses, ...theArgs) {
     movingBuses.forEach(bus => {
         if (flatten(theArgs).some(element => element.VehicleRef === bus.slice(0, 12)) !== true) {
             movingBuses.delete(bus);
-            Trip.update({vehicleref: bus.slice(0, 12)}, {active: false, end: Date.now()}, {sort: {begin: 'desc'}}, function (err, raw) {if (err) console.log(err)});
+            Trip.update({ vehicleref: bus.slice(0, 12) }, { active: false, end: Date.now() }, { sort: { begin: 'desc' } }, function (err, raw) { if (err) console.log(err) });
         }
         theArgs.forEach(arr => {
             arr.forEach(element => {
@@ -150,7 +165,7 @@ function trackBuses(movingBuses, ...theArgs) {
                             try {
                                 body = JSON.parse(body);
                                 let speedRatio = body.flowSegmentData.currentSpeed / body.flowSegmentData.freeFlowSpeed;
-                                Trip.update({_id: doc._id}, { $push: { bunch_data: { time: Date.now(), speed: speedRatio, coordinates: [key.VehicleLocation.Latitude, key.VehicleLocation.Longitude] } } }, function (err, raw) { if (err) console.log(err); });
+                                Trip.update({ _id: doc._id }, { $push: { bunch_data: { time: Date.now(), speed: speedRatio, coordinates: [key.VehicleLocation.Latitude, key.VehicleLocation.Longitude] } } }, function (err, raw) { if (err) console.log(err); });
                             }
                             catch (err) {
                                 console.log(err)
@@ -179,31 +194,31 @@ function createGeoJSON(socket) {
 
     function pushTemplates(arr) {
         if (arr && arr.length > 0) {
-        arr.forEach(element => {
-            var template = { //rewrite as constructor
-                "type": "Feature",
-                "geometry": {
-                    "type": "Point",
-                    "coordinates": []
-                },
-                "properties": {}
-            };
-            try {
-                template.geometry.coordinates.push(element.VehicleLocation.Longitude);
-                template.geometry.coordinates.push(element.VehicleLocation.Latitude);
-                template.properties.VehicleRef = element.VehicleRef;
-                template.properties.DirectionRef = element.DirectionRef;
-                template.properties.DestinationName = element.DestinationName;
-                template.properties.Distances = element.MonitoredCall.Extensions.Distances; //Cannot read property 'Extensions' of undefined
-                template.properties.StopPointName = element.MonitoredCall.StopPointName;
-                template.properties.ProgressRate = element.ProgressRate;
-                busesGeoJSON.features.push(template);
-            }
-            catch (err) {
-                console.log(new Date().toLocaleString());
-                console.log(err)
-            }
-        });
+            arr.forEach(element => {
+                var template = { //rewrite as constructor
+                    "type": "Feature",
+                    "geometry": {
+                        "type": "Point",
+                        "coordinates": []
+                    },
+                    "properties": {}
+                };
+                try {
+                    template.geometry.coordinates.push(element.VehicleLocation.Longitude);
+                    template.geometry.coordinates.push(element.VehicleLocation.Latitude);
+                    template.properties.VehicleRef = element.VehicleRef;
+                    template.properties.DirectionRef = element.DirectionRef;
+                    template.properties.DestinationName = element.DestinationName;
+                    template.properties.Distances = element.MonitoredCall.Extensions.Distances; //Cannot read property 'Extensions' of undefined
+                    template.properties.StopPointName = element.MonitoredCall.StopPointName;
+                    template.properties.ProgressRate = element.ProgressRate;
+                    busesGeoJSON.features.push(template);
+                }
+                catch (err) {
+                    console.log(new Date().toLocaleString());
+                    console.log(err)
+                }
+            });
         };
     };
     pushTemplates(brownsville);
@@ -217,10 +232,10 @@ function createGeoJSON(socket) {
 };
 
 module.exports = function (io) {
-
+    // let emittedChange;
+    // Trip.watch().on('change', change => emittedChange = change);
     //Socket.IO
     io.on('connection', function (socket) {
-        Trip.watch().on('change', change => console.log('from watch ', change));
         createGeoJSON(socket)
         // socket.emit('JSON update', busesGeoJSON);
 

@@ -20,7 +20,6 @@ router.get('/toggle/:state', function(req, res) {
     if (req.params.state === 'on') {
         isRunning = true;
         intervId = setInterval(() => {
-        console.log('WORKING')
         request({ url: APIURL }, function (error, response, body) { //'https://215e88da-ab10-40f1-bfe1-229f1c639ac1.mock.pstmn.io/b8'
             if (error) {
                 console.log('error: ', error);

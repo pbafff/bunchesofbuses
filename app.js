@@ -1,3 +1,4 @@
+require('dotenv').config();
 var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
@@ -6,13 +7,11 @@ var logger = require('morgan');
 var bodyParser = require('body-parser');  
 var favicon = require('serve-favicon');
 
-
-
 //Import the mongoose module
 var mongoose = require('mongoose');
 
 //Set up default mongoose connection
-var mongoDB = 'mongodb+srv://pbaff:ImQMVkSjIonPEQV5@b8-cluster-a9l2k.mongodb.net/test?retryWrites=true';
+var mongoDB = process.env.ATLASURL;
 mongoose.connect(mongoDB);
 // Get Mongoose to use the global promise library
 mongoose.Promise = global.Promise;
@@ -27,7 +26,7 @@ app.locals.env = process.env;
 app.use(favicon(path.join(__dirname,'public','images','favicon.ico')));
 app.io = require('socket.io')();
 var index = require('./routes/index')(app.io);
-var apicall = require('./apicall')(app.io);
+var apicall = require('./routes/apicall')(app.io);
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -43,7 +42,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 // app.use(express.static(path.join(__dirname, 'client/build')));
 
 app.use('/', index);
-app.use('/', apicall);
+app.use('/api/apicall/', apicall);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

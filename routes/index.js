@@ -30,15 +30,12 @@ router.get('/index', function(req, res, next) {
     });
 })
 
-module.exports = router;
+// module.exports = router;
 module.exports = function (io) {
   //Socket.IO
   io.on('connection', function (socket) {
-      console.log('#####User has connected to Index####');
+      console.log('----User has connected to Index----');
       //ON Events
-      socket.on('admin', function () {
-          console.log('Successful Socket Test');
-      });
 
       socket.emit('message', 'You are connected');
 

@@ -1,15 +1,10 @@
 var request = require('request');
 var express = require('express');
 var router = express.Router();
-var app = require('./app');
-var mongoose = require('mongoose');
 var flatten = require('arr-flatten');
-var BrownsvilleModel = require("./models/brownsville");
-var BayRidgeModel = require('./models/bayridge');
-var HospModel = require('./models/hosp');
-var Trip = require('./models/trip');
+var Trip = require('../models/trip');
 
-var APIkey = "e76036fc-f470-4344-8df0-ce31c6cf01eb";
+var APIkey = process.env.APIKEY;
 var format = "json";
 var busLine = "MTA+NYCT_B8";
 
@@ -18,93 +13,53 @@ var busesGeoJSON = {};
 var brownsville, hosp, bayRidge;
 var layoverBuses = new Set();
 var movingBuses = new Set();
-Trip.watch().on('change', change => console.log('from watch ', change));
-setInterval(() => {
-    request({ url: APIURL }, function (error, response, body) { //'https://215e88da-ab10-40f1-bfe1-229f1c639ac1.mock.pstmn.io/b8'
-        if (error) {
-            console.log('error: ', error);
-        };
-        brownsville = [];
-        hosp = [];
-        bayRidge = [];
-        var json = JSON.parse(body);
-        for (var i = 0; i < json.Siri.ServiceDelivery.VehicleMonitoringDelivery[0].VehicleActivity.length; i++) {
-            if (json.Siri.ServiceDelivery.VehicleMonitoringDelivery[0].VehicleActivity[i].MonitoredVehicleJourney.DirectionRef == 1 && json.Siri.ServiceDelivery.VehicleMonitoringDelivery[0].VehicleActivity[i].MonitoredVehicleJourney.DestinationName == "V A HOSP") {
-                hosp.push(json.Siri.ServiceDelivery.VehicleMonitoringDelivery[0].VehicleActivity[i].MonitoredVehicleJourney);
+let intervId;
+let isRunning = false;
 
-            } else if (json.Siri.ServiceDelivery.VehicleMonitoringDelivery[0].VehicleActivity[i].MonitoredVehicleJourney.DirectionRef == 1 && json.Siri.ServiceDelivery.VehicleMonitoringDelivery[0].VehicleActivity[i].MonitoredVehicleJourney.DestinationName == "BAY RIDGE 95 ST STA") {
-                bayRidge.push(json.Siri.ServiceDelivery.VehicleMonitoringDelivery[0].VehicleActivity[i].MonitoredVehicleJourney);
-
-            } else if (json.Siri.ServiceDelivery.VehicleMonitoringDelivery[0].VehicleActivity[i].MonitoredVehicleJourney.DirectionRef == 0) {
-                brownsville.push(json.Siri.ServiceDelivery.VehicleMonitoringDelivery[0].VehicleActivity[i].MonitoredVehicleJourney);
-
-            }
-        }
-
-        // var brownsville_instance = new BrownsvilleModel({ buses: brownsville, length: brownsville.length });
-        // brownsville_instance.save(function (err) {
-        //     if (err) return handleError(err);
-        // });
-        // var bayRidge_instance = new BayRidgeModel({ buses: bayRidge, length: bayRidge.length });
-        // bayRidge_instance.save(function (err) {
-        //     if (err) return handleError(err);
-        // });
-        // var hosp_instance = new HospModel({ buses: hosp, length: hosp.length });
-        // hosp_instance.save(function (err) {
-        //     if (err) return handleError(err);
-        // });
-
-        checkForLayovers(bayRidge, brownsville, hosp);
-
-        checkIfMovingYet(bayRidge, brownsville, hosp);
-
-        trackBuses(movingBuses, bayRidge, brownsville, hosp);
-    });
-}, 5000);
-
-function createGeoJSON() {
-    busesGeoJSON = {
-        "type": "FeatureCollection",
-        "timestamp": new Date().toLocaleString(),
-        "features": []
-    };
-
-    function pushTemplates(arr) {
-        // if (arr.length > 0) {
-        arr.forEach(element => {
-            var template = {
-                "type": "Feature",
-                "geometry": {
-                    "type": "Point",
-                    "coordinates": []
-                },
-                "properties": {
-
-                }
+router.get('/toggle/:state', function(req, res) {
+    if (req.params.state === 'on') {
+        isRunning = true;
+        intervId = setInterval(() => {
+        console.log('WORKING')
+        request({ url: APIURL }, function (error, response, body) { //'https://215e88da-ab10-40f1-bfe1-229f1c639ac1.mock.pstmn.io/b8'
+            if (error) {
+                console.log('error: ', error);
             };
-            try {
-                template.geometry.coordinates.push(element.VehicleLocation.Longitude);
-                template.geometry.coordinates.push(element.VehicleLocation.Latitude);
-                template.properties.VehicleRef = element.VehicleRef;
-                template.properties.DirectionRef = element.DirectionRef;
-                template.properties.DestinationName = element.DestinationName;
-                template.properties.Distances = element.MonitoredCall.Extensions.Distances; //Cannot read property 'Extensions' of undefined
-                template.properties.StopPointName = element.MonitoredCall.StopPointName;
-                template.properties.ProgressRate = element.ProgressRate;
-                busesGeoJSON.features.push(template);
+            brownsville = [];
+            hosp = [];
+            bayRidge = [];
+            var json = JSON.parse(body);
+            for (var i = 0; i < json.Siri.ServiceDelivery.VehicleMonitoringDelivery[0].VehicleActivity.length; i++) {
+                if (json.Siri.ServiceDelivery.VehicleMonitoringDelivery[0].VehicleActivity[i].MonitoredVehicleJourney.DirectionRef == 1 && json.Siri.ServiceDelivery.VehicleMonitoringDelivery[0].VehicleActivity[i].MonitoredVehicleJourney.DestinationName == "V A HOSP") {
+                    hosp.push(json.Siri.ServiceDelivery.VehicleMonitoringDelivery[0].VehicleActivity[i].MonitoredVehicleJourney);
+    
+                } else if (json.Siri.ServiceDelivery.VehicleMonitoringDelivery[0].VehicleActivity[i].MonitoredVehicleJourney.DirectionRef == 1 && json.Siri.ServiceDelivery.VehicleMonitoringDelivery[0].VehicleActivity[i].MonitoredVehicleJourney.DestinationName == "BAY RIDGE 95 ST STA") {
+                    bayRidge.push(json.Siri.ServiceDelivery.VehicleMonitoringDelivery[0].VehicleActivity[i].MonitoredVehicleJourney);
+    
+                } else if (json.Siri.ServiceDelivery.VehicleMonitoringDelivery[0].VehicleActivity[i].MonitoredVehicleJourney.DirectionRef == 0) {
+                    brownsville.push(json.Siri.ServiceDelivery.VehicleMonitoringDelivery[0].VehicleActivity[i].MonitoredVehicleJourney);
+                }
             }
-            catch (err) {
-                console.log(new Date().toLocaleString());
-                console.log(err)
-            }
+    
+            checkForLayovers(bayRidge, brownsville, hosp);
+    
+            checkIfMovingYet(bayRidge, brownsville, hosp);
+    
+            trackBuses(movingBuses, bayRidge, brownsville, hosp);
         });
-        // };
-    };
-    pushTemplates(brownsville);
-    pushTemplates(bayRidge);
-    pushTemplates(hosp);
-    busesGeoJSON = JSON.stringify(busesGeoJSON, null, 3);
-};
+        }, 5000);
+        res.status(200);
+        res.end();
+    } else if (req.params.state === 'off') {
+        clearInterval(intervId);
+        isRunning = false;
+        res.status(200);
+        res.end();
+    } else if (req.params.state === 'state') {
+        res.send(isRunning);
+        res.end();
+    }
+});
 
 function checkForLayovers(...theArgs) {
     //check if bus is still there
@@ -214,16 +169,61 @@ function trackBuses(movingBuses, ...theArgs) {
             movingBuses.delete(key.VehicleRef + 'trackingbunched');
         }
     }
-}
+};
+
+function createGeoJSON(socket) {
+    busesGeoJSON = {
+        "type": "FeatureCollection",
+        "timestamp": new Date().toLocaleString(),
+        "features": []
+    };
+
+    function pushTemplates(arr) {
+        if (arr && arr.length > 0) {
+        arr.forEach(element => {
+            var template = { //rewrite as constructor
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": []
+                },
+                "properties": {}
+            };
+            try {
+                template.geometry.coordinates.push(element.VehicleLocation.Longitude);
+                template.geometry.coordinates.push(element.VehicleLocation.Latitude);
+                template.properties.VehicleRef = element.VehicleRef;
+                template.properties.DirectionRef = element.DirectionRef;
+                template.properties.DestinationName = element.DestinationName;
+                template.properties.Distances = element.MonitoredCall.Extensions.Distances; //Cannot read property 'Extensions' of undefined
+                template.properties.StopPointName = element.MonitoredCall.StopPointName;
+                template.properties.ProgressRate = element.ProgressRate;
+                busesGeoJSON.features.push(template);
+            }
+            catch (err) {
+                console.log(new Date().toLocaleString());
+                console.log(err)
+            }
+        });
+        };
+    };
+    pushTemplates(brownsville);
+    pushTemplates(bayRidge);
+    pushTemplates(hosp);
+
+    if (busesGeoJSON.features.length > 0) {
+        busesGeoJSON = JSON.stringify(busesGeoJSON, null, 3);
+        socket.emit('JSON update', busesGeoJSON)
+    };
+};
 
 module.exports = function (io) {
 
     //Socket.IO
     io.on('connection', function (socket) {
-        // setTimeout(() => {
-        //     createGeoJSON();
-        // }, 1000); 
-        socket.emit('JSON update', busesGeoJSON);
+        Trip.watch().on('change', change => console.log('from watch ', change));
+        createGeoJSON(socket)
+        // socket.emit('JSON update', busesGeoJSON);
 
         console.log('#####User has connected to apicall####');
         //ON Events
@@ -231,8 +231,8 @@ module.exports = function (io) {
         socket.emit('message', 'You are connected to apicall');
 
         setInterval(() => {
-            createGeoJSON();
-            socket.emit('JSON update', busesGeoJSON);
+            createGeoJSON(socket);
+            // socket.emit('JSON update', busesGeoJSON);
         }, 5000);
 
         //End ON Events

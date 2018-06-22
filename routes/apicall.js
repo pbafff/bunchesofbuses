@@ -3,6 +3,7 @@ var express = require('express');
 var router = express.Router();
 var flatten = require('arr-flatten');
 var Trip = require('../models/trip');
+const auth = require('express-basic-auth');
 
 var APIkey = process.env.APIKEY;
 var format = "json";
@@ -16,6 +17,13 @@ var movingBuses = new Set();
 let intervId;
 let isRunning;
 runInterval();
+
+const username = process.env.USR;
+const password = process.env.PASSWORD;
+
+router.use(
+    auth({authorizer: myAuthorizer})
+);
 
 router.get('/toggle/:state', function (req, res) {
     if (req.params.state === 'on' && isRunning === false) {
@@ -38,6 +46,10 @@ router.get('/toggle/:state', function (req, res) {
         res.end();
     }
 });
+
+function myAuthorizer(user, pass) {
+    return username === user && password === pass
+};
 
 function runInterval() {
     isRunning = true;

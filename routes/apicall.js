@@ -47,6 +47,19 @@ router.get('/toggle/:state', function (req, res) {
     }
 });
 
+class busTimer {
+    constructor(bus) {
+        this.bus = bus;
+        movingBuses.delete(Array.from(movingBuses).filter(element => element.includes(this.bus))[0]);
+        movingBuses.add(`${this.bus}waiting`);
+        this.timeoutId = setTimeout(() => {
+            Trip.update({ vehicleref: this.bus }, { active: false, end: Date.now() }, { sort: { begin: 'desc' } }, function (err, raw) { if (err) console.log(err); });
+            movingBuses.delete(Array.from(movingBuses).filter(element => element.includes(this.bus))[0]);
+        }, 1800000);
+        
+    }
+};
+
 function myAuthorizer(user, pass) {
     return username === user && password === pass
 };

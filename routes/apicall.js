@@ -56,7 +56,9 @@ class busTimer {
             Trip.update({ vehicleref: this.bus }, { active: false, end: Date.now() }, { sort: { begin: 'desc' } }, function (err, raw) { if (err) console.log(err); });
             movingBuses.delete(Array.from(movingBuses).filter(element => element.includes(this.bus))[0]);
         }, 1800000);
-        
+        this.intervalId = setInterval(() => {
+            
+        }, 10);
     }
 };
 
@@ -147,7 +149,7 @@ function trackBuses(movingBuses, ...theArgs) {
     movingBuses.forEach(bus => {
         if (flatten(theArgs).some(element => element.VehicleRef === bus.slice(0, 12)) !== true) {
             movingBuses.delete(bus);
-            Trip.update({ vehicleref: bus.slice(0, 12) }, { active: false, end: Date.now() }, { sort: { begin: 'desc' } }, function (err, raw) { if (err) console.log(err) });
+            Trip.update({ vehicleref: bus.slice(0, 12) }, { active: false, end: Date.now(), termination_reason: 'disappeared' }, { sort: { begin: 'desc' } }, function (err, raw) { if (err) console.log(err) });
         }
         theArgs.forEach(arr => {
             arr.forEach(element => {
@@ -165,7 +167,7 @@ function trackBuses(movingBuses, ...theArgs) {
     });
     for (var [key, value] of busMap) {
         if (key.ProgressRate === 'noProgress') {
-            Trip.update({ vehicleref: key.VehicleRef }, { active: false, end: Date.now() }, { sort: { begin: 'desc' } }, function (err, raw) { if (err) console.log(err); });
+            Trip.update({ vehicleref: key.VehicleRef }, { active: false, end: Date.now(), termination_reason: 'no progress' }, { sort: { begin: 'desc' } }, function (err, raw) { if (err) console.log(err); });
             movingBuses.delete(Array.from(movingBuses).filter(element => element.includes(key.VehicleRef))[0]);
         }
         if (value === 'new') {

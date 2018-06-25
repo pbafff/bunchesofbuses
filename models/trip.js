@@ -9,6 +9,7 @@ var tripSchema = new Schema({
     destination: String,
     stops: [{ time: Date, stop: String }],
     active: Boolean,
+    termination_reason: String,
     bunch_data: [{ time: Date, speed: Number, coordinates: [Number] }],
     bunch_time: Number
 }, { timestamps: true });

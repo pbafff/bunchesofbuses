@@ -30,7 +30,7 @@ router.use(
 class Bus extends events.EventEmitter {
     constructor(bus) {
         this.vehicleref = bus;
-        this.direction = null;
+        this.destination = null;
         this.location = null;
         this.state = null;
         this.id = null;
@@ -40,7 +40,7 @@ class Bus extends events.EventEmitter {
         })
     }
     wait(reason) {
-        this.state = 'waiting';
+        this.state = reason;
         this.timeoutId = setTimeout(() => {
             Trip.update({ _id: this.id}, { active: false, end: Date.now(), termination_reason: reason }, function (err, raw) { if (err) console.log(err); });
             movingBuses.delete(this);
@@ -160,16 +160,16 @@ function checkIfMovingYet(...theArgs) {
 
 function trackBuses(...theArgs) {
     movingBuses.forEach(bus => {
-        if (flatten(theArgs).some(element => element.VehicleRef === bus.vehicleref) !== true && bus.state !== 'waiting') {
-            if (bus.direction === 'BROWNSVILLE ROCKAWAY AV') {
+        if (flatten(theArgs).some(element => element.VehicleRef === bus.vehicleref) !== true && bus.state !== 'disappeared' && bus.state !== 'no progress') {
+            if (bus.destination === 'BROWNSVILLE ROCKAWAY AV') {
                 if (haversine(bus.location[0], bus.location[1], -73.907379, 40.656052) >= 2.55) bus.wait('disappeared');
                 else bus.endNow('disappeared');
             }
-            if (bus.direction === 'BAY RIDGE 95 ST STA') {
+            if (bus.destination === 'BAY RIDGE 95 ST STA') {
                 if (haversine(bus.location[0], bus.location[1], -74.031128, 40.616263) >= 2.55) bus.wait('disappeared');
                 else bus.endNow('disappeared');
             }
-            if (bus.direction === 'V A HOSP') {
+            if (bus.destination === 'V A HOSP') {
                 if (haversine(bus.location[0], bus.location[1], -74.023373, 40.608397) >= 2.55) bus.wait('disappeared');
                 else bus.endNow('disappeared');
             }
@@ -180,7 +180,7 @@ function trackBuses(...theArgs) {
             arr.forEach(element => {
                 if (element.VehicleRef === bus.vehicleref && bus.state === null) {
                     bus.state = 'new';
-                    bus.direction = element.DirectionRef;
+                    bus.destination = element.DestinationName;
                     const {Longitude, Latitude} = element.VehicleLocation;
                     bus.location = [Longitude, Latitude];
                     busMap.set(element, bus);
@@ -188,7 +188,13 @@ function trackBuses(...theArgs) {
                     const {Longitude, Latitude} = element.VehicleLocation;
                     bus.location = [Longitude, Latitude];
                     busMap.set(element, bus);
-                } else if (element.VehicleRef === bus.vehicleref && bus.state === 'waiting') {
+                } else if (element.VehicleRef === bus.vehicleref && element.DestinationName === bus.destination && bus.state === 'disappeared') {
+                    const {Longitude, Latitude} = element.VehicleLocation;
+                    bus.location = [Longitude, Latitude];
+                    bus.state = 'tracking';
+                    bus.emit('returned');
+                    busMap.set(element, bus);
+                } else if (element.VehicleRef === bus.vehicleref && element.DestinationName === bus.destination && bus.state === 'no progress') {
                     const {Longitude, Latitude} = element.VehicleLocation;
                     bus.location = [Longitude, Latitude];
                     bus.state = 'tracking';
@@ -200,15 +206,15 @@ function trackBuses(...theArgs) {
     });
     for (let [key, value] of busMap) {
         if (key.ProgressRate === 'noProgress') {
-            if (bus.direction === 'BROWNSVILLE ROCKAWAY AV') {
+            if (bus.destination === 'BROWNSVILLE ROCKAWAY AV') {
                 if (haversine(bus.location[0], bus.location[1], -73.907379, 40.656052) >= 2.55) bus.wait('no progress');
                 else bus.endNow('no progress');
             }
-            if (bus.direction === 'BAY RIDGE 95 ST STA') {
+            if (bus.destination === 'BAY RIDGE 95 ST STA') {
                 if (haversine(bus.location[0], bus.location[1], -74.031128, 40.616263) >= 2.55) bus.wait('no progress');
                 else bus.endNow('no progress');
             }
-            if (bus.direction === 'V A HOSP') {
+            if (bus.destination === 'V A HOSP') {
                 if (haversine(bus.location[0], bus.location[1], -74.023373, 40.608397) >= 2.55) bus.wait('no progress');
                 else bus.endNow('no progress');
             }

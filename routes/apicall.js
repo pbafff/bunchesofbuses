@@ -194,7 +194,7 @@ function trackBuses(...theArgs) {
                     bus.state = 'tracking';
                     bus.emit('returned');
                     busMap.set(element, bus);
-                } else if (element.VehicleRef === bus.vehicleref && element.DestinationName === bus.destination && bus.state === 'no progress') {
+                } else if (element.VehicleRef === bus.vehicleref && element.DestinationName === bus.destination && element.ProgressRate === 'normalProgress' && bus.state === 'no progress') {
                     const {Longitude, Latitude} = element.VehicleLocation;
                     bus.location = [Longitude, Latitude];
                     bus.state = 'tracking';

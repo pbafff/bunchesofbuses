@@ -19,7 +19,6 @@ var movingBuses = new Set();
 var busMap = new Map();
 let intervId;
 let isRunning;
-runInterval();
 
 const username = process.env.USR;
 const password = process.env.PASSWORD;
@@ -27,28 +26,6 @@ const password = process.env.PASSWORD;
 router.use(
     auth({authorizer: myAuthorizer})
 );
-
-router.get('/toggle/:state', function (req, res) {
-    if (req.params.state === 'on' && isRunning === false) {
-        runInterval();
-        res.status(200);
-        res.end();
-    } else if (req.params.state === 'on' && isRunning === true) {
-        res.send('Interval is already running');
-        res.end();
-    } else if (req.params.state === 'off' && isRunning === true) {
-        clearInterval(intervId);
-        isRunning = false;
-        res.status(200);
-        res.end();
-    } else if (req.params.state === 'off' && isRunning === false) {
-        res.send('Interval is already off');
-        res.end();
-    } else if (req.params.state === 'status') {
-        res.send(isRunning);
-        res.end();
-    }
-});
 
 class Bus extends events.EventEmitter {
     constructor(bus) {
@@ -74,6 +51,30 @@ class Bus extends events.EventEmitter {
         movingBuses.delete(this);
     }
 };
+
+runInterval();
+
+router.get('/toggle/:state', function (req, res) {
+    if (req.params.state === 'on' && isRunning === false) {
+        runInterval();
+        res.status(200);
+        res.end();
+    } else if (req.params.state === 'on' && isRunning === true) {
+        res.send('Interval is already running');
+        res.end();
+    } else if (req.params.state === 'off' && isRunning === true) {
+        clearInterval(intervId);
+        isRunning = false;
+        res.status(200);
+        res.end();
+    } else if (req.params.state === 'off' && isRunning === false) {
+        res.send('Interval is already off');
+        res.end();
+    } else if (req.params.state === 'status') {
+        res.send(isRunning);
+        res.end();
+    }
+});
 
 function myAuthorizer(user, pass) {
     return username === user && password === pass

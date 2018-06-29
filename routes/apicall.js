@@ -29,6 +29,7 @@ router.use(
 
 class Bus extends events.EventEmitter {
     constructor(bus) {
+        super();
         this.vehicleref = bus;
         this.destination = null;
         this.location = null;
@@ -42,7 +43,7 @@ class Bus extends events.EventEmitter {
     wait(reason) {
         this.state = reason;
         this.timeoutId = setTimeout(() => {
-            Trip.update({ _id: this.id}, { active: false, end: Date.now(), termination_reason: reason }, function (err, raw) { if (err) console.log(err); });
+            Trip.update({ _id: this.id}, { active: false, end: new Date(Date.now() - 1800000), termination_reason: reason }, function (err, raw) { if (err) console.log(err); });
             movingBuses.delete(this);
         }, 1800000);
     }
@@ -83,7 +84,6 @@ function myAuthorizer(user, pass) {
 function runInterval() {
     isRunning = true;
     intervId = setInterval(() => {
-        try {
             request({ url: APIURL }, function (error, response, body) { //'https://215e88da-ab10-40f1-bfe1-229f1c639ac1.mock.pstmn.io/b8'
                 if (error) {
                     console.log('error: ', error);
@@ -91,6 +91,7 @@ function runInterval() {
                 brownsville = [];
                 hosp = [];
                 bayRidge = [];
+                try {
                 var json = JSON.parse(body);
                 for (var i = 0; i < json.Siri.ServiceDelivery.VehicleMonitoringDelivery[0].VehicleActivity.length; i++) {
                     if (json.Siri.ServiceDelivery.VehicleMonitoringDelivery[0].VehicleActivity[i].MonitoredVehicleJourney.DirectionRef == 1 && json.Siri.ServiceDelivery.VehicleMonitoringDelivery[0].VehicleActivity[i].MonitoredVehicleJourney.DestinationName == "V A HOSP") {
@@ -103,16 +104,15 @@ function runInterval() {
                         brownsville.push(json.Siri.ServiceDelivery.VehicleMonitoringDelivery[0].VehicleActivity[i].MonitoredVehicleJourney);
                     }
                 }
-
+            } catch (err) {
+                console.log(err)
+            }
                 checkForLayovers(bayRidge, brownsville, hosp);
 
                 checkIfMovingYet(bayRidge, brownsville, hosp);
 
                 trackBuses(bayRidge, brownsville, hosp);
             });
-        } catch (err) {
-            console.log(err)
-        }
     }, 5000);
 };
 
@@ -206,17 +206,17 @@ function trackBuses(...theArgs) {
     });
     for (let [key, value] of busMap) {
         if (key.ProgressRate === 'noProgress') {
-            if (bus.destination === 'BROWNSVILLE ROCKAWAY AV') {
-                if (haversine(bus.location[0], bus.location[1], -73.907379, 40.656052) >= 2.55) bus.wait('no progress');
-                else bus.endNow('no progress');
+            if (value.destination === 'BROWNSVILLE ROCKAWAY AV') {
+                if (haversine(value.location[0], value.location[1], -73.907379, 40.656052) >= 2.55) value.wait('no progress');
+                else value.endNow('no progress');
             }
-            if (bus.destination === 'BAY RIDGE 95 ST STA') {
-                if (haversine(bus.location[0], bus.location[1], -74.031128, 40.616263) >= 2.55) bus.wait('no progress');
-                else bus.endNow('no progress');
+            if (value.destination === 'BAY RIDGE 95 ST STA') {
+                if (haversine(value.location[0], value.location[1], -74.031128, 40.616263) >= 2.55) value.wait('no progress');
+                else value.endNow('no progress');
             }
-            if (bus.destination === 'V A HOSP') {
-                if (haversine(bus.location[0], bus.location[1], -74.023373, 40.608397) >= 2.55) bus.wait('no progress');
-                else bus.endNow('no progress');
+            if (value.destination === 'V A HOSP') {
+                if (haversine(value.location[0], value.location[1], -74.023373, 40.608397) >= 2.55) value.wait('no progress');
+                else value.endNow('no progress');
             }
         }
         if (value.state === 'new') {
@@ -227,7 +227,7 @@ function trackBuses(...theArgs) {
                 value.state = 'tracking';
             });
         }
-        if (value.state = 'tracking' && key.MonitoredCall && key.MonitoredCall.Extensions.Distances.PresentableDistance === 'at stop' && key.ProgressRate !== 'noProgress') {
+        if (value.state === 'tracking' && key.MonitoredCall && key.MonitoredCall.Extensions.Distances.PresentableDistance === 'at stop' && key.ProgressRate !== 'noProgress') {
             Trip.update({ _id: value.id, 'stops.stop': { $ne: key.MonitoredCall.StopPointName }, active: true }, { $push: { stops: { time: Date.now(), stop: key.MonitoredCall.StopPointName } } }, function (err, raw) {
                 if (err) console.log(err);
             });

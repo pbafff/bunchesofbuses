@@ -11,7 +11,9 @@ var tripSchema = new Schema({
     active: Boolean,
     termination_reason: String,
     bunch_data: [{ time: Date, speed: Number, coordinates: [Number] }],
-    bunch_time: Number
+    bunch_time: Number,
+    waiting: [{ value: Boolean, time: Date }],
+    returned: [{ value: Boolean, time: Date }],
 }, { timestamps: true });
 
 module.exports = mongoose.model('Trip', tripSchema);

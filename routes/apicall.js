@@ -38,7 +38,7 @@ class Bus extends events.EventEmitter {
         this.bunched = false;
         this.on('returned', function () {
             clearTimeout(this.timeoutId);
-            Trip.update({ _id: this.id }, { $push: { returned: { time: Date.now(), value: true } }, $push: { waiting: { time: Date.now(), value: false } } }, function (err, raw) { if (err) console.log(err) });
+            Trip.update({ _id: this.id }, { $push: { waiting: { time: Date.now(), value: false }, returned: { time: Date.now(), value: true } } }, function (err, raw) { if (err) console.log(err) });
         })
     }
     wait(reason) {

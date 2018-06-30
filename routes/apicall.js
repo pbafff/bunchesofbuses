@@ -43,7 +43,7 @@ class Bus extends events.EventEmitter {
     wait(reason) {
         this.state = reason;
         this.timeoutId = setTimeout(() => {
-            Trip.update({ _id: this.id}, { active: false, end: new Date(Date.now() - 1800000), termination_reason: reason }, function (err, raw) { if (err) console.log(err); });
+            Trip.update({ _id: this.id}, { active: false, end: new Date(Date.now() - 1800000), termination_reason: `${reason}/timeout` }, function (err, raw) { if (err) console.log(err); });
             movingBuses.delete(this);
         }, 1800000);
     }
@@ -74,6 +74,8 @@ router.get('/toggle/:state', function (req, res) {
     } else if (req.params.state === 'status') {
         res.send(isRunning);
         res.end();
+    } else if (req.params.state === 'logbuses') {
+        res.send({ movingBuses: Array.from(movingBuses) });
     }
 });
 
@@ -162,16 +164,26 @@ function trackBuses(...theArgs) {
     movingBuses.forEach(bus => {
         if (flatten(theArgs).some(element => element.VehicleRef === bus.vehicleref) !== true && bus.state !== 'disappeared' && bus.state !== 'no progress') {
             if (bus.destination === 'BROWNSVILLE ROCKAWAY AV') {
-                if (haversine(bus.location[0], bus.location[1], -73.907379, 40.656052) >= 2.55) bus.wait('disappeared');
-                else bus.endNow('disappeared');
+                if (haversine(bus.location[0], bus.location[1], -73.907379, 40.656052) >= 2.55) {
+                    bus.wait('disappeared');
+                } else {
+                    bus.endNow('disappeared');
+                }
             }
             if (bus.destination === 'BAY RIDGE 95 ST STA') {
-                if (haversine(bus.location[0], bus.location[1], -74.031128, 40.616263) >= 2.55) bus.wait('disappeared');
-                else bus.endNow('disappeared');
+                if (haversine(bus.location[0], bus.location[1], -74.031128, 40.616263) >= 2.55) {
+                    bus.wait('disappeared');
+                } else {
+                    bus.endNow('disappeared');
+                }
             }
             if (bus.destination === 'V A HOSP') {
-                if (haversine(bus.location[0], bus.location[1], -74.023373, 40.608397) >= 2.55) bus.wait('disappeared');
-                else bus.endNow('disappeared');
+                if (haversine(bus.location[0], bus.location[1], -74.023373, 40.608397) >= 2.55) {
+                    bus.wait('disappeared');
+                }
+                else {
+                    bus.endNow('disappeared');
+                }
             }
         }
     });
@@ -207,16 +219,25 @@ function trackBuses(...theArgs) {
     for (let [key, value] of busMap) {
         if (key.ProgressRate === 'noProgress') {
             if (value.destination === 'BROWNSVILLE ROCKAWAY AV') {
-                if (haversine(value.location[0], value.location[1], -73.907379, 40.656052) >= 2.55) value.wait('no progress');
-                else value.endNow('no progress');
+                if (haversine(value.location[0], value.location[1], -73.907379, 40.656052) >= 2.55) {
+                    value.wait('no progress');
+                } else {
+                    value.endNow('no progress');
+                }
             }
             if (value.destination === 'BAY RIDGE 95 ST STA') {
-                if (haversine(value.location[0], value.location[1], -74.031128, 40.616263) >= 2.55) value.wait('no progress');
-                else value.endNow('no progress');
+                if (haversine(value.location[0], value.location[1], -74.031128, 40.616263) >= 2.55) {
+                    value.wait('no progress');
+                } else {
+                     value.endNow('no progress');
+                }
             }
             if (value.destination === 'V A HOSP') {
-                if (haversine(value.location[0], value.location[1], -74.023373, 40.608397) >= 2.55) value.wait('no progress');
-                else value.endNow('no progress');
+                if (haversine(value.location[0], value.location[1], -74.023373, 40.608397) >= 2.55) {
+                    value.wait('no progress');
+                } else {
+                    value.endNow('no progress'); 
+                }
             }
         }
         if (value.state === 'new') {

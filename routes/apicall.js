@@ -75,9 +75,17 @@ router.get('/toggle/:state', function (req, res) {
     } else if (req.params.state === 'status') {
         res.send(isRunning);
         res.end();
-    } else if (req.params.state === 'logbuses') {
-        res.send({ movingBuses: Array.from(movingBuses) });
     }
+});
+
+router.get('/movingbuses', function (req, res) {
+    res.send({ movingBuses: Array.from(movingBuses) });
+    res.end();
+});
+
+router.get('/layoverbuses', function (req, res) {
+    res.send({ layoverBuses: Array.from(layoverBuses) });
+    res.end();
 });
 
 function myAuthorizer(user, pass) {

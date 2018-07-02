@@ -79,7 +79,8 @@ router.get('/toggle/:state', function (req, res) {
 });
 
 router.get('/movingbuses', function (req, res) {
-    res.send({ movingBuses: Array.from(movingBuses) });
+    const buses = Array.from(movingBuses).map(bus => JSON.stringify(bus, null, 2));
+    res.send({ movingBuses: buses });
     res.end();
 });
 

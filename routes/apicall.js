@@ -5,7 +5,6 @@ var flatten = require('arr-flatten');
 var Trip = require('../models/trip');
 const auth = require('express-basic-auth');
 const events = require('events');
-const haversine = require('./haversine');
 
 var APIkey = process.env.APIKEY;
 var format = "json";
@@ -32,14 +31,14 @@ class Bus extends events.EventEmitter {
         super();
         this.vehicleref = bus;
         this.destination = null;
-        this.location = null;
         this.state = null;
         this.id = null;
         this.bunched = false;
         this.on('returned', function () {
+            this.state = 'tracking';
             clearTimeout(this.timeoutId);
-            Trip.update({ _id: this.id }, { $push: { waiting: { time: Date.now(), value: false }, returned: { time: Date.now(), value: true } } }, function (err, raw) { if (err) console.log(err) });
-        })
+            Trip.update({ _id: this.id }, { $push: { waiting: { time: Date.now(), value: false } } }, function (err, raw) { if (err) console.log(err) });
+        });
     }
     wait(reason) {
         this.state = reason;
@@ -131,7 +130,6 @@ function checkForLayovers(...theArgs) {
     for (var bus of layoverBuses) {
         if (everything.indexOf(bus) === -1) {
             layoverBuses.delete(bus);
-            console.log(new Date().toLocaleString('en-US', { timeZone: 'America/New_York' }) + ' | Dissappeared from layovers: ', bus);
         }
     };
     //add buses to layover set
@@ -139,7 +137,6 @@ function checkForLayovers(...theArgs) {
         arr.forEach((element) => {
             if (element.ProgressRate === 'noProgress' && element.ProgressStatus === 'layover' && layoverBuses.has(element.VehicleRef) !== true) {
                 layoverBuses.add(element.VehicleRef);
-                console.log(new Date().toLocaleString('en-US', { timeZone: 'America/New_York' }) + ' | Current Layovers: ', layoverBuses);
             }
             //if element approaching or 1 stop away from end stops
         });
@@ -154,7 +151,6 @@ function checkIfMovingYet(...theArgs) {
                     if (bus.VehicleRef === element && bus.ProgressRate === 'normalProgress') {
                         movingBuses.add(new Bus(element));
                         layoverBuses.delete(element);
-                        console.log('moving buses ', movingBuses);
                     }
                 });
             });
@@ -165,28 +161,7 @@ function checkIfMovingYet(...theArgs) {
 function trackBuses(...theArgs) {
     movingBuses.forEach(bus => {
         if (flatten(theArgs).some(element => element.VehicleRef === bus.vehicleref) !== true && bus.state !== 'disappeared' && bus.state !== 'no progress') {
-            if (bus.destination === 'BROWNSVILLE ROCKAWAY AV') {
-                if (haversine(bus.location[0], bus.location[1], -73.907379, 40.656052) >= 2.55) {
-                    bus.wait('disappeared');
-                } else {
-                    bus.endNow('disappeared');
-                }
-            }
-            if (bus.destination === 'BAY RIDGE 95 ST STA') {
-                if (haversine(bus.location[0], bus.location[1], -74.031128, 40.616263) >= 2.55) {
-                    bus.wait('disappeared');
-                } else {
-                    bus.endNow('disappeared');
-                }
-            }
-            if (bus.destination === 'V A HOSP') {
-                if (haversine(bus.location[0], bus.location[1], -74.023373, 40.608397) >= 2.55) {
-                    bus.wait('disappeared');
-                }
-                else {
-                    bus.endNow('disappeared');
-                }
-            }
+            bus.wait('disappeared');
         }
     });
     movingBuses.forEach(bus => {
@@ -195,90 +170,83 @@ function trackBuses(...theArgs) {
                 if (element.VehicleRef === bus.vehicleref && bus.state === null) {
                     bus.state = 'new';
                     bus.destination = element.DestinationName;
-                    const { Longitude, Latitude } = element.VehicleLocation;
-                    bus.location = [Longitude, Latitude];
                     busMap.set(element, bus);
                 } else if (element.VehicleRef === bus.vehicleref && bus.state === 'tracking') {
-                    const { Longitude, Latitude } = element.VehicleLocation;
-                    bus.location = [Longitude, Latitude];
                     busMap.set(element, bus);
                 } else if (element.VehicleRef === bus.vehicleref && element.DestinationName === bus.destination && bus.state === 'disappeared') {
-                    const { Longitude, Latitude } = element.VehicleLocation;
-                    bus.location = [Longitude, Latitude];
-                    bus.state = 'tracking';
                     bus.emit('returned');
                     busMap.set(element, bus);
                 } else if (element.VehicleRef === bus.vehicleref && element.DestinationName === bus.destination && element.ProgressRate === 'normalProgress' && bus.state === 'no progress') {
-                    const { Longitude, Latitude } = element.VehicleLocation;
-                    bus.location = [Longitude, Latitude];
-                    bus.state = 'tracking';
                     bus.emit('returned');
                     busMap.set(element, bus);
                 }
             })
         })
     });
-    for (let [key, value] of busMap) {
-        if (key.ProgressRate === 'noProgress') {
-            if (value.destination === 'BROWNSVILLE ROCKAWAY AV') {
-                if (haversine(value.location[0], value.location[1], -73.907379, 40.656052) >= 2.55) {
-                    value.wait('no progress');
-                } else {
-                    value.endNow('no progress');
-                }
-            }
-            if (value.destination === 'BAY RIDGE 95 ST STA') {
-                if (haversine(value.location[0], value.location[1], -74.031128, 40.616263) >= 2.55) {
-                    value.wait('no progress');
-                } else {
-                    value.endNow('no progress');
-                }
-            }
-            if (value.destination === 'V A HOSP') {
-                if (haversine(value.location[0], value.location[1], -74.023373, 40.608397) >= 2.55) {
-                    value.wait('no progress');
-                } else {
-                    value.endNow('no progress');
-                }
-            }
-        }
-        if (value.state === 'new') {
-            var busInstance = new Trip({ trip_id: key.VehicleRef + ':' + new Date().toLocaleString('en-US', { timeZone: 'America/New_York' }), vehicleref: key.VehicleRef, begin: Date.now(), destination: key.DestinationName, active: true });
-            busInstance.save(function (err, doc) {
-                if (err) return handleError(err);
-                value.id = doc._id;
-                value.state = 'tracking';
-            });
-        }
-        if (value.state === 'tracking' && key.MonitoredCall && key.MonitoredCall.Extensions.Distances.PresentableDistance === 'at stop' && key.ProgressRate !== 'noProgress') {
-            Trip.update({ _id: value.id, 'stops.stop': { $ne: key.MonitoredCall.StopPointName }, active: true }, { $push: { stops: { time: Date.now(), stop: key.MonitoredCall.StopPointName } } }, function (err, raw) {
-                if (err) console.log(err);
-            });
-        }
-        if (value.state === 'tracking' && flatten(theArgs).filter(element => element.DestinationName === key.DestinationName && element.VehicleRef !== key.VehicleRef && element.MonitoredCall).some(element => Math.abs(key.MonitoredCall.Extensions.Distances.CallDistanceAlongRoute - element.MonitoredCall.Extensions.Distances.CallDistanceAlongRoute) <= 609.6)) {
-            if (value.bunched) {
-                Trip.findOneAndUpdate({ _id: value.id }, { $inc: { bunch_time: 5 } }).exec(function (err, doc) {
-                    if (err) console.log(err);
-                    if (doc.bunch_time % 120 === 0) {
-                        request({ url: 'https://api.tomtom.com/traffic/services/4/flowSegmentData/relative/18/json?key=yp3zE7zS5up8EAEqWyHMf2owUBBWIUNr&point=' + key.VehicleLocation.Latitude + ',' + key.VehicleLocation.Longitude + '&unit=MPH' }, function (error, response, body) {
-                            try {
-                                body = JSON.parse(body);
-                                let speedRatio = body.flowSegmentData.currentSpeed / body.flowSegmentData.freeFlowSpeed;
-                                Trip.update({ _id: doc._id }, { $push: { bunch_data: { time: Date.now(), speed: speedRatio, coordinates: [key.VehicleLocation.Latitude, key.VehicleLocation.Longitude] } } }, function (err, raw) { if (err) console.log(err); });
-                            }
-                            catch (err) {
-                                console.log(err)
-                            }
-                        });
-                    }
+    try {
+        for (let [key, value] of busMap) {
+            if (value.state === 'new') {
+                var busInstance = new Trip({ trip_id: key.VehicleRef + ':' + new Date().toLocaleString('en-US', { timeZone: 'America/New_York' }), vehicleref: key.VehicleRef, begin: Date.now(), destination: key.DestinationName, active: true });
+                busInstance.save(function (err, doc) {
+                    if (err) return handleError(err);
+                    value.id = doc._id;
                 });
-            } else {
-                value.bunched = true;
+                value.state = 'tracking';
+            }
+            if (value.state === 'tracking' && key.MonitoredCall) {
+                if (key.MonitoredCall.Extensions.Distances.PresentableDistance === 'at stop' || key.MonitoredCall.Extensions.Distances.PresentableDistance === 'approaching') {
+                    Trip.update({ _id: value.id, 'stops.stop': { $ne: key.MonitoredCall.StopPointName }, active: true }, { $push: { stops: { time: Date.now(), stop: key.MonitoredCall.StopPointName } } }, function (err, raw) {
+                        if (err) console.log(err);
+                    });
+                }
+            }
+            if (value.state === 'tracking' && flatten(theArgs).filter(element => element.DestinationName === key.DestinationName && element.VehicleRef !== key.VehicleRef && element.MonitoredCall).some(element => Math.abs(key.MonitoredCall.Extensions.Distances.CallDistanceAlongRoute - element.MonitoredCall.Extensions.Distances.CallDistanceAlongRoute) <= 609.6)) {
+                if (value.bunched) {
+                    Trip.findOneAndUpdate({ _id: value.id }, { $inc: { bunch_time: 5 } }).exec(function (err, doc) {
+                        if (err) console.log(err);
+                        if (doc.bunch_time % 120 === 0) {
+                            request({ url: 'https://api.tomtom.com/traffic/services/4/flowSegmentData/relative/18/json?key=yp3zE7zS5up8EAEqWyHMf2owUBBWIUNr&point=' + key.VehicleLocation.Latitude + ',' + key.VehicleLocation.Longitude + '&unit=MPH' }, function (error, response, body) {
+                                try {
+                                    body = JSON.parse(body);
+                                    let speedRatio = body.flowSegmentData.currentSpeed / body.flowSegmentData.freeFlowSpeed;
+                                    Trip.update({ _id: doc._id }, { $push: { bunch_data: { time: Date.now(), speed: speedRatio, coordinates: [key.VehicleLocation.Latitude, key.VehicleLocation.Longitude] } } }, function (err, raw) { if (err) console.log(err); });
+                                }
+                                catch (err) {
+                                    console.log(err)
+                                }
+                            });
+                        }
+                    });
+                } else {
+                    value.bunched = true;
+                }
+            }
+            if (value.bunched && flatten(theArgs).filter(element => element.DestinationName === key.DestinationName && element.VehicleRef !== key.VehicleRef).some(element => Math.abs(key.MonitoredCall.Extensions.Distances.CallDistanceAlongRoute - element.MonitoredCall.Extensions.Distances.CallDistanceAlongRoute) <= 609.6) !== true) {
+                value.bunched = false;
+            }
+            if (key.ProgressRate && key.ProgressRate === 'noProgress') {
+                value.wait('no progress');
+                continue;
+            }
+            if (key.DestinationName === 'BAY RIDGE 95 ST STA' && key.MonitoredCall.StopPointName === '4 AV/95 ST') {
+                if (key.MonitoredCall.Extensions.Distances.PresentableDistance === 'approaching' || key.MonitoredCall.Extensions.Distances.PresentableDistance === 'at stop') {
+                    value.endNow('reached terminal');
+                }
+            }
+            if (key.DestinationName === 'BROWNSVILLE ROCKAWAY AV' && key.DestinationName.StopPointName === 'ROCKAWAY AV/HEGEMAN AV') {
+                if (key.MonitoredCall.Extensions.Distances.PresentableDistance === 'approaching' || key.MonitoredCall.Extensions.Distances.PresentableDistance === 'at stop') {
+                    value.endNow('reached terminal');
+                }
+            }
+            if (key.DestinationName === 'V A HOSP' && key.DestinationName.StopPointName === 'VA HOSPITAL/MAIN ENT BAY 2') {
+                if (key.MonitoredCall.Extensions.Distances.PresentableDistance === 'approaching' || key.MonitoredCall.Extensions.Distances.PresentableDistance === 'at stop') {
+                    value.endNow('reached terminal');
+                }
             }
         }
-        if (value.bunched && flatten(theArgs).filter(element => element.DestinationName === key.DestinationName && element.VehicleRef !== key.VehicleRef).some(element => Math.abs(key.MonitoredCall.Extensions.Distances.CallDistanceAlongRoute - element.MonitoredCall.Extensions.Distances.CallDistanceAlongRoute) <= 609.6) !== true) {
-            value.bunched = false;
-        }
+    }
+    catch (err) {
+        if (err) console.log(err);
     }
     busMap.clear();
 };

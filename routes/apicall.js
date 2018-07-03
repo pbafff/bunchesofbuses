@@ -80,7 +80,7 @@ router.get('/toggle/:state', function (req, res) {
 
 router.get('/movingbuses', function (req, res) {
     const buses = Array.from(movingBuses).map(bus => {
-        const {vehicleref, destination, state, id, bunched} = bus;
+        const { vehicleref, destination, state, id, bunched } = bus;
         const mappedBus = {};
         mappedBus.vehicleref = vehicleref;
         mappedBus.destination = destination;

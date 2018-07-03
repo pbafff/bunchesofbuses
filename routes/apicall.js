@@ -79,7 +79,16 @@ router.get('/toggle/:state', function (req, res) {
 });
 
 router.get('/movingbuses', function (req, res) {
-    const buses = Array.from(movingBuses).map(bus => JSON.stringify(bus, null, 2));
+    const buses = Array.from(movingBuses).map(bus => {
+        const {vehicleref, destination, state, id, bunched} = bus;
+        let mappedBus = {};
+        mappedBus.vehicleref = vehicleref;
+        mappedBus.destination = destination;
+        mappedBus.state = state;
+        mappedBus.id = id;
+        mappedBus.bunched = bunched;
+        JSON.stringify(mappedBus, null, 2);
+    });
     res.send({ movingBuses: buses });
     res.end();
 });

@@ -60,7 +60,7 @@ class Bus extends events.EventEmitter {
         movingBuses.delete(this);
     }
     pushToRedis() {
-        redis.rpush(['buses', this.vehicleref, this.destination, this.state, this.id, JSON.stringify(this.bunched)], function (err) {
+        redis.rpush(['buses', this.vehicleref, this.destination, this.id, JSON.stringify(this.bunched)], function (err) {
             if (err) console.log(err);
         });
     }
@@ -73,8 +73,8 @@ process.on('SIGTERM', () => {
 
 redis.lrange('buses', 0, -1, function (err, reply) {
     if (err) console.log(err);
-    for (let i = 0; i < reply.length; i += 5) {
-        movingBuses.add(new Bus(reply[i], reply[i + 1], reply[i + 2], reply[i + 3], reply[i + 4]));
+    for (let i = 0; i < reply.length; i += 4) {
+        movingBuses.add(new Bus(reply[i], reply[i + 1], 'tracking', reply[i + 2], reply[i + 3]));
     }
 });
 

@@ -5,6 +5,7 @@ var flatten = require('arr-flatten');
 var Trip = require('../models/trip');
 const auth = require('express-basic-auth');
 const events = require('events');
+const redis = require('redis').createClient(process.env.REDIS_URL);
 
 var APIkey = process.env.APIKEY;
 var format = "json";
@@ -22,18 +23,24 @@ let isRunning;
 const username = process.env.USR;
 const password = process.env.PASSWORD;
 
+process.stdin.resume();
+
+redis.on('error', function (err) {
+    console.log(err);
+});
+
 router.use(
     auth({ authorizer: myAuthorizer })
 );
 
 class Bus extends events.EventEmitter {
-    constructor(bus) {
+    constructor(vehicleref, destination = null, state = null, id = null, bunched = false) {
         super();
-        this.vehicleref = bus;
-        this.destination = null;
-        this.state = null;
-        this.id = null;
-        this.bunched = false;
+        this.vehicleref = vehicleref;
+        this.destination = destination;
+        this.state = state;
+        this.id = id;
+        this.bunched = JSON.parse(bunched);
         this.on('returned', function () {
             this.state = 'tracking';
             clearTimeout(this.timeoutId);
@@ -52,7 +59,24 @@ class Bus extends events.EventEmitter {
         Trip.update({ _id: this.id }, { active: false, end: Date.now(), termination_reason: reason }, function (err, raw) { if (err) console.log(err); });
         movingBuses.delete(this);
     }
+    pushToRedis() {
+        redis.rpush(['buses', this.vehicleref, this.destination, this.state, this.id, JSON.stringify(this.bunched)], function (err) {
+            if (err) console.log(err);
+        });
+    }
 };
+
+process.on('SIGTERM', () => {
+    redis.del('buses');
+    movingBuses.forEach(bus => bus.pushToRedis());
+});
+
+redis.lrange('buses', 0, -1, function (err, reply) {
+    if (err) console.log(err);
+    for (let i = 0; i < reply.length; i += 5) {
+        movingBuses.add(new Bus(reply[i], reply[i + 1], reply[i + 2], reply[i + 3], reply[i + 4]));
+    }
+});
 
 runInterval();
 
@@ -87,7 +111,7 @@ router.get('/movingbuses', function (req, res) {
         mappedBus.state = state;
         mappedBus.id = id;
         mappedBus.bunched = bunched;
-        JSON.stringify(mappedBus, null, 2);
+        return JSON.stringify(mappedBus, null, 2);
     });
     res.send({ movingBuses: buses });
     res.end();

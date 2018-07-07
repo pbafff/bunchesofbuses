@@ -2,7 +2,7 @@ var request = require('request');
 var express = require('express');
 var router = express.Router();
 var flatten = require('arr-flatten');
-var Trip = require('../models/trip');
+const db = require('../db/index');
 const auth = require('express-basic-auth');
 const events = require('events');
 const redis = require('redis').createClient(process.env.REDIS_URL);
@@ -34,33 +34,34 @@ router.use(
 );
 
 class Bus extends events.EventEmitter {
-    constructor(vehicleref, destination = null, state = null, id = null, bunched = false) {
+    constructor(vehicleref, destination = null, state = null, trip_id = null, bunched = false) {
         super();
         this.vehicleref = vehicleref;
         this.destination = destination;
         this.state = state;
-        this.id = id;
+        this.trip_id = trip_id;
         this.bunched = JSON.parse(bunched);
         this.on('returned', function () {
             this.state = 'tracking';
             clearTimeout(this.timeoutId);
-            Trip.update({ _id: this.id }, { $push: { waiting: { time: Date.now(), value: false } } }, function (err, raw) { if (err) console.log(err) });
+            db.query('INSERT INTO waiting(trip_id, time, value) VALUES ($1, NOW(), $2)', [this.trip_id, false]).catch(e => console.error(e.stack));
         });
     }
     wait(reason) {
         this.state = reason;
-        Trip.update({ _id: this.id }, { $push: { waiting: { value: true, time: Date.now() } } }, function (err, raw) { if (err) console.log(err) });
+        db.query('INSERT INTO waiting(trip_id, time, value) VALUES ($1, NOW(), $3)', [this.trip_id, true]).catch(e => console.error(e.stack));
         this.timeoutId = setTimeout(() => {
-            Trip.update({ _id: this.id }, { active: false, end: new Date(Date.now() - 1800000), termination_reason: `${reason}/timeout`, $push: { waiting: { time: Date.now(), value: false } } }, function (err, raw) { if (err) console.log(err); });
+            db.query(`UPDATE trips SET end_time = NOW() - INTERVAL '30 MINUTES', termination_reason = $1, active = $2 WHERE trip_id = $3`, [`${reason}/timeout`, false, this.trip_id]).catch(e => console.error(e.stack));
+            db.query('INSERT INTO waiting(trip_id, time, value) VALUES ($1, NOW(), $3)', [this.trip_id, false]).catch(e => console.error(e.stack));
             movingBuses.delete(this);
         }, 1800000);
     }
     endNow(reason) {
-        Trip.update({ _id: this.id }, { active: false, end: Date.now(), termination_reason: reason }, function (err, raw) { if (err) console.log(err); });
+        db.query(`UPDATE trips SET end_time = NOW() - INTERVAL '30 MINUTES', termination_reason = $1, active = $2 WHERE trip_id = $3`, [`${reason}/timeout`, false, this.trip_id]).catch(e => console.error(e.stack));
         movingBuses.delete(this);
     }
     pushToRedis() {
-        redis.rpush(['buses', this.vehicleref, this.destination, this.id, JSON.stringify(this.bunched)], function (err) {
+        redis.rpush(['buses', this.vehicleref, this.destination, this.trip_id, JSON.stringify(this.bunched)], function (err) {
             if (err) console.log(err);
         });
     }
@@ -228,30 +229,26 @@ function trackBuses(...theArgs) {
     try {
         for (let [key, value] of busMap) {
             if (value.state === 'new') {
-                var busInstance = new Trip({ trip_id: key.VehicleRef + ':' + new Date().toLocaleString('en-US', { timeZone: 'America/New_York' }), vehicleref: key.VehicleRef, begin: Date.now(), destination: key.DestinationName, active: true });
-                busInstance.save(function (err, doc) {
-                    if (err) return handleError(err);
-                    value.id = doc._id;
-                });
+                const trip_id = key.VehicleRef + ':' + new Date().toLocaleString('en-US', { timeZone: 'America/New_York' });
+                db.query('INSERT INTO trips(trip_id, begin_time, vehicleref, destination, active) VALUES ($1, NOW(), $2, $3, $4)', [trip_id, key.VehicleRef, key.DestinationName, true]).catch(e => console.error(e.stack));
+                value.trip_id = trip_id;
                 value.state = 'tracking';
             }
             if (value.state === 'tracking' && key.MonitoredCall) {
                 if (key.MonitoredCall.Extensions.Distances.PresentableDistance === 'at stop' || key.MonitoredCall.Extensions.Distances.PresentableDistance === 'approaching') {
-                    Trip.update({ _id: value.id, 'stops.stop': { $ne: key.MonitoredCall.StopPointName }, active: true }, { $push: { stops: { time: Date.now(), stop: key.MonitoredCall.StopPointName } } }, function (err, raw) {
-                        if (err) console.log(err);
-                    });
+                    db.query('INSERT INTO stops(trip_id, time, stop) VALUES ($1, NOW(), $2) WHERE NOT EXISTS (SELECT trip_id FROM stops WHERE trip_id = $3)', [value.trip_id, key.MonitoredCall.StopPointName]).catch(e => console.error(e.stack));
                 }
             }
             if (value.state === 'tracking' && flatten(theArgs).filter(element => element.DestinationName === key.DestinationName && element.VehicleRef !== key.VehicleRef && element.MonitoredCall).some(element => Math.abs(key.MonitoredCall.Extensions.Distances.CallDistanceAlongRoute - element.MonitoredCall.Extensions.Distances.CallDistanceAlongRoute) <= 609.6)) {
                 if (value.bunched) {
-                    Trip.findOneAndUpdate({ _id: value.id }, { $inc: { bunch_time: 5 } }).exec(function (err, doc) {
-                        if (err) console.log(err);
-                        if (doc.bunch_time % 120 === 0) {
+                    db.query('UPDATE trips SET bunch_time = bunch_time + 5 WHERE trip_id = $1 RETURNING bunch_time', [value.trip_id], (err, res) => {
+                        if (err) console.log(err.stack);
+                        if (res.rows[0].bunch_time % 120 === 0) {
                             request({ url: 'https://api.tomtom.com/traffic/services/4/flowSegmentData/relative/18/json?key=yp3zE7zS5up8EAEqWyHMf2owUBBWIUNr&point=' + key.VehicleLocation.Latitude + ',' + key.VehicleLocation.Longitude + '&unit=MPH' }, function (error, response, body) {
                                 try {
                                     body = JSON.parse(body);
-                                    let speedRatio = body.flowSegmentData.currentSpeed / body.flowSegmentData.freeFlowSpeed;
-                                    Trip.update({ _id: doc._id }, { $push: { bunch_data: { time: Date.now(), speed: speedRatio, coordinates: [key.VehicleLocation.Latitude, key.VehicleLocation.Longitude] } } }, function (err, raw) { if (err) console.log(err); });
+                                    const speedRatio = body.flowSegmentData.currentSpeed / body.flowSegmentData.freeFlowSpeed;
+                                    db.query('INSERT INTO bunch_data(trip_id, time, speed, latitude, longitude) VALUES ($1, NOW(), $2, $3, $4)', [value.trip_id, speedRatio, key.VehicleLocation.Latitude, key.VehicleLocation.Longitude]).catch(e => console.error(e.stack));
                                 }
                                 catch (err) {
                                     console.log(err)

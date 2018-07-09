@@ -2,7 +2,6 @@ var express = require('express');
 var router = express.Router();
 var b8 = require('../filtered-b8-routes-and-stops.json');
 var brooklyn = require('../topo-brooklyn.json');
-var Trip = require('../models/trip.js');
 
 /* GET home page. */
 router.get('/', function (req, res, next) {

@@ -44,35 +44,36 @@ class Bus extends events.EventEmitter {
         this.on('returned', function () {
             this.state = 'tracking';
             clearTimeout(this.timeoutId);
-            db.query('INSERT INTO waiting(trip_id, time, value) VALUES ($1, NOW(), $2)', [this.trip_id, false]).catch(e => console.error(e.stack));
+            db.query(`INSERT INTO waiting(trip_id, time, value) VALUES ($1, NOW(), $2)`, [this.trip_id, false]).catch(e => console.log(e));
         });
     }
     wait(reason) {
         this.state = reason;
-        db.query('INSERT INTO waiting(trip_id, time, value) VALUES ($1, NOW(), $3)', [this.trip_id, true]).catch(e => console.error(e.stack));
+        db.query(`INSERT INTO waiting(trip_id, time, value) VALUES ($1, NOW(), $2)`, [this.trip_id, true]).catch(e => console.log(e));
         this.timeoutId = setTimeout(() => {
-            db.query(`UPDATE trips SET end_time = NOW() - INTERVAL '30 MINUTES', termination_reason = $1, active = $2 WHERE trip_id = $3`, [`${reason}/timeout`, false, this.trip_id]).catch(e => console.error(e.stack));
-            db.query('INSERT INTO waiting(trip_id, time, value) VALUES ($1, NOW(), $3)', [this.trip_id, false]).catch(e => console.error(e.stack));
+            db.query(`UPDATE trips SET end_time = NOW() - INTERVAL '30 MINUTES', termination_reason = $1, active = $2 WHERE trip_id = $3`, [`${reason}/timeout`, false, this.trip_id]).catch(e => console.log('54', e));
+            db.query(`INSERT INTO waiting(trip_id, time, value) VALUES ($1, NOW(), $2)`, [this.trip_id, false]).catch(e => console.log('55', e));
             movingBuses.delete(this);
         }, 1800000);
     }
     endNow(reason) {
-        db.query(`UPDATE trips SET end_time = NOW() - INTERVAL '30 MINUTES', termination_reason = $1, active = $2 WHERE trip_id = $3`, [`${reason}/timeout`, false, this.trip_id]).catch(e => console.error(e.stack));
+        db.query(`UPDATE trips SET end_time = NOW() - INTERVAL '30 MINUTES', termination_reason = $1, active = $2 WHERE trip_id = $3`, [reason, false, this.trip_id]).catch(e => console.log('60', e));
         movingBuses.delete(this);
     }
     pushToRedis() {
-        redis.rpush(['buses', this.vehicleref, this.destination, this.trip_id, JSON.stringify(this.bunched)], function (err) {
+        redis.rpush(['busesDev', this.vehicleref, this.destination, this.trip_id, JSON.stringify(this.bunched)], function (err) {
             if (err) console.log(err);
         });
     }
 };
 
 process.on('SIGTERM', () => {
-    redis.del('buses');
+    redis.del('busesDev');
     movingBuses.forEach(bus => bus.pushToRedis());
+    redis.expire('busesDev', 30);
 });
 
-redis.lrange('buses', 0, -1, function (err, reply) {
+redis.lrange('busesDev', 0, -1, function (err, reply) {
     if (err) console.log(err);
     for (let i = 0; i < reply.length; i += 4) {
         movingBuses.add(new Bus(reply[i], reply[i + 1], 'tracking', reply[i + 2], reply[i + 3]));
@@ -105,12 +106,12 @@ router.get('/toggle/:state', function (req, res) {
 
 router.get('/movingbuses', function (req, res) {
     const buses = Array.from(movingBuses).map(bus => {
-        const { vehicleref, destination, state, id, bunched } = bus;
+        const { vehicleref, destination, state, trip_id, bunched } = bus;
         const mappedBus = {};
         mappedBus.vehicleref = vehicleref;
         mappedBus.destination = destination;
         mappedBus.state = state;
-        mappedBus.id = id;
+        mappedBus.trip_id = trip_id;
         mappedBus.bunched = bunched;
         return JSON.stringify(mappedBus, null, 2);
     });
@@ -230,25 +231,25 @@ function trackBuses(...theArgs) {
         for (let [key, value] of busMap) {
             if (value.state === 'new') {
                 const trip_id = key.VehicleRef + ':' + new Date().toLocaleString('en-US', { timeZone: 'America/New_York' });
-                db.query('INSERT INTO trips(trip_id, begin_time, vehicleref, destination, active) VALUES ($1, NOW(), $2, $3, $4)', [trip_id, key.VehicleRef, key.DestinationName, true]).catch(e => console.error(e.stack));
+                db.query(`INSERT INTO trips(trip_id, begin_time, vehicleref, destination, active) VALUES ($1, NOW(), $2, $3, $4)`, [trip_id, key.VehicleRef, key.DestinationName, true]).catch(e => console.log('233', e));
                 value.trip_id = trip_id;
                 value.state = 'tracking';
             }
             if (value.state === 'tracking' && key.MonitoredCall) {
                 if (key.MonitoredCall.Extensions.Distances.PresentableDistance === 'at stop' || key.MonitoredCall.Extensions.Distances.PresentableDistance === 'approaching') {
-                    db.query('INSERT INTO stops(trip_id, time, stop) VALUES ($1, NOW(), $2) WHERE NOT EXISTS (SELECT trip_id FROM stops WHERE trip_id = $3)', [value.trip_id, key.MonitoredCall.StopPointName]).catch(e => console.error(e.stack));
+                    db.query(`INSERT INTO stops(trip_id, time, stop) SELECT $1, NOW(), $2 WHERE NOT EXISTS (SELECT trip_id, stop FROM stops WHERE trip_id = $1 AND stop = $2)`, [value.trip_id, key.MonitoredCall.StopPointName]).catch(e => console.log('239', e));
                 }
             }
             if (value.state === 'tracking' && flatten(theArgs).filter(element => element.DestinationName === key.DestinationName && element.VehicleRef !== key.VehicleRef && element.MonitoredCall).some(element => Math.abs(key.MonitoredCall.Extensions.Distances.CallDistanceAlongRoute - element.MonitoredCall.Extensions.Distances.CallDistanceAlongRoute) <= 609.6)) {
                 if (value.bunched) {
-                    db.query('UPDATE trips SET bunch_time = bunch_time + 5 WHERE trip_id = $1 RETURNING bunch_time', [value.trip_id], (err, res) => {
-                        if (err) console.log(err.stack);
+                    db.query(`UPDATE trips SET bunch_time = coalesce(bunch_time, 0) + 5 WHERE trip_id = $1 RETURNING bunch_time`, [value.trip_id], (err, res) => {
+                        if (err) console.log('245', err);
                         if (res.rows[0].bunch_time % 120 === 0) {
                             request({ url: 'https://api.tomtom.com/traffic/services/4/flowSegmentData/relative/18/json?key=yp3zE7zS5up8EAEqWyHMf2owUBBWIUNr&point=' + key.VehicleLocation.Latitude + ',' + key.VehicleLocation.Longitude + '&unit=MPH' }, function (error, response, body) {
                                 try {
                                     body = JSON.parse(body);
                                     const speedRatio = body.flowSegmentData.currentSpeed / body.flowSegmentData.freeFlowSpeed;
-                                    db.query('INSERT INTO bunch_data(trip_id, time, speed, latitude, longitude) VALUES ($1, NOW(), $2, $3, $4)', [value.trip_id, speedRatio, key.VehicleLocation.Latitude, key.VehicleLocation.Longitude]).catch(e => console.error(e.stack));
+                                    db.query(`INSERT INTO bunch_data(trip_id, time, speed, latitude, longitude) VALUES ($1, NOW(), $2, $3, $4)`, [value.trip_id, speedRatio, key.VehicleLocation.Latitude, key.VehicleLocation.Longitude]).catch(e => console.log(e));
                                 }
                                 catch (err) {
                                     console.log(err)

@@ -244,7 +244,7 @@ function trackBuses(...theArgs) {
                 if (value.bunched) {
                     db.query(`UPDATE trips SET bunch_time = coalesce(bunch_time, 0) + 5 WHERE trip_id = $1 RETURNING bunch_time`, [value.trip_id], (err, res) => {
                         if (err) console.log('245', err);
-                        if (res.rows[0].bunch_time % 120 === 0) {
+                        if (Number.parseInt(res.rows[0].bunch_time) % 120 === 0) {
                             request({ url: 'https://api.tomtom.com/traffic/services/4/flowSegmentData/relative/18/json?key=yp3zE7zS5up8EAEqWyHMf2owUBBWIUNr&point=' + key.VehicleLocation.Latitude + ',' + key.VehicleLocation.Longitude + '&unit=MPH' }, function (error, response, body) {
                                 try {
                                     body = JSON.parse(body);

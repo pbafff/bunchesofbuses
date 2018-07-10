@@ -251,21 +251,21 @@ function trackBuses(...theArgs) {
             }
             if (value.state === 'tracking' && flatten(theArgs).filter(element => element.DestinationName === key.DestinationName && element.VehicleRef !== key.VehicleRef && element.MonitoredCall).some(element => Math.abs(key.MonitoredCall.Extensions.Distances.CallDistanceAlongRoute - element.MonitoredCall.Extensions.Distances.CallDistanceAlongRoute) <= 609.6)) {
                 if (value.bunched) {
-                    db.query(`UPDATE trips SET bunch_time = coalesce(bunch_time, 0) + 5 WHERE trip_id = $1 RETURNING bunch_time`, [value.trip_id], (err, res) => {
-                        if (err) console.log('245', err);
-                        if (Number.parseInt(res.rows[0].bunch_time) % 120 === 0) {
-                            request({ url: 'https://api.tomtom.com/traffic/services/4/flowSegmentData/relative/18/json?key=yp3zE7zS5up8EAEqWyHMf2owUBBWIUNr&point=' + key.VehicleLocation.Latitude + ',' + key.VehicleLocation.Longitude + '&unit=MPH' }, function (error, response, body) {
-                                try {
-                                    body = JSON.parse(body);
-                                    const speedRatio = body.flowSegmentData.currentSpeed / body.flowSegmentData.freeFlowSpeed;
-                                    db.query(`INSERT INTO bunch_data(trip_id, time, speed, latitude, longitude) VALUES ($1, NOW(), $2, $3, $4)`, [value.trip_id, speedRatio, key.VehicleLocation.Latitude, key.VehicleLocation.Longitude]).catch(e => console.log(e));
-                                }
-                                catch (err) {
-                                    console.log(err)
-                                }
-                            });
-                        }
-                    });
+                    db.query(`UPDATE trips SET bunch_time = coalesce(bunch_time, 0) + 5 WHERE trip_id = $1 RETURNING bunch_time`, [value.trip_id])
+                        .then(res => {
+                            if (Number.parseInt(res.rows[0].bunch_time) % 120 === 0) {
+                                request({ url: 'https://api.tomtom.com/traffic/services/4/flowSegmentData/relative/18/json?key=yp3zE7zS5up8EAEqWyHMf2owUBBWIUNr&point=' + key.VehicleLocation.Latitude + ',' + key.VehicleLocation.Longitude + '&unit=MPH' }, function (error, response, body) {
+                                    try {
+                                        body = JSON.parse(body);
+                                        const speedRatio = body.flowSegmentData.currentSpeed / body.flowSegmentData.freeFlowSpeed;
+                                        db.query(`INSERT INTO bunch_data(trip_id, time, speed, latitude, longitude) VALUES ($1, NOW(), $2, $3, $4)`, [value.trip_id, speedRatio, key.VehicleLocation.Latitude, key.VehicleLocation.Longitude]).catch(e => console.log(e));
+                                    }
+                                    catch (err) {
+                                        console.log(err)
+                                    }
+                                });
+                            }
+                        }).catch(e => console.log('268', e));
                 } else {
                     value.bunched = true;
                 }

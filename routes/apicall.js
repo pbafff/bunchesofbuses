@@ -69,11 +69,16 @@ class Bus extends events.EventEmitter {
 
 process.on('SIGTERM', () => {
     redis.del(process.env.REDIS_KEY);
+    layoverBuses.forEach(bus => redis.rpush(process.env.REDIS_KEY2, bus));
     movingBuses.forEach(bus => bus.pushToRedis());
     redis.expire(process.env.REDIS_KEY, 30);
 });
 
 if (!process.env.NO_REDIS) {
+    redis.lrange(process.env.REDIS_KEY2, function (err, reply) {
+        if (err) console.log(err);
+        reply.forEach(bus => layoverBuses.add(bus));
+    });
     redis.lrange(process.env.REDIS_KEY, 0, -1, function (err, reply) {
         if (err) console.log(err);
         for (let i = 0; i < reply.length; i += 4) {

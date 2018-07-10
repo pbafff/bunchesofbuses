@@ -22,7 +22,7 @@ CREATE TABLE bunch_data (
     time TIMESTAMPTZ NOT NULL,
     speed NUMERIC NULL,
     longitude NUMERIC NULL,
-    latitutde NUMERIC NULL
+    latitude NUMERIC NULL
 );
 SELECT create_hypertable('bunch_data', 'time');
 

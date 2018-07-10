@@ -270,8 +270,12 @@ function trackBuses(...theArgs) {
                     value.bunched = true;
                 }
             }
-            if (value.bunched && flatten(theArgs).filter(element => element.DestinationName === key.DestinationName && element.VehicleRef !== key.VehicleRef).some(element => Math.abs(key.MonitoredCall.Extensions.Distances.CallDistanceAlongRoute - element.MonitoredCall.Extensions.Distances.CallDistanceAlongRoute) <= 609.6) !== true) {
-                value.bunched = false;
+            if (value.bunched) {
+                if (flatten(theArgs).some(element => element.DestinationName === key.DestinationName && element.VehicleRef !== key.VehicleRef) !== true) {
+                    value.bunched = false;
+                } else if (flatten(theArgs).filter(element => element.DestinationName === key.DestinationName && element.VehicleRef !== key.VehicleRef).some(element => Math.abs(key.MonitoredCall.Extensions.Distances.CallDistanceAlongRoute - element.MonitoredCall.Extensions.Distances.CallDistanceAlongRoute) <= 609.6) !== true) {
+                    value.bunched = false;
+                }
             }
             if (key.ProgressRate && key.ProgressRate === 'noProgress') {
                 value.wait('no progress');

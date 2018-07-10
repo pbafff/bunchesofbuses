@@ -77,7 +77,7 @@ process.on('SIGTERM', () => {
 });
 
 if (!process.env.NO_REDIS) {
-    redis.lrange(process.env.REDIS_KEY2, function (err, reply) {
+    redis.lrange(process.env.REDIS_KEY2, 0, -1, function (err, reply) {
         if (err) console.log(err);
         reply.forEach(bus => layoverBuses.add(bus));
     });

@@ -73,12 +73,14 @@ process.on('SIGTERM', () => {
     redis.expire(process.env.REDIS_KEY, 30);
 });
 
-redis.lrange(process.env.REDIS_KEY, 0, -1, function (err, reply) {
-    if (err) console.log(err);
-    for (let i = 0; i < reply.length; i += 4) {
-        movingBuses.add(new Bus(reply[i], reply[i + 1], 'tracking', reply[i + 2], reply[i + 3]));
-    }
-});
+if (!process.env.NO_REDIS) {
+    redis.lrange(process.env.REDIS_KEY, 0, -1, function (err, reply) {
+        if (err) console.log(err);
+        for (let i = 0; i < reply.length; i += 4) {
+            movingBuses.add(new Bus(reply[i], reply[i + 1], 'tracking', reply[i + 2], reply[i + 3]));
+        }
+    });
+}
 
 runInterval();
 

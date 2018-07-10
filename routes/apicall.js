@@ -246,7 +246,7 @@ function trackBuses(...theArgs) {
             }
             if (value.state === 'tracking' && key.MonitoredCall) {
                 if (key.MonitoredCall.Extensions.Distances.PresentableDistance === 'at stop' || key.MonitoredCall.Extensions.Distances.PresentableDistance === 'approaching') {
-                    db.query(`INSERT INTO stops(trip_id, time, stop) SELECT $1, NOW(), $2 WHERE NOT EXISTS (SELECT trip_id, stop FROM stops WHERE trip_id = $1 AND stop = $2)`, [value.trip_id, key.MonitoredCall.StopPointName]).catch(e => console.log('239', e));
+                    db.query(`INSERT INTO stops(trip_id, time, stop, stop_point_ref) SELECT $1, NOW(), $2, $3 WHERE NOT EXISTS (SELECT trip_id, stop FROM stops WHERE trip_id = $1 AND stop = $2)`, [value.trip_id, key.MonitoredCall.StopPointName, key.MonitoredCall.StopPointRef]).catch(e => console.log('239', e));
                 }
             }
             if (value.state === 'tracking' && flatten(theArgs).filter(element => element.DestinationName === key.DestinationName && element.VehicleRef !== key.VehicleRef && element.MonitoredCall).some(element => Math.abs(key.MonitoredCall.Extensions.Distances.CallDistanceAlongRoute - element.MonitoredCall.Extensions.Distances.CallDistanceAlongRoute) <= 609.6)) {

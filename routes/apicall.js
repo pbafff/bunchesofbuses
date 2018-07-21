@@ -51,13 +51,14 @@ class Bus extends events.EventEmitter {
         this.state = reason;
         db.query(`INSERT INTO waiting(trip_id, time, value) VALUES ($1, NOW(), $2)`, [this.trip_id, true]).catch(e => console.log(e));
         this.timeoutId = setTimeout(() => {
-            db.query(`UPDATE trips SET end_time = NOW() - INTERVAL '30 MINUTES', termination_reason = $1, active = $2 WHERE trip_id = $3`, [`${reason}/timeout`, false, this.trip_id]).catch(e => console.log('54', e));
+            db.query(`UPDATE trips SET end_time = NOW() - INTERVAL '1 HOUR', termination_reason = $1, active = $2 WHERE trip_id = $3`, [`${reason}/timeout`, false, this.trip_id]).catch(e => console.log('54', e));
             db.query(`INSERT INTO waiting(trip_id, time, value) VALUES ($1, NOW(), $2)`, [this.trip_id, false]).catch(e => console.log('55', e));
             movingBuses.delete(this);
-        }, 1800000);
+        }, 3600000);
     }
     endNow(reason) {
-        db.query(`UPDATE trips SET end_time = NOW() - INTERVAL '30 MINUTES', termination_reason = $1, active = $2 WHERE trip_id = $3`, [reason, false, this.trip_id]).catch(e => console.log('60', e));
+        db.query(`UPDATE trips SET end_time = NOW(), termination_reason = $1, active = $2 WHERE trip_id = $3`, [reason, false, this.trip_id]).catch(e => console.log('60', e));
+        clearTimeout(this.timeoutId);
         movingBuses.delete(this);
     }
     pushToRedis() {
@@ -279,19 +280,18 @@ function trackBuses(...theArgs) {
             }
             if (key.ProgressRate && key.ProgressRate === 'noProgress') {
                 value.wait('no progress');
-                continue;
             }
-            if (key.DestinationName === 'BAY RIDGE 95 ST STA' && key.MonitoredCall.StopPointName === '4 AV/95 ST') {
+            if (value.DestinationName === 'BAY RIDGE 95 ST STA' && key.MonitoredCall.StopPointName === '4 AV/95 ST') {
                 if (key.MonitoredCall.Extensions.Distances.PresentableDistance === 'approaching' || key.MonitoredCall.Extensions.Distances.PresentableDistance === 'at stop') {
                     value.endNow('reached terminal');
                 }
             }
-            if (key.DestinationName === 'BROWNSVILLE ROCKAWAY AV' && key.DestinationName.StopPointName === 'ROCKAWAY AV/HEGEMAN AV') {
+            if (value.DestinationName === 'BROWNSVILLE ROCKAWAY AV' && key.DestinationName.StopPointName === 'ROCKAWAY AV/HEGEMAN AV') {
                 if (key.MonitoredCall.Extensions.Distances.PresentableDistance === 'approaching' || key.MonitoredCall.Extensions.Distances.PresentableDistance === 'at stop') {
                     value.endNow('reached terminal');
                 }
             }
-            if (key.DestinationName === 'V A HOSP' && key.DestinationName.StopPointName === 'VA HOSPITAL/MAIN ENT BAY 2') {
+            if (value.DestinationName === 'V A HOSP' && key.DestinationName.StopPointName === 'VA HOSPITAL/MAIN ENT BAY 2') {
                 if (key.MonitoredCall.Extensions.Distances.PresentableDistance === 'approaching' || key.MonitoredCall.Extensions.Distances.PresentableDistance === 'at stop') {
                     value.endNow('reached terminal');
                 }

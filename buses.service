@@ -1,0 +1,8 @@
+[Unit]
+Description=bunchesofbuses server
+
+[Service]
+ExecStart=/bin/bash -c "cd /home/pi/bunchesofbuses && npm run start"
+
+[Install]
+WantedBy=multi-user.target

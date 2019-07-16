@@ -1,10 +1,11 @@
+require('dotenv').config();
 const request = require('request');
 const router = require('express').Router();
 const db = require('./db/index');
 // const argv = require('yargs').option('dest', {type: 'array', desc: 'Bus destinations'}).option('route', {type: 'string', desc: 'Bus route'}).argv;
 
 const APIkey = process.env.APIKEY;
-const APIURL = `https://bustime.mta.info/api/siri/vehicle-monitoring.json?bustimeObj=${APIkey}&LineRef=MTA+NYCT_B8`;
+const APIURL = `https://bustime.mta.info/api/siri/vehicle-monitoring.json?key=${APIkey}&LineRef=MTA+NYCT_B8`;
 
 const layoverBuses = new Set();
 const movingBuses = new Set();
@@ -55,6 +56,7 @@ function runInterval() {
 
             try {
                 const json = JSON.parse(body);
+		console.log(json.Siri.ServiceDelivery.VehicleMonitoringDelivery[0]);
                 for (const i = 0; i < json.Siri.ServiceDelivery.VehicleMonitoringDelivery[0].VehicleActivity.length; i++) {
                     bustimeObjs.push(json.Siri.ServiceDelivery.VehicleMonitoringDelivery[0].VehicleActivity[i].MonitoredVehicleJourney);
                 }

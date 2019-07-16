@@ -56,8 +56,7 @@ function runInterval() {
 
             try {
                 const json = JSON.parse(body);
-		console.log(json.Siri.ServiceDelivery.VehicleMonitoringDelivery[0]);
-                for (const i = 0; i < json.Siri.ServiceDelivery.VehicleMonitoringDelivery[0].VehicleActivity.length; i++) {
+		for (let i = 0; i < json.Siri.ServiceDelivery.VehicleMonitoringDelivery[0].VehicleActivity.length; i++) {
                     bustimeObjs.push(json.Siri.ServiceDelivery.VehicleMonitoringDelivery[0].VehicleActivity[i].MonitoredVehicleJourney);
                 }
             } catch (err) {

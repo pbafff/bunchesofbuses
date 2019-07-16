@@ -149,7 +149,7 @@ function trackBuses(bustimeObjs) {
                         .then(res => {
                             const bunch_time = res.rows[0].bunch_time;
                             if (Number.parseInt(bunch_time) % 120 === 0 || bunch_time === 5) {
-                                request({ url: `https://api.tomtom.com/traffic/services/4/flowSegmentData/relative/18/json?bustimeObj=yp3zE7zS5up8EAEqWyHMf2owUBBWIUNr&point=${mBustimeObj.VehicleLocation.Latitude},${mBustimeObj.VehicleLocation.Longitude}&unit=MPH` }, function (error, response, body) {
+                                request({ url: `https://api.tomtom.com/traffic/services/4/flowSegmentData/relative/18/json?key=${process.env.TOMTOMKEY}&point=${mBustimeObj.VehicleLocation.Latitude},${mBustimeObj.VehicleLocation.Longitude}&unit=MPH` }, function (error, response, body) {
                                     try {
                                         body = JSON.parse(body);
                                         const speedRatio = body.flowSegmentData.currentSpeed / body.flowSegmentData.freeFlowSpeed;

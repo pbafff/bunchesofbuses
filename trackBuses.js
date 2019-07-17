@@ -4,8 +4,8 @@ const router = require('express').Router();
 const db = require('./db/index');
 // const argv = require('yargs').option('dest', {type: 'array', desc: 'Bus destinations'}).option('route', {type: 'string', desc: 'Bus route'}).argv;
 
-const APIkey = process.env.APIKEY;
-const APIURL = `https://bustime.mta.info/api/siri/vehicle-monitoring.json?key=${APIkey}&LineRef=MTA+NYCT_B8`;
+const BUSTIMEAPIURL = `https://bustime.mta.info/api/siri/vehicle-monitoring.json?key=${process.env.APIKEY}&LineRef=MTA+NYCT_B8`;
+const TOMTOMAPIURL = `https://api.tomtom.com/traffic/services/4/flowSegmentData/relative/18/json?key=${process.env.TOMTOMKEY}&point=${mBustimeObj.VehicleLocation.Latitude},${mBustimeObj.VehicleLocation.Longitude}&unit=MPH`;
 
 const layoverBuses = new Set();
 const movingBuses = new Set();
@@ -49,7 +49,7 @@ function runInterval() {
     intervId = setInterval(() => {
         const bustimeObjs = [];
 
-        request({ url: APIURL }, function (error, response, body) {
+        request({ url: BUSTIMEAPIURL }, function (error, response, body) {
             if (error) {
                 console.log('error: ', error);
             }
@@ -155,7 +155,7 @@ function trackBuses(bustimeObjs) {
                         .then(res => {
                             const bunch_time = res.rows[0].bunch_time;
                             if (Number.parseInt(bunch_time) % 120 === 0 || bunch_time === 5) {
-                                request({ url: `https://api.tomtom.com/traffic/services/4/flowSegmentData/relative/18/json?key=${process.env.TOMTOMKEY}&point=${mBustimeObj.VehicleLocation.Latitude},${mBustimeObj.VehicleLocation.Longitude}&unit=MPH` }, function (error, response, body) {
+                                request({ url: TOMTOMAPIURL }, function (error, response, body) {
                                     try {
                                         body = JSON.parse(body);
                                         const speedRatio = body.flowSegmentData.currentSpeed / body.flowSegmentData.freeFlowSpeed;

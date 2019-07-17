@@ -42,7 +42,7 @@ class Bus {
         clearTimeout(this.timeoutId);
         movingBuses.delete(this);
     }
-};
+}
 
 function runInterval() {
     isRunning = true;
@@ -56,7 +56,7 @@ function runInterval() {
 
             try {
                 const json = JSON.parse(body);
-		for (let i = 0; i < json.Siri.ServiceDelivery.VehicleMonitoringDelivery[0].VehicleActivity.length; i++) {
+                for (let i = 0; i < json.Siri.ServiceDelivery.VehicleMonitoringDelivery[0].VehicleActivity.length; i++) {
                     bustimeObjs.push(json.Siri.ServiceDelivery.VehicleMonitoringDelivery[0].VehicleActivity[i].MonitoredVehicleJourney);
                 }
             } catch (err) {
@@ -68,7 +68,7 @@ function runInterval() {
             trackBuses(bustimeObjs);
         });
     }, 5000);
-};
+}
 
 function checkForLayovers(bustimeObjs) {
     //check if data on layover buses is still being returned by bustime. if not remove that bus from set.
@@ -76,11 +76,11 @@ function checkForLayovers(bustimeObjs) {
     bustimeObjs.forEach(bustimeObj => {
         everything.push(bustimeObj.VehicleRef);
     });
-    for (var bus of layoverBuses) {
+    for (let bus of layoverBuses) {
         if (everything.indexOf(bus) === -1) {
             layoverBuses.delete(bus);
         }
-    };
+    }
     //add buses to layover set
     bustimeObjs.forEach(bustimeObj => {
         if (bustimeObj.ProgressRate === 'noProgress' && bustimeObj.ProgressStatus === 'layover' && layoverBuses.has(bustimeObj.VehicleRef) !== true) {
@@ -88,20 +88,26 @@ function checkForLayovers(bustimeObjs) {
         }
         //if element approaching or 1 stop away from end stops
     });
-};
+}
 
 function checkIfMovingYet(bustimeObjs) {
     if (layoverBuses.size > 0) {
         layoverBuses.forEach(bus => {
             bustimeObjs.forEach(bustimeObj => {
                 if (bustimeObj.VehicleRef === bus && bustimeObj.ProgressRate === 'normalProgress') {
-                    movingBuses.add(new Bus(bus));
-                    layoverBuses.delete(bus);
+                    if (Array.from(movingBuses).some(movingBus => movingBus.vehicleref === bustimeObj.VehicleRef) !== true) {
+                        movingBuses.add(new Bus(bus));
+                        layoverBuses.delete(bus);
+                    }
+                    else {
+                        layoverBuses.delete(bus);
+                    }
                 }
+
             });
         });
     }
-};
+}
 
 function trackBuses(bustimeObjs) {
     movingBuses.forEach(bus => {
@@ -153,7 +159,7 @@ function trackBuses(bustimeObjs) {
                                     try {
                                         body = JSON.parse(body);
                                         const speedRatio = body.flowSegmentData.currentSpeed / body.flowSegmentData.freeFlowSpeed;
-                                        db.query(`INSERT INTO bunch_data(trip_id, time, speed, latitude, longitude) VALUES ($1, NOW(), $2, $3, $4)`, [movingBus.trip_id, speedRatio, mBustimeObj.VehicleLocation.Latitude, mBustimeObj.VehicleLocation.Longitude]).catch(e => console.log(e));
+                                        db.query(`INSERT INTO bunch_data(trip_id, time, traffic_speed, latitude, longitude) VALUES ($1, NOW(), $2, $3, $4)`, [movingBus.trip_id, speedRatio, mBustimeObj.VehicleLocation.Latitude, mBustimeObj.VehicleLocation.Longitude]).catch(e => console.log(e));
                                     }
                                     catch (err) {
                                         console.log(err)
@@ -201,7 +207,7 @@ function trackBuses(bustimeObjs) {
     }
 
     busMap.clear();
-};
+}
 
 router.get('/toggle/:state', function (req, res) {
     if (req.params.state === 'on' && isRunning === false) {

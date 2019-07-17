@@ -13,14 +13,15 @@ SELECT create_hypertable('trips', 'begin_time');
 CREATE TABLE stops (
     trip_id TEXT NOT NULL,
     time TIMESTAMPTZ NOT NULL,
-    stop TEXT NOT NULL
+    stop TEXT NOT NULL,
+    stop_point_ref TEXT NOT NULL
 );
 SELECT create_hypertable('stops', 'time');
 
 CREATE TABLE bunch_data (
     trip_id TEXT NOT NULL,
     time TIMESTAMPTZ NOT NULL,
-    speed NUMERIC NULL,
+    traffic_speed NUMERIC NULL,
     longitude NUMERIC NULL,
     latitude NUMERIC NULL
 );

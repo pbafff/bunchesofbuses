@@ -5,8 +5,7 @@ CREATE TABLE trips (
     vehicleref TEXT NOT NULL,
     destination TEXT NOT NULL,
     active BOOLEAN NOT NULL,
-    termination_reason TEXT NULL,
-    bunch_time NUMERIC NULL
+    termination_reason TEXT NULL
 );
 SELECT create_hypertable('trips', 'begin_time');
 
@@ -18,14 +17,12 @@ CREATE TABLE stops (
 );
 SELECT create_hypertable('stops', 'time');
 
-CREATE TABLE bunch_data (
-    trip_id TEXT NOT NULL,
+CREATE TABLE positions (
     time TIMESTAMPTZ NOT NULL,
-    traffic_speed NUMERIC NULL,
-    longitude NUMERIC NULL,
-    latitude NUMERIC NULL
+    destination TEXT NOT NULL,
+    buses json[]
 );
-SELECT create_hypertable('bunch_data', 'time');
+SELECT create_hypertable('positions', 'time');
 
 CREATE TABLE waiting (
     trip_id TEXT NOT NULL,

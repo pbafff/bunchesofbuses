@@ -1,6 +1,6 @@
 const db = require('./db/index');
 
-export default class Bus {
+module.exports = class Bus {
     constructor(vehicleref, destination = null, state = null, trip_id = null) {
         this.vehicleref = vehicleref;
         this.destination = destination;

@@ -6,7 +6,7 @@ const db = require('./db/index');
 
 const BUSTIMEAPIURL = `https://bustime.mta.info/api/siri/vehicle-monitoring.json?key=${process.env.APIKEY}&LineRef=MTA+NYCT_B8`;
 
-import Bus from './Bus';
+const Bus = require('./Bus');
 const layoverBuses = Bus.layoverBuses;
 const movingBuses = Bus.movingBuses;
 const busMap = Bus.busMap;

@@ -14,14 +14,14 @@ module.exports = class Bus {
     static called = 0;
 
     static getPositions(...destinations) {
-        let pos;
-
-        if (pos = Array.from(Bus.movingBuses)
+        let pos = Array.from(Bus.movingBuses)
             .filter(x => destinations.includes(x.destination))
             .map(x => {
                 return { trip_id: x.trip_id, latitude: x.latitude, longitude: x.longitude, distance: x.distance }
             })
-            .sort((a, b) => a.distance - b.distance)) {
+            .sort((a, b) => a.distance - b.distance);
+
+        if (pos.length > 0) {
 
             const distances = pos.map((x, i, arr) => { if (arr[i + 1]) return arr[i + 1].distance - x.distance });
 
@@ -45,12 +45,14 @@ module.exports = class Bus {
         Bus.called++;
 
         setInterval(() => {
-            if (Bus.getPositions('BAY RIDGE 95 ST STA')) {
-                db.query(`INSERT INTO positions VALUES (NOW(), $1, $2)`, ['BROWNSVILLE ROCKAWAY AV', Bus.getPositions('BROWNSVILLE ROCKAWAY AV')]).catch(e => console.log(e));
+            let pos1;
+            if (pos1 = Bus.getPositions('BAY RIDGE 95 ST STA')) {
+                db.query(`INSERT INTO positions VALUES (NOW(), $1, $2)`, ['BROWNSVILLE ROCKAWAY AV', pos1]).catch(e => console.log(e));
             }
 
-            if (Bus.getPositions('BAY RIDGE 95 ST STA', 'V A HOSP')) {
-                db.query(`INSERT INTO positions VALUES (NOW(), $1, $2)`, ['BAY RIDGE 95 ST STA/V A HOSP', Bus.getPositions('BAY RIDGE 95 ST STA', 'V A HOSP')]).catch(e => console.log(e));
+            let pos2;
+            if (pos2 = Bus.getPositions('BAY RIDGE 95 ST STA', 'V A HOSP')) {
+                db.query(`INSERT INTO positions VALUES (NOW(), $1, $2)`, ['BAY RIDGE 95 ST STA/V A HOSP', pos2]).catch(e => console.log(e));
             }
         }, 60000);
     })()

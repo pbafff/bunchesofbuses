@@ -20,13 +20,13 @@ function runInterval() {
     intervId = setInterval(() => {
         const bustimeObjs = [];
 
-        request({ url: BUSTIMEAPIURL }, function (error, response, body) {
+        request({ url: BUSTIMEAPIURL, headers: { 'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:68.0) Gecko/20100101 Firefox/68.0' } }, function (error, response, body) {
             if (error) {
                 console.log('error: ', error);
             }
 
             const json = JSON.parse(body);
-            
+
             try {
                 for (let i = 0; i < json.Siri.ServiceDelivery.VehicleMonitoringDelivery[0].VehicleActivity.length; i++) {
                     bustimeObjs.push(json.Siri.ServiceDelivery.VehicleMonitoringDelivery[0].VehicleActivity[i].MonitoredVehicleJourney);

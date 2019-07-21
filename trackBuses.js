@@ -1,4 +1,3 @@
-require('dotenv').config();
 const request = require('request');
 const router = require('express').Router();
 const db = require('./db/index');
@@ -20,7 +19,7 @@ function runInterval() {
     intervId = setInterval(() => {
         const bustimeObjs = [];
 
-        request({ url: BUSTIMEAPIURL, headers: { 'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:68.0) Gecko/20100101 Firefox/68.0' } }, function (error, response, body) {
+        request({ url: BUSTIMEAPIURL }, function (error, response, body) {
             if (error) {
                 console.log('error: ', error);
             }

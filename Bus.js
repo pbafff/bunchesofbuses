@@ -45,12 +45,12 @@ module.exports = class Bus {
         Bus.called++;
 
         setInterval(() => {
-            if (Bus.getPositions(['BAY RIDGE 95 ST STA'])) {
-                db.query(`INSERT INTO positions VALUES (NOW(), $1, $2)`, ['BROWNSVILLE ROCKAWAY AV', Bus.getPositions(['BROWNSVILLE ROCKAWAY AV'])]).catch(e => console.log(e));
+            if (Bus.getPositions('BAY RIDGE 95 ST STA')) {
+                db.query(`INSERT INTO positions VALUES (NOW(), $1, $2)`, ['BROWNSVILLE ROCKAWAY AV', Bus.getPositions('BROWNSVILLE ROCKAWAY AV')]).catch(e => console.log(e));
             }
 
-            if (Bus.getPositions(['BAY RIDGE 95 ST STA', 'V A HOSP'])) {
-                db.query(`INSERT INTO positions VALUES (NOW(), $1, $2)`, ['BAY RIDGE 95 ST STA/V A HOSP', Bus.getPositions(['BAY RIDGE 95 ST STA', 'V A HOSP'])]).catch(e => console.log(e));
+            if (Bus.getPositions('BAY RIDGE 95 ST STA', 'V A HOSP')) {
+                db.query(`INSERT INTO positions VALUES (NOW(), $1, $2)`, ['BAY RIDGE 95 ST STA/V A HOSP', Bus.getPositions('BAY RIDGE 95 ST STA', 'V A HOSP')]).catch(e => console.log(e));
             }
         }, 60000);
     })()

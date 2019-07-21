@@ -24,14 +24,14 @@ function runInterval() {
                 console.log('error: ', error);
             }
 
-            const json = JSON.parse(body);
-
             try {
+                const json = JSON.parse(body);
+
                 for (let i = 0; i < json.Siri.ServiceDelivery.VehicleMonitoringDelivery[0].VehicleActivity.length; i++) {
                     bustimeObjs.push(json.Siri.ServiceDelivery.VehicleMonitoringDelivery[0].VehicleActivity[i].MonitoredVehicleJourney);
                 }
             } catch (err) {
-                console.log(err, JSON.stringify(json, null, 2), BUSTIMEAPIURL);
+                console.log(err, body, BUSTIMEAPIURL);
             }
 
             checkForLayovers(bustimeObjs);

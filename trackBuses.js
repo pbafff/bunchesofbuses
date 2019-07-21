@@ -7,42 +7,15 @@ const db = require('./db/index');
 const BUSTIMEAPIURL = `https://bustime.mta.info/api/siri/vehicle-monitoring.json?key=${process.env.APIKEY}&LineRef=MTA+NYCT_B8`;
 const TOMTOMAPIURL = `https://api.tomtom.com/traffic/services/4/flowSegmentData/relative/18/json?key=${process.env.TOMTOMKEY}&point=${mBustimeObj.VehicleLocation.Latitude},${mBustimeObj.VehicleLocation.Longitude}&unit=MPH`;
 
-const layoverBuses = new Set();
-const movingBuses = new Set();
-const busMap = new Map();
+import Bus from './Bus';
+import Bunch from './Bunch';
+const layoverBuses = Bus.layoverBuses;
+const movingBuses = Bus.movingBuses;
+const busMap = Bus.busMap;
 let intervId;
 let isRunning;
 
 runInterval();
-
-class Bus {
-    constructor(vehicleref, destination = null, state = null, trip_id = null, bunched = false) {
-        this.vehicleref = vehicleref;
-        this.destination = destination;
-        this.state = state;
-        this.trip_id = trip_id;
-        this.bunched = JSON.parse(bunched);
-        this.returned = function () {
-            this.state = 'tracking';
-            clearTimeout(this.timeoutId);
-            db.query(`INSERT INTO waiting(trip_id, time, value) VALUES ($1, NOW(), $2)`, [this.trip_id, false]).catch(e => console.log(e));
-        }
-    }
-    wait(reason) {
-        this.state = reason;
-        db.query(`INSERT INTO waiting(trip_id, time, value) VALUES ($1, NOW(), $2)`, [this.trip_id, true]).catch(e => console.log(e));
-        this.timeoutId = setTimeout(() => {
-            db.query(`UPDATE trips SET end_time = NOW() - INTERVAL '1 HOUR', termination_reason = $1, active = $2 WHERE trip_id = $3`, [`${reason}/timeout`, false, this.trip_id]).catch(e => console.log('54', e));
-            db.query(`INSERT INTO waiting(trip_id, time, value) VALUES ($1, NOW(), $2)`, [this.trip_id, false]).catch(e => console.log('55', e));
-            movingBuses.delete(this);
-        }, 3600000);
-    }
-    endNow(reason) {
-        db.query(`UPDATE trips SET end_time = NOW(), termination_reason = $1, active = $2 WHERE trip_id = $3`, [reason, false, this.trip_id]).catch(e => console.log('60', e));
-        clearTimeout(this.timeoutId);
-        movingBuses.delete(this);
-    }
-}
 
 function runInterval() {
     isRunning = true;
@@ -134,10 +107,11 @@ function trackBuses(bustimeObjs) {
         });
     });
 
-    try {
-        for (let [mBustimeObj, movingBus] of busMap) {
+    for (let [mBustimeObj, movingBus] of busMap) {
+        movingBus.CallDistanceAlongRoute = mBustimeObj.MonitoredCall.Extensions.Distances.CallDistanceAlongRoute;
+        try {
             if (movingBus.state === 'new') {
-                const trip_id = mBustimeObj.VehicleRef + ':' + new Date().toLocaleString('en-US', { timeZone: 'America/New_York' });
+                const trip_id = `${mBustimeObj.VehicleRef}:${new Date().toLocaleString('en-US', { timeZone: 'America/New_York'} )}`;
                 db.query(`INSERT INTO trips(trip_id, begin_time, vehicleref, destination, active) VALUES ($1, NOW(), $2, $3, $4)`, [trip_id, mBustimeObj.VehicleRef, mBustimeObj.DestinationName, true]).catch(e => console.log('233', e));
                 movingBus.trip_id = trip_id;
                 movingBus.state = 'tracking';
@@ -153,8 +127,8 @@ function trackBuses(bustimeObjs) {
                 if (movingBus.bunched) {
                     db.query(`UPDATE trips SET bunch_time = coalesce(bunch_time, 0) + 5 WHERE trip_id = $1 RETURNING bunch_time`, [movingBus.trip_id])
                         .then(res => {
-                            const bunch_time = res.rows[0].bunch_time;
-                            if (Number.parseInt(bunch_time) % 120 === 0 || bunch_time === 5) {
+                            const bunch_time = Number.parseInt(res.rows[0].bunch_time);
+                            if (bunch_time % 120 === 0 || bunch_time === 5) {
                                 request({ url: TOMTOMAPIURL }, function (error, response, body) {
                                     try {
                                         body = JSON.parse(body);
@@ -162,7 +136,7 @@ function trackBuses(bustimeObjs) {
                                         db.query(`INSERT INTO bunch_data(trip_id, time, traffic_speed, latitude, longitude) VALUES ($1, NOW(), $2, $3, $4)`, [movingBus.trip_id, speedRatio, mBustimeObj.VehicleLocation.Latitude, mBustimeObj.VehicleLocation.Longitude]).catch(e => console.log(e));
                                     }
                                     catch (err) {
-                                        console.log(err)
+                                        console.log(err, JSON.stringify(body, null, 2));
                                     }
                                 });
                             }
@@ -200,10 +174,9 @@ function trackBuses(bustimeObjs) {
                     movingBus.endNow('reached terminal');
                 }
             }
+        } catch (err) {
+            console.log(err, JSON.stringify(mBustimeObj, null, 2));
         }
-    }
-    catch (err) {
-        if (err) console.log(err);
     }
 
     busMap.clear();

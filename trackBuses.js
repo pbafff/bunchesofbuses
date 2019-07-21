@@ -32,7 +32,7 @@ function runInterval() {
                     bustimeObjs.push(json.Siri.ServiceDelivery.VehicleMonitoringDelivery[0].VehicleActivity[i].MonitoredVehicleJourney);
                 }
             } catch (err) {
-                console.log(err, JSON.stringify(json, null, 2));
+                console.log(err, JSON.stringify(json, null, 2), BUSTIMEAPIURL);
             }
 
             checkForLayovers(bustimeObjs);

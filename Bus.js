@@ -75,7 +75,7 @@ module.exports = class Bus {
 
     endNow(reason) {
         db.query(`UPDATE trips SET end_time = NOW(), termination_reason = $1, active = $2 WHERE trip_id = $3`, [reason, false, this.trip_id]).catch(e => console.log('60', e));
-        clearTimeout(this.timeoutId);
+        if (this.timeoutId) clearTimeout(this.timeoutId);
         Bus.movingBuses.delete(this);
     }
 }

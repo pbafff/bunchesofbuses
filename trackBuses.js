@@ -17,49 +17,61 @@ runInterval();
 function runInterval() {
     isRunning = true;
     intervId = setInterval(() => {
-        const bustimeObjs = [];
-
         request({ url: BUSTIMEAPIURL }, function (error, response, body) {
             if (error) {
                 console.log('error: ', error);
             }
 
+            let json;
+            let bustimeObjs;
+
             try {
-                const json = JSON.parse(body);
+                json = JSON.parse(body);
+                bustimeObjs = json.Siri.ServiceDelivery.VehicleMonitoringDelivery[0].VehicleActivity
+                    .map(x => x.MonitoredVehicleJourney);
 
-                for (let i = 0; i < json.Siri.ServiceDelivery.VehicleMonitoringDelivery[0].VehicleActivity.length; i++) {
-                    bustimeObjs.push(json.Siri.ServiceDelivery.VehicleMonitoringDelivery[0].VehicleActivity[i].MonitoredVehicleJourney);
-                }
+                checkForLayovers(bustimeObjs);
+                checkIfMovingYet(bustimeObjs);
+                trackBuses(bustimeObjs);
             } catch (err) {
-                console.log(err, JSON.stringify(JSON.parse(body), null, 2), BUSTIMEAPIURL);
+                console.log(err, json);
             }
-
-            checkForLayovers(bustimeObjs);
-            checkIfMovingYet(bustimeObjs);
-            trackBuses(bustimeObjs);
         });
     }, 5000);
 }
 
-function checkForLayovers(bustimeObjs) {
-    //check if data on layover buses is still being returned by bustime. if not remove that bus from set.
-    const everything = [];
-    bustimeObjs.forEach(bustimeObj => {
-        everything.push(bustimeObj.VehicleRef);
-    });
-    for (let bus of layoverBuses) {
-        if (everything.indexOf(bus) === -1) {
-            layoverBuses.delete(bus);
+const checkForLayovers = (function (bustimeObjs) {
+    let oldObjs = null;
+
+    return function (bustimeObjs) {
+        
+        if (!oldObjs) {
+            oldObjs = bustimeObjs;
+        } 
+        else  {
+            bustimeObjs.forEach(bustimeObj => {
+                if (!oldObjs.some(old => old.VehicleRef === bustimeObj.VehicleRef) && !layoverBuses.has(bustimeObj.VehicleRef) && bustimeObj.ProgressRate === 'normalProgress') {
+                    movingBuses.add(new Bus(bustimeObj.VehicleRef));
+                }
+            });
+
+            oldObjs = bustimeObjs;
         }
+        //check if data on layover buses is still being returned by bustime. if not remove that bus from set.
+        layoverBuses.forEach(bus => {
+            if (bustimeObjs.indexOf(bus) === -1) {
+                layoverBuses.delete(bus);
+            }
+        });
+        //add buses to layover set
+        bustimeObjs.forEach(bustimeObj => {
+            if (bustimeObj.ProgressRate === 'noProgress' && bustimeObj.ProgressStatus === 'layover' && !layoverBuses.has(bustimeObj.VehicleRef)) {
+                layoverBuses.add(bustimeObj.VehicleRef);
+            }
+            //if element approaching or 1 stop away from end stops
+        });
     }
-    //add buses to layover set
-    bustimeObjs.forEach(bustimeObj => {
-        if (bustimeObj.ProgressRate === 'noProgress' && bustimeObj.ProgressStatus === 'layover' && layoverBuses.has(bustimeObj.VehicleRef) !== true) {
-            layoverBuses.add(bustimeObj.VehicleRef);
-        }
-        //if element approaching or 1 stop away from end stops
-    });
-}
+})();
 
 function checkIfMovingYet(bustimeObjs) {
     if (layoverBuses.size > 0) {
@@ -93,14 +105,25 @@ function trackBuses(bustimeObjs) {
                 movingBus.state = 'new';
                 movingBus.destination = bustimeObj.DestinationName;
                 busMap.set(bustimeObj, movingBus);
-            } else if (bustimeObj.VehicleRef === movingBus.vehicleref && movingBus.state === 'tracking') {
+            }
+            else if (bustimeObj.VehicleRef === movingBus.vehicleref && movingBus.state === 'tracking') {
                 busMap.set(bustimeObj, movingBus);
-            } else if (bustimeObj.VehicleRef === movingBus.vehicleref && bustimeObj.DestinationName === movingBus.destination && movingBus.state === 'disappeared') {
+            }
+            else if (bustimeObj.VehicleRef === movingBus.vehicleref && bustimeObj.DestinationName === movingBus.destination && movingBus.state === 'disappeared') {
                 movingBus.returned();
                 busMap.set(bustimeObj, movingBus);
-            } else if (bustimeObj.VehicleRef === movingBus.vehicleref && bustimeObj.DestinationName === movingBus.destination && bustimeObj.ProgressRate === 'normalProgress' && movingBus.state === 'no progress') {
+            }
+            else if (bustimeObj.VehicleRef === movingBus.vehicleref && bustimeObj.DestinationName === movingBus.destination && bustimeObj.ProgressRate === 'normalProgress' && movingBus.state === 'no progress') {
                 movingBus.returned();
                 busMap.set(bustimeObj, movingBus);
+            }
+            else if (bustimeObj.VehicleRef === movingBus.vehicleref && bustimeObj.DestinationName !== movingBus.destination && bustimeObj.ProgressRate === 'normalProgress' && movingBus.state === 'no progress') {
+                movingBus.endNow('immediate loopback');
+                movingBuses.add(new Bus(bustimeObj.VehicleRef));
+            }
+            else if (bustimeObj.VehicleRef === movingBus.vehicleref && bustimeObj.DestinationName !== movingBus.destination && bustimeObj.ProgressRate === 'noProgress' && bustimeObj.ProgressStatus === 'layover' && movingBus.state === 'no progress') {
+                movingBus.endNow('layover loopback');
+                layoverBuses.add(bustimeObj.VehicleRef);
             }
         });
     });

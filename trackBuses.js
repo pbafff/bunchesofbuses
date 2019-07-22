@@ -44,11 +44,10 @@ const checkForLayovers = (function (bustimeObjs) {
     let oldObjs = null;
 
     return function (bustimeObjs) {
-        
         if (!oldObjs) {
             oldObjs = bustimeObjs;
-        } 
-        else  {
+        }
+        else {
             bustimeObjs.forEach(bustimeObj => {
                 if (!oldObjs.some(old => old.VehicleRef === bustimeObj.VehicleRef) && !layoverBuses.has(bustimeObj.VehicleRef) && bustimeObj.ProgressRate === 'normalProgress') {
                     movingBuses.add(new Bus(bustimeObj.VehicleRef));
@@ -129,11 +128,11 @@ function trackBuses(bustimeObjs) {
     });
 
     for (let [mBustimeObj, movingBus] of busMap) {
-        movingBus.distance = mBustimeObj.MonitoredCall.Extensions.Distances.CallDistanceAlongRoute;
-        movingBus.longitude = mBustimeObj.VehicleLocation.Longitude;
-        movingBus.latitude = mBustimeObj.VehicleLocation.Latitude;
-
         try {
+            movingBus.distance = mBustimeObj.MonitoredCall.Extensions.Distances.CallDistanceAlongRoute;
+            movingBus.longitude = mBustimeObj.VehicleLocation.Longitude;
+            movingBus.latitude = mBustimeObj.VehicleLocation.Latitude;
+
             if (movingBus.state === 'new') {
                 const trip_id = `${mBustimeObj.VehicleRef}:${new Date().toLocaleString('en-US', { timeZone: 'America/New_York' })}`;
                 db.query(`INSERT INTO trips(trip_id, begin_time, vehicleref, destination, active) VALUES ($1, NOW(), $2, $3, $4)`, [trip_id, mBustimeObj.VehicleRef, mBustimeObj.DestinationName, true]).catch(e => console.log('233', e));

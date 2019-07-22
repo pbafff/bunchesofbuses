@@ -1,4 +1,3 @@
-require('dotenv').config();
 const request = require('request');
 const router = require('express').Router();
 const db = require('./db/index');

@@ -2,7 +2,7 @@
 Description=bunchesofbuses server
 
 [Service]
-ExecStart=/bin/bash -c "cd /home/pi/bunchesofbuses && npm run start"
+ExecStart=/bin/bash -c "cd /home/pi/bunchesofbuses && /home/pi/.nvm/versions/node/v12.6.0/bin/node bin/www"
 
 [Install]
 WantedBy=multi-user.target

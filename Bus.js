@@ -46,7 +46,7 @@ module.exports = class Bus {
 
         setInterval(() => {
             let pos1;
-            if (pos1 = Bus.getPositions('BAY RIDGE 95 ST STA')) {
+            if (pos1 = Bus.getPositions('BROWNSVILLE ROCKAWAY AV')) {
                 db.query(`INSERT INTO positions VALUES (NOW(), $1, $2)`, ['BROWNSVILLE ROCKAWAY AV', pos1]).catch(e => console.log(e));
             }
 

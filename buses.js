@@ -1,10 +1,9 @@
 const fetch = require('node-fetch');
 
-const getBuses = (function () {
+const getBuses = (async function () {
     let prevBuses = [[], []];
     let prevStops = [[], []];
-    let polylines;
-    getPolylines().then(p => polylines = p);
+    let polylines = await getPolylines();
 
     return async function* () {
         const res = await fetch(vehicle_monitoring('B8'));
@@ -180,8 +179,9 @@ module.exports = async function () {
 
     const spacing = [];
     const stops = [];
+    const getBusesGen = await getBuses;
 
-    for await (let dir of getBuses()) {
+    for await (let dir of getBusesGen()) {
         if (i < 2) spacing.push(insertDistances(dir));
         if (i >= 2) stops.push(dir);
         i++;

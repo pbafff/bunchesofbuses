@@ -1,3 +1,4 @@
+require('dotenv').config();
 const getBuses = require('./buses');
 const RefWatcher = require('./RefWatcher');
 const db = require('./db/index');

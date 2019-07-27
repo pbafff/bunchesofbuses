@@ -3,7 +3,7 @@ const fetch = require('node-fetch');
 const getBuses = (async function () {
     let prevBuses = [[], []];
     let prevStops = [[], []];
-    let polylines = await getPolylines();
+    let polylines = await getPolylines('B8');
 
     return async function* () {
         const res = await fetch(vehicle_monitoring('B8'));
@@ -121,8 +121,8 @@ function distance(lat1, lon1, lat2, lon2) {
     return 12742 * Math.asin(Math.sqrt(a)); // 2 * R; R = 6371 km
 }
 
-async function getPolylines() {
-    const res = await fetch('http://bustime.mta.info/api/search?q=B8');
+async function getPolylines(route) {
+    const res = await fetch(`http://bustime.mta.info/api/search?q=${route}`);
     const json = await res.json();
     const directions = json.searchResults.matches[0].directions.map(x => { return { "directionId": x.directionId, "polylines": x.polylines } });
 
@@ -171,7 +171,7 @@ function decodePolyline(encoded) {
 }
 
 function vehicle_monitoring(route) {
-    return `https://bustime.mta.info/api/siri/vehicle-monitoring.json?key=e76036fc-f470-4344-8df0-ce31c6cf01eb&LineRef=MTA+NYCT_${route}`;
+    return `https://bustime.mta.info/api/siri/vehicle-monitoring.json?key=${process.env.APIKEY}&LineRef=MTA+NYCT_${route}`;
 }
 
 module.exports = async function () {

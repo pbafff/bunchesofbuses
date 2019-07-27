@@ -16,7 +16,7 @@ setInterval(async function () {
 
     stops.forEach(direction => {
         direction.forEach(x => {
-            db.query('INSERT INTO stops VALUES ($1,$2,$3,$4,$5,$6,$7) WHERE NOT EXISTS (SELECT recordedattime, journeyid FROM stops WHERE recordedattime = $1 AND journeyid = $7)', Object.values(x))
+            db.query('INSERT INTO stops(recordedattime, publishedlinename, destinationname, directionref, stoppointname, stoppointref, vehicleref, journeyid) SELECT $1, $2, $3, $4, $5, $6, $7, $8 WHERE NOT EXISTS (SELECT recordedattime, journeyid FROM stops WHERE recordedattime = $1 AND journeyid = $8)', Object.values(x))
                 .catch(err => console.log('STOPS ERROR\n', err, JSON.stringify(x, null, 2)));
         });
     });

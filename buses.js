@@ -10,7 +10,7 @@ const getBuses = (async function () {
 
         if (json.Siri.ServiceDelivery.VehicleMonitoringDelivery[0].VehicleActivity.length > 0) {
 
-            let buses = json.Siri.ServiceDelivery.VehicleMonitoringDelivery[0].VehicleActivity;
+            const buses = json.Siri.ServiceDelivery.VehicleMonitoringDelivery[0].VehicleActivity;
 
             let i = 0;
 

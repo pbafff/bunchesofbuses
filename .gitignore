@@ -58,3 +58,4 @@ typings/
 .env
 .nvm-node
 .vscode
+*.service

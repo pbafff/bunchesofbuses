@@ -2,7 +2,6 @@ const fetch = require('node-fetch');
 
 const getBuses = (async function () {
     let prevBuses = [[], []];
-    let prevStops = [[], []];
     let polylines = await getPolylines('B8');
 
     return async function* () {
@@ -29,10 +28,10 @@ const getBuses = (async function () {
                             "Latitude": x.MonitoredVehicleJourney.VehicleLocation.Latitude,
                         }
                     })
-                    .map(x => ({...x, "DistanceAlongRoute": getDistanceAlongRoute(x.Latitude, x.Longitude, polylines[i])}))
+                    .map(x => ({ ...x, "DistanceAlongRoute": getDistanceAlongRoute(x.Latitude, x.Longitude, polylines[i]) }))
                     .sort((a, b) => a.DistanceAlongRoute - b.DistanceAlongRoute);
 
-                if (JSON.stringify(_buses) !== JSON.stringify(prevBuses[i])) {
+                if (JSON.stringify(_buses) != JSON.stringify(prevBuses[i])) {
                     prevBuses[i] = _buses;
                     yield _buses;
                 }
@@ -60,19 +59,11 @@ const getBuses = (async function () {
                             }
                         });
 
-                    _buses = _buses.map(x => {
-                        if (!prevStops[i].some(y => JSON.stringify(x) === JSON.stringify(y))) {
-                            return x;
-                        }
-                    });
-
-                    prevStops[i] = _buses;
                     yield _buses;
                     i++;
                 }
             }
         }
-        else yield;
     }
 })()
 

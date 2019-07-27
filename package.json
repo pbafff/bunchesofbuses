@@ -3,7 +3,9 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "nvm": "~/.nvm/nvm-exec which node | xargs -I % ln -sf % ./.nvm-node && chmod +x ./.nvm-node"
+    "nvm": "~/.nvm/nvm-exec which node | xargs -I % ln -sf % ./.nvm-node && chmod +x ./.nvm-node",
+    "test1": "node test1.js",
+    "test2": "node test2.js"
   },
   "dependencies": {
     "dotenv": "^5.0.1",

@@ -14,7 +14,8 @@
     "morgan": "^1.9.1",
     "node-fetch": "^2.6.0",
     "pg": "^7.11.0",
-    "request": "^2.88.0"
+    "request": "^2.88.0",
+    "uuid": "^3.3.2"
   },
   "devDependencies": {
     "nodemon": "^1.19.1"

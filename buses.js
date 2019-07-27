@@ -51,12 +51,12 @@ const getBuses = (async function () {
                         .map(x => {
                             return {
                                 "RecordedAtTime": x.RecordedAtTime,
-                                "DirectionRef": x.MonitoredVehicleJourney.DirectionRef,
                                 "PublishedLineName": x.MonitoredVehicleJourney.PublishedLineName,
                                 "DestinationName": x.MonitoredVehicleJourney.DestinationName,
-                                "VehicleRef": x.MonitoredVehicleJourney.VehicleRef,
+                                "DirectionRef": x.MonitoredVehicleJourney.DirectionRef,
                                 "StopPointName": x.MonitoredVehicleJourney.MonitoredCall.StopPointName,
                                 "StopPointRef": x.MonitoredVehicleJourney.MonitoredCall.StopPointRef,
+                                "VehicleRef": x.MonitoredVehicleJourney.VehicleRef,
                             }
                         });
 
@@ -72,7 +72,7 @@ const getBuses = (async function () {
                 }
             }
         }
-        else yield null;
+        else yield;
     }
 })()
 

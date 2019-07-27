@@ -1,3 +1,10 @@
+CREATE TABLE positions (
+    time TIMESTAMPTZ NOT NULL,
+    DirectionRef TEXT NOT NULL,
+    buses json[]
+);
+SELECT create_hypertable('positions', 'time');
+
 CREATE TABLE stops (
     RecordedAtTime TIMESTAMPTZ NOT NULL,
     PublishedLineName TEXT NOT NULL,
@@ -5,13 +12,7 @@ CREATE TABLE stops (
     DirectionRef TEXT NOT NULL,
     StopPointName TEXT NOT NULL,
     StopPointRef TEXT NOT NULL,
-    VehicleRef TEXT NOT NULL
-)
-SELECT create_hypertable('stops', 'RecordedAtTime');
-
-CREATE TABLE positions (
-    time TIMESTAMPTZ NOT NULL,
-    destination TEXT NOT NULL,
-    buses json[]
+    VehicleRef TEXT NOT NULL,
+    JourneyId TEXT NOT NULL
 );
-SELECT create_hypertable('positions', 'time');
+SELECT create_hypertable('stops', 'recordedattime');

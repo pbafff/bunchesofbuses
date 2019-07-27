@@ -1,18 +1,10 @@
 const uuid = require('uuid/v4');
+const db = require('./db/index');
 
 module.exports = class RefWatcher {
     constructor(VehicleRef, DestinationName) {
         this.VehicleRef = VehicleRef;
         this.DestinationName = DestinationName;
-        this.timerId;
-    }
-
-    newDeleteTimer() {
-        if (this.timerId) clearInterval(this.timerId);
-
-        this.timerId = setInterval(() => {
-            RefWatcher.watchers.splice(RefWatcher.watchers.indexOf(this), 1);
-        }, 3600000);
     }
 
     static watchers = [];
@@ -24,18 +16,25 @@ module.exports = class RefWatcher {
     }
 
     static scanRefs(stops) {
-        stops.forEach(x => {
+        stops.forEach(async x => {
             let watcher;
             if (watcher = RefWatcher.watchers.find(y => x.VehicleRef == y.VehicleRef)) {
-                if (watcher.DestinationName !== x.DestinationName) {
+                let mostRecent = await db.query('SELECT MAX(recordedattime) FROM stops WHERE journeyid = $1', [watcher.JourneyId]);
+                mostRecent = mostRecent.rows[0].max;
+                if (mostRecent && Date.now() - Date.parse(mostRecent) < 3600000) {
+                    if (watcher.DestinationName !== x.DestinationName) {
+                        const newId = uuid();
+                        x.JourneyId = newId;
+                        watcher.JourneyId = newId;
+                        watcher.DestinationName = x.DestinationName;
+                    } else {
+                        x.JourneyId = watcher.JourneyId;
+                    }
+                } else {
                     const newId = uuid();
                     x.JourneyId = newId;
                     watcher.JourneyId = newId;
                     watcher.DestinationName = x.DestinationName;
-                    watcher.newDeleteTimer();
-                } else {
-                    x.JourneyId = watcher.JourneyId;
-                    watcher.newDeleteTimer();
                 }
             }
             else {
@@ -43,7 +42,6 @@ module.exports = class RefWatcher {
                 const newId = uuid();
                 x.JourneyId = newId;
                 watcher.JourneyId = newId;
-                watcher.newDeleteTimer();
             }
         });
     }

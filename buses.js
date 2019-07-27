@@ -168,15 +168,15 @@ function vehicle_monitoring(route) {
 module.exports = async function () {
     let i = 0;
 
-    const spacing = [];
+    const positions = [];
     const stops = [];
     const getBusesGen = await getBuses;
 
     for await (let dir of getBusesGen()) {
-        if (i < 2) spacing.push(insertDistances(dir));
+        if (i < 2) positions.push(insertDistances(dir));
         if (i >= 2) stops.push(dir);
         i++;
     }
 
-    return [spacing, stops];
+    return [positions, stops];
 }

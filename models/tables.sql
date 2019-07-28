@@ -1,7 +1,7 @@
 CREATE TABLE positions (
     time TIMESTAMPTZ NOT NULL,
     DirectionRef TEXT NOT NULL,
-    buses TEXT NOT NULL
+    buses JSON
 );
 SELECT create_hypertable('positions', 'time');
 

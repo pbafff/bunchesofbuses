@@ -15,34 +15,34 @@ module.exports = class RefWatcher {
         return newRef;
     }
 
-    static scanRefs(stops) {
-        stops.forEach(async x => {
-            let watcher;
-            if (watcher = RefWatcher.watchers.find(y => x.VehicleRef == y.VehicleRef)) {
+    static async scanRefs(stops) {
+	for (let i = 0; i < stops.length; i++) {
+		let watcher;
+            if (watcher = RefWatcher.watchers.find(y => stops[i].VehicleRef == y.VehicleRef)) {
                 let mostRecent = await db.query('SELECT MAX(recordedattime) FROM stops WHERE journeyid = $1', [watcher.JourneyId]);
                 mostRecent = mostRecent.rows[0].max;
-                if (mostRecent && Date.now() - Date.parse(mostRecent) < 3600000) {
-                    if (watcher.DestinationName !== x.DestinationName) {
+                if (mostRecent != null && Date.now() - Date.parse(mostRecent) < 3600000) {
+                    if (watcher.DestinationName !== stops[i].DestinationName) {
                         const newId = uuid();
-                        x.JourneyId = newId;
+                        stops[i].JourneyId = newId;
                         watcher.JourneyId = newId;
-                        watcher.DestinationName = x.DestinationName;
+                        watcher.DestinationName = stops[i].DestinationName;
                     } else {
-                        x.JourneyId = watcher.JourneyId;
+                        stops[i].JourneyId = watcher.JourneyId;
                     }
                 } else {
                     const newId = uuid();
-                    x.JourneyId = newId;
+                    stops[i].JourneyId = newId;
                     watcher.JourneyId = newId;
-                    watcher.DestinationName = x.DestinationName;
+                    watcher.DestinationName = stops[i].DestinationName;
                 }
             }
             else {
-                watcher = RefWatcher.addRef(x);
+                watcher = RefWatcher.addRef(stops[i]);
                 const newId = uuid();
-                x.JourneyId = newId;
+                stops[i].JourneyId = newId;
                 watcher.JourneyId = newId;
             }
-        });
+	} 
     }
 }

@@ -5,7 +5,7 @@ const db = require('./db/index');
 
 setInterval(async function () {
     const [positions, stops] = await getBuses();
-    RefWatcher.scanRefs(stops.flat());
+    await RefWatcher.scanRefs(stops.flat());
 
     positions.forEach((direction, i) => {
         if (direction.length > 0) {

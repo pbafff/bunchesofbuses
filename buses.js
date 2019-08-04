@@ -1,6 +1,22 @@
 const fetch = require('node-fetch');
 const { execSync } = require('child_process');
 
+module.exports = async function () {
+    let i = 0;
+
+    const positions = [];
+    const stops = [];
+    const getBusesGen = await getBuses;
+
+    for await (let dir of getBusesGen()) {
+        if (i < 2) positions.push(insertDistances(dir));
+        if (i >= 2) stops.push(dir);
+        i++;
+    }
+
+    return [positions, stops];
+}
+
 const getBuses = (async function () {
     let prevBuses = [[], []];
     let polylines = await getPolylines('B8');
@@ -36,8 +52,8 @@ const getBuses = (async function () {
                     prevBuses[i] = _buses;
                     yield _buses;
                 }
-                else yield [];
 
+                else yield [];
                 i++;
             }
 
@@ -88,8 +104,7 @@ function insertDistances(arr) {
 }
 
 function getDistanceAlongRoute(lat, lon, polyline) {
-    const distanceAlongRoute = Number(execSync(`node ./getDistanceAlongRoute.js ${lat} ${lon} ${JSON.stringify(polyline)}`).toString());
-    return distanceAlongRoute;
+    return Number(execSync(`node ./getDistanceAlongRoute.js ${lat} ${lon} ${JSON.stringify(polyline)}`).toString());
 }
 
 async function getPolylines(route) {
@@ -143,20 +158,4 @@ function decodePolyline(encoded) {
 
 function vehicle_monitoring(route) {
     return `https://bustime.mta.info/api/siri/vehicle-monitoring.json?key=${process.env.APIKEY}&LineRef=MTA+NYCT_${route}`;
-}
-
-module.exports = async function () {
-    let i = 0;
-
-    const positions = [];
-    const stops = [];
-    const getBusesGen = await getBuses;
-
-    for await (let dir of getBusesGen()) {
-        if (i < 2) positions.push(insertDistances(dir));
-        if (i >= 2) stops.push(dir);
-        i++;
-    }
-
-    return [positions, stops];
 }

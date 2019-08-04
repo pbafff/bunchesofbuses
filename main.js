@@ -9,7 +9,7 @@ setInterval(async function () {
 
     positions.forEach((direction, i) => {
         if (direction.length > 0) {
-            db.query('INSERT INTO positions VALUES (NOW(),$1,$2)', [`${i}`, direction])
+            db.query('INSERT INTO positions VALUES (NOW(),$1,$2)', [`${i}`, JSON.stringify(direction)])
                 .catch(err => console.log('POSITIONS ERROR\n', err, JSON.stringify(direction, null, 2)));
         }
     });

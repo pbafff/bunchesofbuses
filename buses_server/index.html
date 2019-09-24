@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset='utf-8' />
+    <title>Bunches of Buses</title>
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v1.3.1/mapbox-gl.js'></script>
+    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v1.3.1/mapbox-gl.css' rel='stylesheet' />
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        #map {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 100%;
+        }
+
+        .ui {
+            z-index: 1012022;
+            position: absolute;
+        }
+
+        #begin-date {
+            left: 25%;
+        }
+
+        #end-date {
+            left: 50%;
+        }
+
+        #gobutton {
+            left: 95%;
+        }
+
+        #time {
+            bottom: 5%;
+            left: 50%;
+            color: whitesmoke;
+        }
+
+        #play {
+            bottom: 5%;
+            left: 40%;
+            visibility: hidden;
+        }
+
+        #seeker {
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            bottom: 5%;
+            background-color: firebrick;
+        }
+
+        #factor {
+            left: 75%;
+        }
+
+    </style>
+</head>
+
+<body>
+    
+    <input class="ui" id="route" placeholder="route">
+    <input class="ui" id="begin-date" placeholder="start time">
+    <input class="ui" id="end-date" placeholder="end time">
+    <input class="ui" id="factor" placeholder="enter your bunch factor">
+
+    <button class="ui" id="gobutton">Go</button>
+    <button class="ui" id="play">⏯</button>
+
+    <div class="ui" id="seeker"></div>
+    <p class="ui" id="time"></p>
+
+    <div id='map'></div>
+    <script src="index.js"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,69 @@
+long double distance(long double lat, long double lon, long double lat2, long double lon2)
+{
+        long double p = 0.017453292519943295;
+        long double a = 0.5 - cos((lat2 - lat) * p) / 2 +
+                        cos(lat * p) * cos(lat2 * p) *
+                            (1 - cos((lon2 - lon) * p)) / 2;
+        long double dist = 12742 * asin(sqrt(a));
+        return dist;
+}
+
+long double distance_along_route(long double lat, long double lon, std::vector<std::array<long double, 2>> polyline)
+{
+
+        std::vector<DistObj> distances;
+        for (int i = 0; i < polyline.size(); i++)
+        {
+                long double dist = distance(lat, lon, polyline[i][0], polyline[i][1]);
+                DistObj d{dist, i};
+                distances.push_back(d);
+        }
+
+        std::sort(distances.begin(), distances.end(), [](DistObj x, DistObj y) { return (x.d < y.d); });
+
+        std::vector<DistObj> closest_two;
+        closest_two.push_back(distances[0]);
+        closest_two.push_back(distances[1]);
+
+        std::sort(closest_two.begin(), closest_two.end(), [](DistObj x, DistObj y) { return (x.index < y.index); });
+
+        polyline.insert(polyline.begin() + closest_two[1].index, {lat, lon});
+
+        std::vector<std::array<long double, 2>> sliced_polyline(polyline.begin(), polyline.begin() + closest_two[1].index + 1);
+
+        long double result = 0.0;
+        for (int i = 0; i < sliced_polyline.size() - 1; i++)
+                result += distance(sliced_polyline[i][0], sliced_polyline[i][1], sliced_polyline[i + 1][0], sliced_polyline[i + 1][1]);
+
+        return result;
+}
+
+pmap polymap()
+{
+        pmap polymap = {};
+        for (auto &p : fs::directory_iterator("polylines"))
+        {
+                auto path = p.path();
+                std::ifstream file;
+                file.open(path.u8string());
+                std::string s;
+                file >> s;
+
+                std::vector<std::string> strings;
+                boost::split(strings, s, boost::is_any_of(","));
+
+                std::vector<long double> numbers;
+                numbers.resize(strings.size());
+                std::transform(strings.begin(), strings.end(), numbers.begin(), [](std::string x) { return std::stold(x); });
+
+                std::vector<std::array<long double, 2>> coordarrs;
+                for (int i = 0; i < numbers.size(); i += 2)
+                {
+                        coordarrs.push_back({numbers[i], numbers[i + 1]});
+                }
+
+                polymap[path.filename()] = coordarrs;
+        }
+        return polymap;
+}
+

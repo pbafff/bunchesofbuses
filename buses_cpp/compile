@@ -1,0 +1,3 @@
+#!/bin/bash
+
+g++ main.cpp fetch.cpp bus.cpp -o buses --std=c++17 -I /home/andre/vcpkg/installed/x64-linux/include -lpthread -lstdc++fs

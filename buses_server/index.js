@@ -24,84 +24,72 @@ map.on('load', function () {
             const res = await fetch(`/data/B/${route.value}/${begindate.value}/${enddate.value}`),
                   json = await res.json(),
                   rows = json.rows,
-                  jrefs0 = new Set(),
-                  jrefs1 = new Set(),
+                  vrefs = new Set(),
                   timeline = new Map();
 
             rows.sort((a, b) => { return Date.parse(a.recordedattime) - Date.parse(b.recordedattime) });
-            const dir0 = rows.filter(x => x.directionref == "0");
-            const dir1 = rows.filter(x => x.directionref == "1");
-
-            dir0.forEach(j => jrefs0.add(j.datedvehiclejourneyref));
-            dir1.forEach(j => jrefs1.add(j.datedvehiclejourneyref));
+            rows.forEach(x => vrefs.add(x.vehicleref));
 
             rows.forEach(x => timeline.set(Date.parse(x.recordedattime), []));
             rows.forEach(x => timeline.get(Date.parse(x.recordedattime)).push(x));
 
-            jrefs0.forEach(x => {
-                  if (dir0.some(y => x == y.datedvehiclejourneyref)) {
-                        const filtered = dir0.filter(z => x == z.datedvehiclejourneyref);
-                        addSource(filtered[0]);
-                        addLayer(filtered);
-                  }
-            });
-            jrefs1.forEach(x => {
-                  if (dir1.some(y => x == y.datedvehiclejourneyref)) {
-                        const filtered = dir1.filter(z => x == z.datedvehiclejourneyref);
-                        addSource(filtered[0]);
-                        addLayer(filtered);
-                  }
-            });
-            map.getStyle().layers.forEach(x => {
-                  if (x.hasOwnProperty('layout'))
-                        console.log(x.layout["text-field"], x.id)
-            })
-
-            const graphData0 = new Map();
-            dir0.forEach(x => {
-                  const date = new Date(x.recordedattime);
-                  const dateNoSeconds = new Date(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours(), date.getMinutes()).getTime();
-                  if (graphData0.has(dateNoSeconds))
-                        graphData0.get(dateNoSeconds).push(x);
-                  else
-                        graphData0.set(dateNoSeconds, [x]);
-            });
-
-            graphData0.forEach((value, key) => {
-                  value.sort((a, b) => { return a.distancealongroute - b.distancealongroute });
-                  let count = 0;
-                  const noDupes = value.filter((x, I) => {return !(value.some((y, i) => x.datedvehiclejourneyref == y.datedvehiclejourneyref && I < i))});
-                  noDupes.forEach((obj, i, arr) => {
+            vrefs.forEach(x => {
+                  const filtered = rows.filter(z => x == z.vehicleref);
+                  filtered.forEach((y, i, arr) => {
+                        if (arr[i - 1])
+                              y.previous = arr[i - 1].recordedattime;
                         if (arr[i + 1])
-                              count += Math.abs(arr[i + 1].distancealongroute - obj.distancealongroute) <= Number(factor.value) ? 1 : 0;
+                              y.next = arr[i + 1].recordedattime;
                   });
-                  graphData0.set(key, [noDupes, count]);
+                  addSource(filtered[0]);
+                  addLayer(filtered);
             });
 
-            console.log(graphData0);
+            // const graphData0 = new Map();
+            // dir0.forEach(x => {
+            //       const date = new Date(x.recordedattime);
+            //       const dateNoSeconds = new Date(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours(), date.getMinutes()).getTime();
+            //       if (graphData0.has(dateNoSeconds))
+            //             graphData0.get(dateNoSeconds).push(x);
+            //       else
+            //             graphData0.set(dateNoSeconds, [x]);
+            // });
 
-            const graphData1 = new Map();
-            dir1.forEach(x => {
-                  const date = new Date(x.recordedattime);
-                  const dateNoSeconds = new Date(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours(), date.getMinutes()).getTime();
-                  if (graphData1.has(dateNoSeconds))
-                        graphData1.get(dateNoSeconds).push(x);
-                  else
-                        graphData1.set(dateNoSeconds, [x]);
-            });
+            // graphData0.forEach((value, key) => {
+            //       value.sort((a, b) => { return a.distancealongroute - b.distancealongroute });
+            //       let count = 0;
+            //       const noDupes = value.filter((x, I) => {return !(value.some((y, i) => x.datedvehiclejourneyref == y.datedvehiclejourneyref && I < i))});
+            //       noDupes.forEach((obj, i, arr) => {
+            //             if (arr[i + 1])
+            //                   count += Math.abs(arr[i + 1].distancealongroute - obj.distancealongroute) <= Number(factor.value) ? 1 : 0;
+            //       });
+            //       graphData0.set(key, [noDupes, count]);
+            // });
 
-            graphData1.forEach((value, key) => {
-                  value.sort((a, b) => { return a.distancealongroute - b.distancealongroute });
-                  let count = 0;
-                  const noDupes = value.filter((x, I) => {return !(value.some((y, i) => x.datedvehiclejourneyref == y.datedvehiclejourneyref && I < i))});
-                  noDupes.forEach((obj, i, arr) => {
-                        if (arr[i + 1])
-                              count += Math.abs(arr[i + 1].distancealongroute - obj.distancealongroute) <= Number(factor.value) ? 1 : 0;
-                  });
-                  graphData1.set(key, [noDupes, count]);
-            });
+            // console.log(graphData0);
 
-            console.log(graphData1);
+            // const graphData1 = new Map();
+            // dir1.forEach(x => {
+            //       const date = new Date(x.recordedattime);
+            //       const dateNoSeconds = new Date(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours(), date.getMinutes()).getTime();
+            //       if (graphData1.has(dateNoSeconds))
+            //             graphData1.get(dateNoSeconds).push(x);
+            //       else
+            //             graphData1.set(dateNoSeconds, [x]);
+            // });
+
+            // graphData1.forEach((value, key) => {
+            //       value.sort((a, b) => { return a.distancealongroute - b.distancealongroute });
+            //       let count = 0;
+            //       const noDupes = value.filter((x, I) => {return !(value.some((y, i) => x.datedvehiclejourneyref == y.datedvehiclejourneyref && I < i))});
+            //       noDupes.forEach((obj, i, arr) => {
+            //             if (arr[i + 1])
+            //                   count += Math.abs(arr[i + 1].distancealongroute - obj.distancealongroute) <= Number(factor.value) ? 1 : 0;
+            //       });
+            //       graphData1.set(key, [noDupes, count]);
+            // });
+
+            // console.log(graphData1);
 
             play.style.visibility = "visible";
 
@@ -121,17 +109,22 @@ map.on('load', function () {
                               let value = timeline.get(currentTime);
                               if (value) {
                                     value.forEach(obj => {
-                                          map.getSource(obj.datedvehiclejourneyref).setData({ type: "Point", coordinates: [obj.longitude, obj.latitude] });
+                                          map.getSource(obj.vehicleref).setData({ type: "Point", coordinates: [obj.longitude, obj.latitude] });
+                                          map.getLayer(obj.vehicleref).metadata.next = obj.next;
+                                          map.setPaintProperty(obj.vehicleref, "text-color", obj.directionref == "0" ? "#AD79A8" : "#83d0f2");
                                     });
                               }
 
-                              [...jrefs0, ...jrefs1].forEach(ref => {
+                              vrefs.forEach(ref => {
                                     const layer = map.getLayer(ref);
                                     const visibility = layer.visibility;
                                     const metadata = layer.metadata;
-                                    if (visibility == "none" && metadata.begins <= currentTime && currentTime <= metadata.ends)
+                                    const next = metadata.next;
+                                    if (visibility == "none" && metadata.begins <= currentTime && currentTime <= metadata.ends && !(Date.parse(next) - currentTime > 600000))
                                           map.setLayoutProperty(ref, "visibility", "visible");
                                     else if (visibility == "visible" && currentTime < metadata.begins || currentTime > metadata.ends)
+                                          map.setLayoutProperty(ref, "visibility", "none");
+                                    else if (visibility == "visible" && Date.parse(next) - currentTime > 600000)
                                           map.setLayoutProperty(ref, "visibility", "none");
                               });
 
@@ -179,18 +172,37 @@ map.on('load', function () {
                               let value = timeline.get(currentTime);
                               if (value) {
                                     value.forEach(obj => {
-                                          map.getSource(obj.datedvehiclejourneyref).setData({ type: "Point", coordinates: [obj.longitude, obj.latitude] });
+                                          map.getSource(obj.vehicleref).setData({ type: "Point", coordinates: [obj.longitude, obj.latitude] });
+                                          map.setPaintProperty(obj.vehicleref, "text-color", obj.directionref == "0" ? "#AD79A8" : "#83d0f2");
+                                          if (p1 < 0)
+                                                map.getLayer(obj.vehicleref).metadata.next = obj.next;
+                                          else
+                                                map.getLayer(obj.vehicleref).metadata.previous = obj.previous;
                                     });
                               }
 
-                              [...jrefs0, ...jrefs1].forEach(ref => {
+                              vrefs.forEach(ref => {
                                     const layer = map.getLayer(ref);
                                     const visibility = layer.visibility;
                                     const metadata = layer.metadata;
-                                    if (visibility == "none" && metadata.begins <= currentTime && currentTime <= metadata.ends)
-                                          map.setLayoutProperty(ref, "visibility", "visible");
-                                    else if (visibility == "visible" && currentTime < metadata.begins || currentTime > metadata.ends)
-                                          map.setLayoutProperty(ref, "visibility", "none");
+                                    const previous = metadata.previous;
+                                    const next = metadata.next;
+                                    if (p1 < 0) {
+                                          if (visibility == "none" && metadata.begins <= currentTime && currentTime <= metadata.ends && !(Date.parse(next) - currentTime > 600000))
+                                                map.setLayoutProperty(ref, "visibility", "visible");
+                                          else if (visibility == "visible" && currentTime < metadata.begins || currentTime > metadata.ends)
+                                                map.setLayoutProperty(ref, "visibility", "none");
+                                          else if (visibility == "visible" && Date.parse(next) - currentTime > 600000)
+                                                map.setLayoutProperty(ref, "visibility", "none");
+                                    }
+                                    else {
+                                          if (visibility == "none" && metadata.begins <= currentTime && currentTime <= metadata.ends && !(currentTime - Date.parse(previous) > 600000))
+                                                map.setLayoutProperty(ref, "visibility", "visible");
+                                          else if (visibility == "visible" && currentTime < metadata.begins || currentTime > metadata.ends)
+                                                map.setLayoutProperty(ref, "visibility", "none");
+                                          else if (visibility == "visible" && currentTime - Date.parse(previous) > 600000)
+                                                map.setLayoutProperty(ref, "visibility", "none");
+                                    }
                               });
                         }
                   }
@@ -198,26 +210,25 @@ map.on('load', function () {
       }
 
       function addSource(obj) {
-            map.addSource(obj.datedvehiclejourneyref, {
+            map.addSource(obj.vehicleref, {
                   "type": "geojson",
-                  "data": { "type": "Point", "coordinates": [obj.longitude, obj.latitude]}
+                  "data": { "type": "Point", "coordinates": [obj.longitude, obj.latitude] }
             });
       }
 
       function addLayer(arr) {
             map.addLayer({
-                  "id": arr[0].datedvehiclejourneyref,
-                  "source": arr[0].datedvehiclejourneyref,
+                  "id": arr[0].vehicleref,
+                  "source": arr[0].vehicleref,
                   "type": "symbol",
                   "paint": {
-                        "text-color": "#ffffff",
                         "icon-color": "#8b4040"
                   },
                   'layout': {
                         "icon-image": "bus",
                         "icon-size": 1,
                         'visibility': 'none',
-                        "text-field": arr[0].vehicleref,
+                        "text-field": arr[0].vehicleref.slice(9),
                         "text-font": ["Open Sans Semibold", "Arial Unicode MS Bold"],
                         "text-size": 11,
                         "text-offset": [0, 2],

@@ -7,10 +7,12 @@
     <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
     <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v1.3.1/mapbox-gl.js'></script>
     <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v1.3.1/mapbox-gl.css' rel='stylesheet' />
+    <script src="https://d3js.org/d3.v5.min.js"></script>
     <style>
         body {
             margin: 0;
             padding: 0;
+            overflow: hidden;
         }
 
         #map {
@@ -53,12 +55,18 @@
             border-radius: 50%;
             width: 20px;
             height: 20px;
-            bottom: 5%;
+            bottom: 7%;
             background-color: firebrick;
         }
 
         #factor {
             left: 75%;
+        }
+
+        #graph {
+            bottom: 0;
+            width: 100%;
+            height: 60px;
         }
 
     </style>
@@ -76,6 +84,8 @@
 
     <div class="ui" id="seeker"></div>
     <p class="ui" id="time"></p>
+
+    <div class="ui" id="graph"></div>
 
     <div id='map'></div>
     <script src="index.js"></script>

@@ -7,6 +7,19 @@ const gobutton = document.getElementById('gobutton'),
       time = document.getElementById('time'),
       factor = document.getElementById('factor');
 
+const vrefs = new Set();
+const timeline = new Map();
+const requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame ||
+      window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
+const cancelAnimationFrame = window.cancelAnimationFrame || window.mozCancelAnimationFrame;
+let currentTime;
+let animation = null;
+let isplaying = false;
+let range;
+let p1 = 0, p2 = 0;
+const data = [];
+const graphData0 = new Map();
+
 mapboxgl.accessToken = 'pk.eyJ1IjoicGJhZmYiLCJhIjoiY2swa2dlbmVrMDh2cTNtdXB6NDdmZm5xOSJ9.5wHw8zRmu4EqcplZyRnQow';
 
 const map = new mapboxgl.Map({
@@ -16,16 +29,31 @@ const map = new mapboxgl.Map({
       zoom: 12
 });
 
+
 map.on('load', function () {
       gobutton.onclick = async () => {
-            const range = Date.parse(enddate.value + ':00') - Date.parse(begindate.value + ':00');
-            let isplaying = false;
+            if (vrefs.size > 0) {
+                  vrefs.forEach(x => {
+                        map.removeLayer(x);
+                        map.removeLayer(x + "_label");
+                        map.removeSource(x);
+                  });
+                  vrefs.clear();
+                  timeline.clear();
+                  graphData0.clear();
+                  currentTime = Date.parse(begindate.value + ':00');
+                  time.innerHTML = new Date(currentTime).toLocaleTimeString('en-US', { timeZone: "America/New_York", hour12: true });
+                  seeker.style.left = ((currentTime - Date.parse(begindate.value + ':00')) / range) * window.innerWidth + "px";
+                  d3.select("#graph").html("");
+                  data.length = 0;
+                  playbutton.onclick = null;
+            }
+
+            range = Date.parse(enddate.value + ':00') - Date.parse(begindate.value + ':00');
 
             const res = await fetch(`/data/B/${route.value}/${begindate.value}/${enddate.value}`),
                   json = await res.json(),
-                  rows = json.rows,
-                  vrefs = new Set(),
-                  timeline = new Map();
+                  rows = json.rows;
 
             rows.sort((a, b) => { return Date.parse(a.recordedattime) - Date.parse(b.recordedattime) });
             rows.forEach(x => vrefs.add(x.vehicleref));
@@ -38,10 +66,10 @@ map.on('load', function () {
                   const allTimes = filtered.map(z => { return z.recordedattime });
                   filtered.forEach(j => j.allTimes = allTimes);
                   addSource(filtered[0]);
-                  addLayer(filtered);
+                  addCircleLayer(filtered);
+                  addLabelLayer(filtered);
             });
 
-            const graphData0 = new Map();
             rows.filter(x => x.directionref == '0').forEach(x => {
                   const date = new Date(x.recordedattime);
                   const dateNoSeconds = new Date(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours(), date.getMinutes()).getTime();
@@ -51,7 +79,6 @@ map.on('load', function () {
                         graphData0.set(dateNoSeconds, [x]);
             });
 
-            const data = [];
             graphData0.forEach((value, key) => {
                   let count = 0;
                   const noDupes = value.filter((x, I) => { return !(value.some((y, i) => x.vehicleref == y.vehicleref && I < i)) });
@@ -59,11 +86,9 @@ map.on('load', function () {
                         count += arr.some(x => { return distance(obj.latitude, obj.longitude, x.latitude, x.longitude) * 1000 <= Number(factor.value) && x.vehicleref != obj.vehicleref }) ? 1 : 0;
                   });
                   data.push({ date: new Date(key), value: count });
-                  graphData0.set(key, [noDupes, count]);
+                  graphData0.set(key, noDupes);
             });
-            console.log(data);
-            console.log(graphData0);
-
+            
             const width = document.querySelector("#graph").clientWidth - 12;
             const height = 60;
 
@@ -91,82 +116,10 @@ map.on('load', function () {
                         .curve(d3.curveBasis)
                   );
 
-            // const graphData1 = new Map();
-            // rows.filter(x => x.directionref == '1').forEach(x => {
-            //       const date = new Date(x.recordedattime);
-            //       const dateNoSeconds = new Date(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours(), date.getMinutes()).getTime();
-            //       if (graphData1.has(dateNoSeconds))
-            //             graphData1.get(dateNoSeconds).push(x);
-            //       else
-            //             graphData1.set(dateNoSeconds, [x]);
-            // });
-
-            // graphData1.forEach((value, key) => {
-            //       value.sort((a, b) => { return a.distancealongroute - b.distancealongroute });
-            //       let count = 0;
-            //       const noDupes = value.filter((x, I) => {return !(value.some((y, i) => x.vehicleref == y.vehicleref && I < i))});
-            //       noDupes.forEach((obj, i, arr) => {
-            //             if (arr[i + 1])
-            //                   count += Math.abs(arr[i + 1].distancealongroute - obj.distancealongroute) <= Number(factor.value) ? 1 : 0;
-            //       });
-            //       graphData1.set(key, [noDupes, count]);
-            // });
-
-            // console.log(graphData1);
-
             playbutton.style.visibility = "visible";
-
-            const requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame ||
-                  window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
-
-            const cancelAnimationFrame = window.cancelAnimationFrame || window.mozCancelAnimationFrame;
-
-            let currentTime = Date.parse(rows[0].recordedattime);
-            let animation = null;
-
             playbutton.onclick = playpause;
 
-            function playpause(toggle = true) {
-                  if (toggle) isplaying = !isplaying;
-                  if (animation) {
-                        cancelAnimationFrame(animation);
-                        animation = null;
-                  }
-                  else {
-                        animation = requestAnimationFrame(animate);
-                  }
-            }
-
-            let p1 = 0, p2 = 0;
-            seeker.onmousedown = function (e) {
-                  if (animation) {
-                        cancelAnimationFrame(animation);
-                        animation = null;
-                  }
-
-                  e = e || window.event;
-                  e.preventDefault();
-                  p2 = e.clientX;
-
-                  document.onmouseup = function () {
-                        if (isplaying) playpause(false);
-                        document.onmouseup = null;
-                        document.onmousemove = null;
-                  }
-
-                  document.onmousemove = function (e) {
-                        e = e || window.event;
-                        e.preventDefault();
-                        p1 = p2 - e.clientX;
-                        p2 = e.clientX;
-                        if (!(seeker.offsetLeft - p1 < 0) && !(seeker.offsetLeft - p1 > window.innerWidth)) {
-                              seeker.style.left = (seeker.offsetLeft - p1) + "px";
-                              const seekerpos = Math.round((seeker.offsetLeft) / (window.innerWidth) * 1000) / 1000;
-                              currentTime = Date.parse(new Date(Date.parse(begindate.value + ':00') + seekerpos * range).toString()); //seekerpos = (i-begindate.value)/range
-                              time.innerHTML = new Date(currentTime).toLocaleTimeString('en-US', { timeZone: "America/New_York", hour12: true });
-                        }
-                  }
-            }
+            currentTime = Date.parse(rows[0].recordedattime);
       }
 });
 
@@ -177,22 +130,33 @@ function addSource(obj) {
       });
 }
 
-function addLayer(arr) {
+function addCircleLayer(arr) {
       map.addLayer({
             "id": arr[0].vehicleref,
             "source": arr[0].vehicleref,
-            "type": "symbol",
-            "paint": {
-                  "icon-color": "#8b4040"
-            },
+            "type": "circle",
             'layout': {
-                  "icon-image": "bus",
-                  "icon-size": 1,
+                  'visibility': 'none'
+            },
+            "metadata": {
+                  "begins": Date.parse(arr[0].recordedattime),
+                  "ends": Date.parse(arr[arr.length - 1].recordedattime) + 1000,
+                  "allTimes": arr[0].allTimes
+            }
+      });
+}
+
+function addLabelLayer(arr) {
+      map.addLayer({
+            "id": arr[0].vehicleref + "_label",
+            "source": arr[0].vehicleref,
+            "type": "symbol",
+            'layout': {
                   'visibility': 'none',
                   "text-field": arr[0].vehicleref.slice(9),
                   "text-font": ["Open Sans Semibold", "Arial Unicode MS Bold"],
                   "text-size": 11,
-                  "text-offset": [0, 2],
+                  "text-offset": [0, 1.5],
                   "text-allow-overlap": true,
                   "icon-allow-overlap": true,
                   "icon-ignore-placement": true
@@ -217,25 +181,45 @@ function distance(lat1, lon1, lat2, lon2) {
 }
 
 function animate() {
-      let value = timeline.get(currentTime);
+      const value = timeline.get(currentTime);
       if (value) {
             value.forEach(obj => {
                   map.getSource(obj.vehicleref).setData({ type: "Point", coordinates: [obj.longitude, obj.latitude] });
-                  map.setPaintProperty(obj.vehicleref, "text-color", obj.directionref == "0" ? "#AD79A8" : "#83d0f2");
+                  map.getLayer(obj.vehicleref).metadata.directionref = obj.directionref;
+                  map.setPaintProperty(obj.vehicleref + "_label", "text-color", obj.directionref == "0" ? "#AD79A8" : "#83d0f2");
             });
       }
 
-      vrefs.forEach(ref => {
+      vrefs.forEach((ref, ref2, set) => {
             const layer = map.getLayer(ref);
             const visibility = layer.visibility;
             const metadata = layer.metadata;
             const allTimes = metadata.allTimes;
-            if (visibility == "none" && metadata.begins <= currentTime && currentTime <= metadata.ends && Date.parse(allTimes.find(x => { return Date.parse(x) > currentTime })) - currentTime < 60000)
+
+            if (visibility == "none" && metadata.begins <= currentTime && currentTime <= metadata.ends && Date.parse(allTimes.find(x => { return Date.parse(x) > currentTime })) - currentTime < 60000) {
                   map.setLayoutProperty(ref, "visibility", "visible");
-            if (visibility == "visible" && currentTime < metadata.begins || currentTime > metadata.ends)
+                  map.setLayoutProperty(ref + "_label", "visibility", "visible");
+            }
+            if (visibility == "visible" && currentTime < metadata.begins || currentTime > metadata.ends) {
                   map.setLayoutProperty(ref, "visibility", "none");
-            if (visibility == "visible" && Date.parse(allTimes.find(x => { return Date.parse(x) > currentTime })) - currentTime > 60000)
+                  map.setLayoutProperty(ref + "_label", "visibility", "none");
+            }
+            if (visibility == "visible" && Date.parse(allTimes.find(x => { return Date.parse(x) > currentTime })) - currentTime > 60000) {
                   map.setLayoutProperty(ref, "visibility", "none");
+                  map.setLayoutProperty(ref + "_label", "visibility", "none");
+            }
+      });
+
+      let color;
+      const allVisibleLayerIds = Array.from(vrefs).filter(x => map.getLayer(x).visibility == "visible");
+      const allVisibleSources = allVisibleLayerIds.map(x => map.getSource(x));
+      const direction0 = allVisibleSources.filter(x => map.getLayer(x.id).metadata.directionref == "0");
+      direction0.forEach(x => {
+            if (direction0.some(y => { return distance(x._data.coordinates[1], x._data.coordinates[0], y._data.coordinates[1], y._data.coordinates[0]) * 1000 <= Number(factor.value) && y.id != x.id }))
+                  color = "#ffe0fc";
+            else
+                  color = "#AD79A8";
+            map.setPaintProperty(x.id, "circle-color", color);
       });
 
       seeker.style.left = ((currentTime - Date.parse(begindate.value + ':00')) / range) * window.innerWidth + "px";
@@ -246,4 +230,45 @@ function animate() {
             cancelAnimationFrame(animation);
 
       animation = requestAnimationFrame(animate);
+}
+
+function playpause(toggle = true) {
+      if (toggle) isplaying = !isplaying;
+      if (animation) {
+            cancelAnimationFrame(animation);
+            animation = null;
+      }
+      else {
+            animation = requestAnimationFrame(animate);
+      }
+}
+
+seeker.onmousedown = function (e) {
+      if (animation) {
+            cancelAnimationFrame(animation);
+            animation = null;
+      }
+
+      e = e || window.event;
+      e.preventDefault();
+      p2 = e.clientX;
+
+      document.onmouseup = function () {
+            if (isplaying) playpause(false);
+            document.onmouseup = null;
+            document.onmousemove = null;
+      }
+
+      document.onmousemove = function (e) {
+            e = e || window.event;
+            e.preventDefault();
+            p1 = p2 - e.clientX;
+            p2 = e.clientX;
+            if (!(seeker.offsetLeft - p1 < 0) && !(seeker.offsetLeft - p1 > window.innerWidth)) {
+                  seeker.style.left = (seeker.offsetLeft - p1) + "px";
+                  const seekerpos = Math.round((seeker.offsetLeft) / (window.innerWidth) * 1000) / 1000;
+                  currentTime = Date.parse(new Date(Date.parse(begindate.value + ':00') + seekerpos * range).toString()); //seekerpos = (i-begindate.value)/range
+                  time.innerHTML = new Date(currentTime).toLocaleTimeString('en-US', { timeZone: "America/New_York", hour12: true });
+            }
+      }
 }

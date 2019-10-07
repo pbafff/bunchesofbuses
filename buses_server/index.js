@@ -17,8 +17,10 @@ let animation = null;
 let isplaying = false;
 let range;
 let p1 = 0, p2 = 0;
-const data = [];
+const data0 = [];
+const data1 = [];
 const graphData0 = new Map();
+const graphData1 = new Map();
 
 mapboxgl.accessToken = 'pk.eyJ1IjoicGJhZmYiLCJhIjoiY2swa2dlbmVrMDh2cTNtdXB6NDdmZm5xOSJ9.5wHw8zRmu4EqcplZyRnQow';
 
@@ -45,13 +47,13 @@ map.on('load', function () {
                   time.innerHTML = new Date(currentTime).toLocaleTimeString('en-US', { timeZone: "America/New_York", hour12: true });
                   seeker.style.left = ((currentTime - Date.parse(begindate.value + ':00')) / range) * window.innerWidth + "px";
                   d3.select("#graph").html("");
-                  data.length = 0;
+                  data0.length = 0;
                   playbutton.onclick = null;
             }
 
             range = Date.parse(enddate.value + ':00') - Date.parse(begindate.value + ':00');
 
-            const res = await fetch(`/data/B/${route.value}/${begindate.value}/${enddate.value}`),
+            const res = await fetch(`/data/${route.value[1] == "X" ? "BX" : route.value[0]}/${route.value}/${begindate.value}/${enddate.value}`),
                   json = await res.json(),
                   rows = json.rows;
 
@@ -85,35 +87,88 @@ map.on('load', function () {
                   noDupes.forEach((obj, i, arr) => {
                         count += arr.some(x => { return distance(obj.latitude, obj.longitude, x.latitude, x.longitude) * 1000 <= Number(factor.value) && x.vehicleref != obj.vehicleref }) ? 1 : 0;
                   });
-                  data.push({ date: new Date(key), value: count });
-                  graphData0.set(key, noDupes);
+                  data0.push({ date: new Date(key), value: count });
+                  // graphData0.set(key, noDupes);
             });
-            
-            const width = document.querySelector("#graph").clientWidth - 12;
-            const height = 60;
+
+            const graphDiv0 = document.createElement('div');
+            graphDiv0.id = "graph-0";
+            graphDiv0.className = "graph";
+            document.querySelector("#graph-wrapper").appendChild(graphDiv0);
+
+            const width = document.querySelector("#graph-wrapper").clientWidth;
+            const height = document.querySelector("#graph-wrapper").clientHeight;
 
             const x = d3.scaleTime()
-                  .domain(d3.extent(data, function (d) { return d.date; }))
+                  .domain(d3.extent(data0, function (d) { return d.date; }))
                   .range([0, width]);
 
             const y = d3.scaleLinear()
-                  .domain([0, d3.max(data, function (d) { return d.value; })])
+                  .domain([0, d3.max(data0, function (d) { return d.value; })])
                   .range([height, 0]);
 
-            const svg = d3.select("#graph").append("svg")
+            const svg = d3.select("#graph-0").append("svg")
                   .attr("width", width)
                   .attr("height", height)
                   .append("g");
 
             svg.append("path")
-                  .datum(data)
-                  .attr("fill", "#AD79A8")
+                  .datum(data0)
+                  .attr("fill", "#ad79a8")
                   .attr("fill-opacity", "0.75")
                   .attr("d", d3.area()
                         .x(function (d) { return x(d.date) })
                         .y0(y(0))
                         .y1(function (d) { return y(d.value) })
-                        .curve(d3.curveBasis)
+                        .curve(d3.curveMonotoneX)
+                  );
+            //====================================================================================
+            rows.filter(x => x.directionref == '1').forEach(x => {
+                  const date = new Date(x.recordedattime);
+                  const dateNoSeconds = new Date(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours(), date.getMinutes()).getTime();
+                  if (graphData1.has(dateNoSeconds))
+                        graphData1.get(dateNoSeconds).push(x);
+                  else
+                        graphData1.set(dateNoSeconds, [x]);
+            });
+
+            graphData1.forEach((value, key) => {
+                  let count = 0;
+                  const noDupes = value.filter((x, I) => { return !(value.some((y, i) => x.vehicleref == y.vehicleref && I < i)) });
+                  noDupes.forEach((obj, i, arr) => {
+                        count += arr.some(x => { return distance(obj.latitude, obj.longitude, x.latitude, x.longitude) * 1000 <= Number(factor.value) && x.vehicleref != obj.vehicleref }) ? 1 : 0;
+                  });
+                  data1.push({ date: new Date(key), value: count });
+                  // graphData0.set(key, noDupes);
+            });
+
+            const graphDiv1 = document.createElement('div');
+            graphDiv1.id = "graph-1";
+            graphDiv1.className = "graph";
+            document.querySelector("#graph-wrapper").appendChild(graphDiv1);
+
+            const xone = d3.scaleTime()
+                  .domain(d3.extent(data1, function (d) { return d.date; }))
+                  .range([0, width]);
+
+            const yone = d3.scaleLinear()
+                  .domain([0, d3.max(data1, function (d) { return d.value; })])
+                  .range([height, 0]);
+
+            const svg1 = d3.select("#graph-1").append("svg")
+                  .attr("width", width)
+                  .attr("height", height)
+                  .append("g");
+
+            svg1.append("path")
+                  .datum(data1)
+                  .attr("fill", "#83d0f2")
+                  .attr("fill-opacity", "0.75")
+                  .attr("d", d3.area()
+                        .x(function (d) { return xone(d.date) })
+                        .y0(yone(0))
+                        .y1(function (d) { return yone(d.value) })
+                        .curve(d3.curveMonotoneX)
                   );
 
             playbutton.style.visibility = "visible";
@@ -153,7 +208,7 @@ function addLabelLayer(arr) {
             "type": "symbol",
             'layout': {
                   'visibility': 'none',
-                  "text-field": arr[0].vehicleref.slice(9),
+                  "text-field": arr[0].vehicleref.slice(arr[0].vehicleref.indexOf('_') + 1),
                   "text-font": ["Open Sans Semibold", "Arial Unicode MS Bold"],
                   "text-size": 11,
                   "text-offset": [0, 1.5],
@@ -186,11 +241,11 @@ function animate() {
             value.forEach(obj => {
                   map.getSource(obj.vehicleref).setData({ type: "Point", coordinates: [obj.longitude, obj.latitude] });
                   map.getLayer(obj.vehicleref).metadata.directionref = obj.directionref;
-                  map.setPaintProperty(obj.vehicleref + "_label", "text-color", obj.directionref == "0" ? "#AD79A8" : "#83d0f2");
+                  map.setPaintProperty(obj.vehicleref + "_label", "text-color", obj.directionref == "0" ? "#ad79a8" : "#83d0f2");
             });
       }
 
-      vrefs.forEach((ref, ref2, set) => {
+      vrefs.forEach(ref => {
             const layer = map.getLayer(ref);
             const visibility = layer.visibility;
             const metadata = layer.metadata;
@@ -216,20 +271,28 @@ function animate() {
       const direction0 = allVisibleSources.filter(x => map.getLayer(x.id).metadata.directionref == "0");
       direction0.forEach(x => {
             if (direction0.some(y => { return distance(x._data.coordinates[1], x._data.coordinates[0], y._data.coordinates[1], y._data.coordinates[0]) * 1000 <= Number(factor.value) && y.id != x.id }))
-                  color = "#ffe0fc";
+                  color = "#ffd4fc";
             else
-                  color = "#AD79A8";
+                  color = "#ad79a8";
             map.setPaintProperty(x.id, "circle-color", color);
+            map.setPaintProperty(x.id + "_label", "text-color", color);
+      });
+      const direction1 = allVisibleSources.filter(x => map.getLayer(x.id).metadata.directionref == "1");
+      direction1.forEach(x => {
+            if (direction1.some(y => { return distance(x._data.coordinates[1], x._data.coordinates[0], y._data.coordinates[1], y._data.coordinates[0]) * 1000 <= Number(factor.value) && y.id != x.id }))
+                  color = "#c4eeff";
+            else
+                  color = "#60c0eb";
+            map.setPaintProperty(x.id, "circle-color", color);
+            map.setPaintProperty(x.id + "_label", "text-color", color);
       });
 
-      seeker.style.left = ((currentTime - Date.parse(begindate.value + ':00')) / range) * window.innerWidth + "px";
+      seeker.style.left = seeker.offsetLeft + seeker.clientWidth < window.innerWidth ? ((currentTime - Date.parse(begindate.value + ':00')) / range) * window.innerWidth + "px" : window.innerWidth - seeker.clientWidth + "px";
       time.innerHTML = new Date(currentTime).toLocaleTimeString('en-US', { timeZone: "America/New_York", hour12: true });
       currentTime += 1000;
 
-      if (currentTime > Date.parse(enddate.value + ':00'))
-            cancelAnimationFrame(animation);
-
-      animation = requestAnimationFrame(animate);
+      if (currentTime < Date.parse(enddate.value + ':00'))
+            animation = requestAnimationFrame(animate);
 }
 
 function playpause(toggle = true) {

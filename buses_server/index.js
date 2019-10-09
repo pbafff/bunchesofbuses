@@ -53,7 +53,7 @@ map.on('load', function () {
 
             range = Date.parse(enddate.value + ':00') - Date.parse(begindate.value + ':00');
 
-            const res = await fetch(`/data/${route.value[1] == "X" ? "BX" : route.value[0]}/${route.value}/${begindate.value}/${enddate.value}`),
+            const res = await fetch(`/data/${route.value[1] === "X" ? "BX" : route.value[0]}/${route.value}/${begindate.value}/${enddate.value}`),
                   json = await res.json(),
                   rows = json.rows;
 
@@ -64,7 +64,7 @@ map.on('load', function () {
             rows.forEach(x => timeline.get(Date.parse(x.recordedattime)).push(x));
 
             vrefs.forEach(x => {
-                  const filtered = rows.filter(y => y.vehicleref == x);
+                  const filtered = rows.filter(y => y.vehicleref === x);
                   const allTimes = filtered.map(z => { return z.recordedattime });
                   filtered.forEach(j => j.allTimes = allTimes);
                   addSource(filtered[0]);
@@ -72,7 +72,7 @@ map.on('load', function () {
                   addLabelLayer(filtered);
             });
 
-            rows.filter(x => x.directionref == '0').forEach(x => {
+            rows.filter(x => x.directionref === '0').forEach(x => {
                   const date = new Date(x.recordedattime);
                   const dateNoSeconds = new Date(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours(), date.getMinutes()).getTime();
                   if (graphData0.has(dateNoSeconds))
@@ -83,9 +83,9 @@ map.on('load', function () {
 
             graphData0.forEach((value, key) => {
                   let count = 0;
-                  const noDupes = value.filter((x, I) => { return !(value.some((y, i) => x.vehicleref == y.vehicleref && I < i)) });
+                  const noDupes = value.filter((x, I) => { return !(value.some((y, i) => x.vehicleref === y.vehicleref && I < i)) });
                   noDupes.forEach((obj, i, arr) => {
-                        count += arr.some(x => { return distance(obj.latitude, obj.longitude, x.latitude, x.longitude) * 1000 <= Number(factor.value) && x.vehicleref != obj.vehicleref }) ? 1 : 0;
+                        count += arr.some(x => { return distance(obj.latitude, obj.longitude, x.latitude, x.longitude) * 1000 <= Number(factor.value) && x.vehicleref !== obj.vehicleref }) ? 1 : 0;
                   });
                   data0.push({ date: new Date(key), value: count });
                   // graphData0.set(key, noDupes);
@@ -123,7 +123,7 @@ map.on('load', function () {
                         .curve(d3.curveMonotoneX)
                   );
             //====================================================================================
-            rows.filter(x => x.directionref == '1').forEach(x => {
+            rows.filter(x => x.directionref === '1').forEach(x => {
                   const date = new Date(x.recordedattime);
                   const dateNoSeconds = new Date(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours(), date.getMinutes()).getTime();
                   if (graphData1.has(dateNoSeconds))
@@ -134,9 +134,9 @@ map.on('load', function () {
 
             graphData1.forEach((value, key) => {
                   let count = 0;
-                  const noDupes = value.filter((x, I) => { return !(value.some((y, i) => x.vehicleref == y.vehicleref && I < i)) });
+                  const noDupes = value.filter((x, I) => { return !(value.some((y, i) => x.vehicleref === y.vehicleref && I < i)) });
                   noDupes.forEach((obj, i, arr) => {
-                        count += arr.some(x => { return distance(obj.latitude, obj.longitude, x.latitude, x.longitude) * 1000 <= Number(factor.value) && x.vehicleref != obj.vehicleref }) ? 1 : 0;
+                        count += arr.some(x => { return distance(obj.latitude, obj.longitude, x.latitude, x.longitude) * 1000 <= Number(factor.value) && x.vehicleref !== obj.vehicleref }) ? 1 : 0;
                   });
                   data1.push({ date: new Date(key), value: count });
                   // graphData0.set(key, noDupes);
@@ -241,7 +241,7 @@ function animate() {
             value.forEach(obj => {
                   map.getSource(obj.vehicleref).setData({ type: "Point", coordinates: [obj.longitude, obj.latitude] });
                   map.getLayer(obj.vehicleref).metadata.directionref = obj.directionref;
-                  map.setPaintProperty(obj.vehicleref + "_label", "text-color", obj.directionref == "0" ? "#ad79a8" : "#83d0f2");
+                  map.setPaintProperty(obj.vehicleref + "_label", "text-color", obj.directionref === "0" ? "#ad79a8" : "#83d0f2");
             });
       }
 
@@ -266,9 +266,9 @@ function animate() {
       });
 
       let color;
-      const allVisibleLayerIds = Array.from(vrefs).filter(x => map.getLayer(x).visibility == "visible");
+      const allVisibleLayerIds = Array.from(vrefs).filter(x => map.getLayer(x).visibility === "visible");
       const allVisibleSources = allVisibleLayerIds.map(x => map.getSource(x));
-      const direction0 = allVisibleSources.filter(x => map.getLayer(x.id).metadata.directionref == "0");
+      const direction0 = allVisibleSources.filter(x => map.getLayer(x.id).metadata.directionref === "0");
       direction0.forEach(x => {
             if (direction0.some(y => { return distance(x._data.coordinates[1], x._data.coordinates[0], y._data.coordinates[1], y._data.coordinates[0]) * 1000 <= Number(factor.value) && y.id != x.id }))
                   color = "#ffd4fc";
@@ -277,7 +277,7 @@ function animate() {
             map.setPaintProperty(x.id, "circle-color", color);
             map.setPaintProperty(x.id + "_label", "text-color", color);
       });
-      const direction1 = allVisibleSources.filter(x => map.getLayer(x.id).metadata.directionref == "1");
+      const direction1 = allVisibleSources.filter(x => map.getLayer(x.id).metadata.directionref === "1");
       direction1.forEach(x => {
             if (direction1.some(y => { return distance(x._data.coordinates[1], x._data.coordinates[0], y._data.coordinates[1], y._data.coordinates[0]) * 1000 <= Number(factor.value) && y.id != x.id }))
                   color = "#c4eeff";
@@ -312,7 +312,6 @@ seeker.onmousedown = function (e) {
             animation = null;
       }
 
-      e = e || window.event;
       e.preventDefault();
       p2 = e.clientX;
 
@@ -323,7 +322,6 @@ seeker.onmousedown = function (e) {
       }
 
       document.onmousemove = function (e) {
-            e = e || window.event;
             e.preventDefault();
             p1 = p2 - e.clientX;
             p2 = e.clientX;

@@ -17,10 +17,7 @@ let animation = null;
 let isplaying = false;
 let range;
 let p1 = 0, p2 = 0;
-const data0 = [];
-const data1 = [];
-const graphData0 = new Map();
-const graphData1 = new Map();
+const routeDirections = new Set();
 
 mapboxgl.accessToken = 'pk.eyJ1IjoicGJhZmYiLCJhIjoiY2swa2dlbmVrMDh2cTNtdXB6NDdmZm5xOSJ9.5wHw8zRmu4EqcplZyRnQow';
 
@@ -30,7 +27,6 @@ const map = new mapboxgl.Map({
       center: [-73.962484, 40.628349],
       zoom: 12
 });
-
 
 map.on('load', function () {
       gobutton.onclick = async () => {
@@ -42,12 +38,13 @@ map.on('load', function () {
                   });
                   vrefs.clear();
                   timeline.clear();
-                  graphData0.clear();
                   currentTime = Date.parse(begindate.value + ':00');
-                  time.innerHTML = new Date(currentTime).toLocaleTimeString('en-US', { timeZone: "America/New_York", hour12: true });
+                  time.innerHTML = new Date(currentTime).toLocaleTimeString('en-US', {
+                        timeZone: "America/New_York",
+                        hour12: true
+                  });
                   seeker.style.left = ((currentTime - Date.parse(begindate.value + ':00')) / range) * window.innerWidth + "px";
-                  d3.select("#graph").html("");
-                  data0.length = 0;
+                  d3.select("#chart").html("");
                   playbutton.onclick = null;
             }
 
@@ -57,119 +54,31 @@ map.on('load', function () {
                   json = await res.json(),
                   rows = json.rows;
 
-            rows.sort((a, b) => { return Date.parse(a.recordedattime) - Date.parse(b.recordedattime) });
-            rows.forEach(x => vrefs.add(x.vehicleref));
-
+            rows.sort((a, b) => {
+                  return Date.parse(a.recordedattime) - Date.parse(b.recordedattime)
+            });
+            rows.forEach(x => {
+                  vrefs.add(x.vehicleref);
+                  routeDirections.add(x.directionref);
+            });
             rows.forEach(x => timeline.set(Date.parse(x.recordedattime), []));
             rows.forEach(x => timeline.get(Date.parse(x.recordedattime)).push(x));
 
             vrefs.forEach(x => {
                   const filtered = rows.filter(y => y.vehicleref === x);
-                  const allTimes = filtered.map(z => { return z.recordedattime });
+                  const allTimes = filtered.map(z => {
+                        return z.recordedattime
+                  });
                   filtered.forEach(j => j.allTimes = allTimes);
                   addSource(filtered[0]);
                   addCircleLayer(filtered);
                   addLabelLayer(filtered);
             });
 
-            rows.filter(x => x.directionref === '0').forEach(x => {
-                  const date = new Date(x.recordedattime);
-                  const dateNoSeconds = new Date(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours(), date.getMinutes()).getTime();
-                  if (graphData0.has(dateNoSeconds))
-                        graphData0.get(dateNoSeconds).push(x);
-                  else
-                        graphData0.set(dateNoSeconds, [x]);
+            routeDirections.forEach(x => {
+                  const direction = rows.filter(y => y.directionref === x);
+                  new Chart(direction);
             });
-
-            graphData0.forEach((value, key) => {
-                  let count = 0;
-                  const noDupes = value.filter((x, I) => { return !(value.some((y, i) => x.vehicleref === y.vehicleref && I < i)) });
-                  noDupes.forEach((obj, i, arr) => {
-                        count += arr.some(x => { return distance(obj.latitude, obj.longitude, x.latitude, x.longitude) * 1000 <= Number(factor.value) && x.vehicleref !== obj.vehicleref }) ? 1 : 0;
-                  });
-                  data0.push({ date: new Date(key), value: count });
-                  // graphData0.set(key, noDupes);
-            });
-
-            const graphDiv0 = document.createElement('div');
-            graphDiv0.id = "graph-0";
-            graphDiv0.className = "graph";
-            document.querySelector("#graph-wrapper").appendChild(graphDiv0);
-
-            const width = document.querySelector("#graph-wrapper").clientWidth;
-            const height = document.querySelector("#graph-wrapper").clientHeight;
-
-            const x = d3.scaleTime()
-                  .domain(d3.extent(data0, function (d) { return d.date; }))
-                  .range([0, width]);
-
-            const y = d3.scaleLinear()
-                  .domain([0, d3.max(data0, function (d) { return d.value; })])
-                  .range([height, 0]);
-
-            const svg = d3.select("#graph-0").append("svg")
-                  .attr("width", width)
-                  .attr("height", height)
-                  .append("g");
-
-            svg.append("path")
-                  .datum(data0)
-                  .attr("fill", "#ad79a8")
-                  .attr("fill-opacity", "0.75")
-                  .attr("d", d3.area()
-                        .x(function (d) { return x(d.date) })
-                        .y0(y(0))
-                        .y1(function (d) { return y(d.value) })
-                        .curve(d3.curveMonotoneX)
-                  );
-            //====================================================================================
-            rows.filter(x => x.directionref === '1').forEach(x => {
-                  const date = new Date(x.recordedattime);
-                  const dateNoSeconds = new Date(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours(), date.getMinutes()).getTime();
-                  if (graphData1.has(dateNoSeconds))
-                        graphData1.get(dateNoSeconds).push(x);
-                  else
-                        graphData1.set(dateNoSeconds, [x]);
-            });
-
-            graphData1.forEach((value, key) => {
-                  let count = 0;
-                  const noDupes = value.filter((x, I) => { return !(value.some((y, i) => x.vehicleref === y.vehicleref && I < i)) });
-                  noDupes.forEach((obj, i, arr) => {
-                        count += arr.some(x => { return distance(obj.latitude, obj.longitude, x.latitude, x.longitude) * 1000 <= Number(factor.value) && x.vehicleref !== obj.vehicleref }) ? 1 : 0;
-                  });
-                  data1.push({ date: new Date(key), value: count });
-                  // graphData0.set(key, noDupes);
-            });
-
-            const graphDiv1 = document.createElement('div');
-            graphDiv1.id = "graph-1";
-            graphDiv1.className = "graph";
-            document.querySelector("#graph-wrapper").appendChild(graphDiv1);
-
-            const xone = d3.scaleTime()
-                  .domain(d3.extent(data1, function (d) { return d.date; }))
-                  .range([0, width]);
-
-            const yone = d3.scaleLinear()
-                  .domain([0, d3.max(data1, function (d) { return d.value; })])
-                  .range([height, 0]);
-
-            const svg1 = d3.select("#graph-1").append("svg")
-                  .attr("width", width)
-                  .attr("height", height)
-                  .append("g");
-
-            svg1.append("path")
-                  .datum(data1)
-                  .attr("fill", "#83d0f2")
-                  .attr("fill-opacity", "0.75")
-                  .attr("d", d3.area()
-                        .x(function (d) { return xone(d.date) })
-                        .y0(yone(0))
-                        .y1(function (d) { return yone(d.value) })
-                        .curve(d3.curveMonotoneX)
-                  );
 
             playbutton.style.visibility = "visible";
             playbutton.onclick = playpause;
@@ -181,7 +90,7 @@ map.on('load', function () {
 function addSource(obj) {
       map.addSource(obj.vehicleref, {
             "type": "geojson",
-            "data": { "type": "Point", "coordinates": [obj.longitude, obj.latitude] }
+            "data": {"type": "Point", "coordinates": [obj.longitude, obj.latitude]}
       });
 }
 
@@ -239,9 +148,9 @@ function animate() {
       const value = timeline.get(currentTime);
       if (value) {
             value.forEach(obj => {
-                  map.getSource(obj.vehicleref).setData({ type: "Point", coordinates: [obj.longitude, obj.latitude] });
+                  map.getSource(obj.vehicleref).setData({type: "Point", coordinates: [obj.longitude, obj.latitude]});
                   map.getLayer(obj.vehicleref).metadata.directionref = obj.directionref;
-                  map.setPaintProperty(obj.vehicleref + "_label", "text-color", obj.directionref === "0" ? "#ad79a8" : "#83d0f2");
+                  map.setPaintProperty(obj.vehicleref + "_label", "text-color", obj.directionref === "0" ? "#854a80" : "#207085");
             });
       }
 
@@ -251,15 +160,19 @@ function animate() {
             const metadata = layer.metadata;
             const allTimes = metadata.allTimes;
 
-            if (visibility == "none" && metadata.begins <= currentTime && currentTime <= metadata.ends && Date.parse(allTimes.find(x => { return Date.parse(x) > currentTime })) - currentTime < 60000) {
+            if (visibility === "none" && metadata.begins <= currentTime && currentTime <= metadata.ends && Date.parse(allTimes.find(x => {
+                  return Date.parse(x) > currentTime
+            })) - currentTime < 60000) {
                   map.setLayoutProperty(ref, "visibility", "visible");
                   map.setLayoutProperty(ref + "_label", "visibility", "visible");
             }
-            if (visibility == "visible" && currentTime < metadata.begins || currentTime > metadata.ends) {
+            if (visibility === "visible" && currentTime < metadata.begins || currentTime > metadata.ends) {
                   map.setLayoutProperty(ref, "visibility", "none");
                   map.setLayoutProperty(ref + "_label", "visibility", "none");
             }
-            if (visibility == "visible" && Date.parse(allTimes.find(x => { return Date.parse(x) > currentTime })) - currentTime > 60000) {
+            if (visibility === "visible" && Date.parse(allTimes.find(x => {
+                  return Date.parse(x) > currentTime
+            })) - currentTime > 60000) {
                   map.setLayoutProperty(ref, "visibility", "none");
                   map.setLayoutProperty(ref + "_label", "visibility", "none");
             }
@@ -268,27 +181,22 @@ function animate() {
       let color;
       const allVisibleLayerIds = Array.from(vrefs).filter(x => map.getLayer(x).visibility === "visible");
       const allVisibleSources = allVisibleLayerIds.map(x => map.getSource(x));
-      const direction0 = allVisibleSources.filter(x => map.getLayer(x.id).metadata.directionref === "0");
-      direction0.forEach(x => {
-            if (direction0.some(y => { return distance(x._data.coordinates[1], x._data.coordinates[0], y._data.coordinates[1], y._data.coordinates[0]) * 1000 <= Number(factor.value) && y.id != x.id }))
-                  color = "#ffd4fc";
-            else
-                  color = "#ad79a8";
-            map.setPaintProperty(x.id, "circle-color", color);
-            map.setPaintProperty(x.id + "_label", "text-color", color);
-      });
-      const direction1 = allVisibleSources.filter(x => map.getLayer(x.id).metadata.directionref === "1");
-      direction1.forEach(x => {
-            if (direction1.some(y => { return distance(x._data.coordinates[1], x._data.coordinates[0], y._data.coordinates[1], y._data.coordinates[0]) * 1000 <= Number(factor.value) && y.id != x.id }))
-                  color = "#c4eeff";
-            else
-                  color = "#60c0eb";
-            map.setPaintProperty(x.id, "circle-color", color);
-            map.setPaintProperty(x.id + "_label", "text-color", color);
+      routeDirections.forEach(dir => {
+            const direction = allVisibleSources.filter(x => map.getLayer(x.id).metadata.directionref === dir);
+            direction.forEach(x => {
+                  if (direction.some(y => {
+                        return distance(x._data.coordinates[1], x._data.coordinates[0], y._data.coordinates[1], y._data.coordinates[0]) * 1000 <= Number(factor.value) && y.id !== x.id
+                  }))
+                        color = dir === "0" ? "#ffd4fc" : "#22e9ff";
+                  else
+                        color = dir === "0" ? "#854a80" : "#207085";
+                  map.setPaintProperty(x.id, "circle-color", color);
+                  map.setPaintProperty(x.id + "_label", "text-color", color);
+            });
       });
 
       seeker.style.left = seeker.offsetLeft + seeker.clientWidth < window.innerWidth ? ((currentTime - Date.parse(begindate.value + ':00')) / range) * window.innerWidth + "px" : window.innerWidth - seeker.clientWidth + "px";
-      time.innerHTML = new Date(currentTime).toLocaleTimeString('en-US', { timeZone: "America/New_York", hour12: true });
+      time.innerHTML = new Date(currentTime).toLocaleTimeString('en-US', {timeZone: "America/New_York", hour12: true});
       currentTime += 1000;
 
       if (currentTime < Date.parse(enddate.value + ':00'))
@@ -300,8 +208,7 @@ function playpause(toggle = true) {
       if (animation) {
             cancelAnimationFrame(animation);
             animation = null;
-      }
-      else {
+      } else {
             animation = requestAnimationFrame(animate);
       }
 }
@@ -319,7 +226,7 @@ seeker.onmousedown = function (e) {
             if (isplaying) playpause(false);
             document.onmouseup = null;
             document.onmousemove = null;
-      }
+      };
 
       document.onmousemove = function (e) {
             e.preventDefault();
@@ -329,7 +236,10 @@ seeker.onmousedown = function (e) {
                   seeker.style.left = (seeker.offsetLeft - p1) + "px";
                   const seekerpos = Math.round((seeker.offsetLeft) / (window.innerWidth) * 1000) / 1000;
                   currentTime = Date.parse(new Date(Date.parse(begindate.value + ':00') + seekerpos * range).toString()); //seekerpos = (i-begindate.value)/range
-                  time.innerHTML = new Date(currentTime).toLocaleTimeString('en-US', { timeZone: "America/New_York", hour12: true });
+                  time.innerHTML = new Date(currentTime).toLocaleTimeString('en-US', {
+                        timeZone: "America/New_York",
+                        hour12: true
+                  });
             }
       }
-}
+};

@@ -12,4 +12,5 @@ function nocache(req, res, next) {
 app.use('/', require('./controller/index'));
 app.get('/test', (req, res) => res.sendFile('/home/andre/bunchesofbuses/buses_server/index.html'));
 app.get('/index.js', nocache, (req, res) => res.sendFile('/home/andre/bunchesofbuses/buses_server/index.js'));
+app.get('/Chart.js', nocache, (req, res) => res.sendFile('/home/andre/bunchesofbuses/buses_server/Chart.js'));
 app.listen(port, () => console.log(`listening on port ${port}`));

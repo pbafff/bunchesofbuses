@@ -33,7 +33,7 @@ class Chart {
                         .range([0, inst.width]);
 
                   const y = d3.scaleLinear()
-                        .domain([0, d3.max(inst.chartData, function (d) { return d.value; })])
+                        .domain([0, d3.max(inst.chartData, d => d.value)])
                         .range([(inst.direction === "0" ? 0 : inst.height / 2), (inst.direction === "0" ? inst.height / 2 : 0)]);
 
                   const svg = d3.select("#combined-chart-" + inst.direction).append("svg")

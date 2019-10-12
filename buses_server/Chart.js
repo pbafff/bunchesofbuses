@@ -9,7 +9,7 @@ class Chart {
             this.set_chart_data();
             this.draw_chart();
             Chart.count++;
-            Chart.instances.add(this);
+            Chart.instances.push(this);
             if (Chart.count === 2 ) Chart.draw_combined_chart();
       }
 
@@ -23,10 +23,13 @@ class Chart {
                   const chartDiv = document.createElement('div');
                   chartDiv.id = "combined-chart-" + inst.direction;
                   chartDiv.style.height = "45px";
-                  wrapper.appendChild(chartDiv);
+                  if (inst.direction === "0")
+                        wrapper.appendChild(chartDiv);
+                  else
+                        wrapper.prepend(chartDiv);
 
                   const x = d3.scaleTime()
-                        .domain(d3.extent(inst.chartData, function (d) { return d.date; }))
+                        .domain(d3.extent(inst.chartData, d => d.date))
                         .range([0, inst.width]);
 
                   const y = d3.scaleLinear()
@@ -40,12 +43,12 @@ class Chart {
 
                   svg.append("path")
                         .datum(inst.chartData)
-                        .attr("fill", inst.direction === "0" ? "#854a80" : "#207085")
-                        .attr("fill-opacity", "0.75")
+                        .attr("fill", inst.direction === "0" ? "#ffd4fc" : "#22e9ff")
+                        .attr("fill-opacity", "0.60")
                         .attr("d", d3.area()
-                              .x(function (d) { return x(d.date) })
+                              .x(d => x(d.date))
                               .y0(y(0))
-                              .y1(function (d) { return y(d.value) })
+                              .y1(d => y(d.value))
                               .curve(d3.curveMonotoneX)
                         );
             });
@@ -83,13 +86,17 @@ class Chart {
             chartDiv.id = "chart-" + this.direction;
             chartDiv.className = "chart hidden-chart";
             document.querySelector("#chart-wrapper").appendChild(chartDiv);
+            if (this.direction === "0")
+                  document.querySelector("#chart-wrapper").appendChild(chartDiv);
+            else
+                  document.querySelector("#chart-wrapper").prepend(chartDiv);
 
             const x = d3.scaleTime()
-                .domain(d3.extent(this.chartData, function (d) { return d.date; }))
+                .domain(d3.extent(this.chartData, d => d.date))
                 .range([0, this.width]);
 
             const y = d3.scaleLinear()
-                .domain([0, d3.max(this.chartData, function (d) { return d.value; })])
+                .domain([0, d3.max(this.chartData, d => d.value)])
                 .range([this.height, 0]);
 
             const svg = d3.select("#chart-" + this.direction).append("svg")
@@ -99,16 +106,16 @@ class Chart {
 
             svg.append("path")
                 .datum(this.chartData)
-                .attr("fill", this.direction === "0" ? "#854a80" : "#207085")
-                .attr("fill-opacity", "0.75")
+                .attr("fill", this.direction === "0" ? "#ffd4fc" : "#22e9ff")
+                .attr("fill-opacity", "0.60")
                 .attr("d", d3.area()
-                    .x(function (d) { return x(d.date) })
+                    .x(d => x(d.date))
                     .y0(y(0))
-                    .y1(function (d) { return y(d.value) })
+                    .y1(d => y(d.value))
                     .curve(d3.curveMonotoneX)
                 );
       }
 }
 
 Chart.count = 0;
-Chart.instances = new Set();
+Chart.instances = [];

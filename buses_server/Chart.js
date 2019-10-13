@@ -43,7 +43,7 @@ class Chart {
 
                   svg.append("path")
                         .datum(inst.chartData)
-                        .attr("fill", inst.direction === "0" ? "#ffd4fc" : "#22e9ff")
+                        .attr("fill", inst.direction === "0" ? "#854a80" : "#207085")
                         .attr("fill-opacity", "0.60")
                         .attr("d", d3.area()
                               .x(d => x(d.date))
@@ -106,7 +106,7 @@ class Chart {
 
             svg.append("path")
                 .datum(this.chartData)
-                .attr("fill", this.direction === "0" ? "#ffd4fc" : "#22e9ff")
+                .attr("fill", this.direction === "0" ? "#854a80" : "#207085")
                 .attr("fill-opacity", "0.60")
                 .attr("d", d3.area()
                     .x(d => x(d.date))
